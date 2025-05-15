@@ -73,45 +73,6 @@ pet-breath-counter-typescript/
 ├── package.json # Root workspace configuration  
 └── README.md # Project documentation
 
-## Development Notes
-
-### Current Setup
-
-- Monorepo structure using npm workspaces
-- TypeScript configuration for both client and server
-- TailwindCSS setup with dark mode support
-- Basic Express server configuration
-- Environment configuration
-
-### TODO
-
-- [ ] Set up MongoDB connection
-- [ ] Implement authentication system
-- [ ] Create user model
-- [ ] Set up testing environment
-- [ ] Configure CI/CD pipeline
-- [ ] Add API documentation
-- [ ] Implement error handling
-- [ ] Add logging system
-
-## Testing Strategy
-
-- **Frontend**: Unit tests for components and logic using Vitest + React Testing Library
-- **Backend**: Unit and integration tests with Vitest + Supertest (to be decided)
-- **E2E**: To be decided (possibly Cypress)
-- **CI**: All tests run on pull requests via GitHub Actions
-
-## CI/CD Pipeline
-
-Planned steps:
-
-1. Code linting
-2. Type checking
-3. Unit tests
-4. Integration tests
-5. Build process
-6. Deployment
-
 ## Getting Started
 
 1. Clone the repository
@@ -157,6 +118,45 @@ Planned steps:
 - Run backend only: `npm run server`
 
 - Run tests: `npm run test`
+
+## Development Notes
+
+### Current Setup
+
+- Monorepo structure using npm workspaces
+- TypeScript configuration for both client and server
+- TailwindCSS setup with dark mode support
+- Basic Express server configuration
+- Environment configuration
+
+### TODO
+
+- [ ] Set up MongoDB connection
+- [ ] Implement authentication system
+- [ ] Create user model
+- [ ] Set up testing environment
+- [ ] Configure CI/CD pipeline
+- [ ] Add API documentation
+- [ ] Implement error handling
+- [ ] Add logging system
+
+## Testing Strategy
+
+- **Frontend**: Unit tests for components and logic using Vitest + React Testing Library
+- **Backend**: Unit and integration tests with Vitest + Supertest (to be decided)
+- **E2E**: To be decided (possibly Cypress)
+- **CI**: All tests run on pull requests via GitHub Actions
+
+## CI/CD Pipeline
+
+Planned steps:
+
+1. Code linting
+2. Type checking
+3. Unit tests
+4. Integration tests
+5. Build process
+6. Deployment
 
 ## Author
 
