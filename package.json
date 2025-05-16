@@ -6,7 +6,11 @@
   "scripts": {
     "client": "npm run dev --workspace client",
     "server": "npm run dev --workspace server",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "test": "npm run test --workspaces",
+    "test:coverage": "npm run test:coverage --workspaces",
+    "test:client": "npm run test --workspace client",
+    "test:server": "npm run test --workspace server"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
