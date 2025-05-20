@@ -1,14 +1,19 @@
-# Pet Breath Counter
+# Dog Breath Counter 🫀
 
-A web application to count and monitor pet breathing rates, built with TypeScript, Next.js, and Express.
+A full-stack web application to count and monitor dog breathing rates, built with **TypeScript**, **Next.js**, and **Express**. **CI/CD** is implemented using **GitHub Actions**, with automated tests using **Vitest**, to ensure seamless deployment and code quality.
+
+When a dog has or is at risk of developing a heart condition, monitoring their resting respiratory rate can be crucial. This app helps dog owners track their dog's breathing over time, detect early signs of heart disease, and share data with their veterinarian, ultimately helping to prevent the condition from worsening.
+
+❤️ To all 🐕 lovers, and especially to those who, like me, are facing the anxiety of managing a beloved pet’s heart condition, this app is for you. ❤️
 
 ## Table of Contents
 
+- [App Overview](#app-overview)
 - [Tech Stack](#tech-stack)
 - [Features](#features)
-- [App Overview](#app-overview)
 - [User Stories](#user-stories)
 - [Project Structure](#project-structure)
+- [RESTful API Design](#restful-api-design)
 - [Getting Started](#getting-started)
 - [Available Scripts](#available-scripts)
 - [Development Notes](#development-notes)
@@ -16,76 +21,136 @@ A web application to count and monitor pet breathing rates, built with TypeScrip
 - [CI/CD Pipeline](#ci-cd-pipeline)
 - [Author](#author)
 
+## App Overview
+
+| Home Page                                           | Breathing Monitor                                             |
+| --------------------------------------------------- | ------------------------------------------------------------- |
+| ![To add later](client/public/screenshots/home.png) | ![To add later](client/public/screenshots/breath-monitor.png) |
+
 ## Tech Stack
 
 ### Frontend
 
-- Next.js 15.3
-- React 19
-- TypeScript
-- TailwindCSS
-- React-Toastify
-- Google OAuth
+- **Framework**: Next.js 15.3
+- **UI Library**: React 19
+- **Language**: TypeScript
+- **Styling**: TailwindCSS
+- **Authentication**: Google OAuth
+- **HTTP Client**: Axios
+- **State Management**: Context API & reducers
 
 ### Backend
 
-- Express
-- MongoDB with Mongoose
-- TypeScript
-- JWT Authentication
-- Bcrypt
+- **Runtime**: Node.js
+- **Framework**: Express
+- **Language**: TypeScript
+- **Database**: MongoDB & Mongoose ODM
+- **Authentication**:
+  - JWT (jsonwebtoken)
+  - Bcrypt (password hashing)
+  - Cookie-parser
+- **Image Upload**: Cloudinary
+- **Security**: CORS
+- **Environment**: dotenv
+
+### Testing
+
+- **Test Runner**: Vitest
+- **Testing Libraries**:
+  - React Testing Library
+  - @testing-library/jest-dom
+  - Supertest (for API testing)
+- **Mocking**: vi (Vitest's built-in mock)
+- **Database Testing**: mongodb-memory-server
+
+### Development Tools
+
+- **Package Manager**: npm with Workspaces
+- **Type Checking**: TypeScript
+- **Linting**:
+  - ESLint
+  - @typescript-eslint
+- **Development Server**:
+  - nodemon (backend)
+  - Next.js dev server (frontend)
+- **Process Manager**: concurrently (for running multiple scripts)
+
+### DevOps
+
+- **CI/CD**: GitHub Actions (to be implemented)
+- **Version Control**: Git
+- **Code Quality**:
+  - TypeScript strict mode
+  - ESLint configuration
+  - Automated testing
 
 ## Features
 
-- Count and log pet breathing rates manually
-- View historical breathing data
-- Authenticate with Google OAuth
-- Responsive design with dark mode
-- JWT-based authentication (backend)
-
-## App Overview
-
-| Home Page                                   | Breathing Monitor                                        |
-| ------------------------------------------- | -------------------------------------------------------- |
-| ![Home](client/public/screenshots/home.png) | ![Monitor](client/public/screenshots/breath-monitor.png) |
+- Manual breath counter with real-time BPM calculation and optional sound feedback
+- Dog profile management with photos, vital info, and veterinarian contacts
+- Breathing history tracking with interactive graphs and date filtering
+- Data sharing via PDF download or email to veterinarians
+- Secure authentication with Google OAuth and JWT session management
+- Responsive UI with dark mode and PWA support for mobile use
 
 ## User Stories
 
+#### General & Onboarding
+
 - As a user, I want to scroll through the homepage and see the app's purpose and learn more about breathing rate monitoring.
 - As a user, I want to be able to create an account and login.
-- As a user, I want to be redirected to My Dogs page after logging in.
-- As a user, I want to be able to view my dog(s) in **My Dogs** page.
-- As a user, I want to be able to click on the + icon and add a new dog in the **My Dogs** page. From here, user is redirected to **Add Dog** page, where they can add their dog's data. After this, user saves new dog and is redirected back to the **My Dogs** page. Dog's data:
+- As a user, I want to be redirected to **My Dogs** page after logging in.
+- As a user, I am redirected to a **Not Found** page when I try to access a page that does not exist.
+
+#### My Dogs Page --> Add Dog Page
+
+- As a user, I want to view my dog(s) on the **My Dogs** page.
+- As a user, I want to click the "+" icon to add a new dog and be redirected to the **Add Dog** page.
+- As a user, I want to fill in the following dog data and save it:
   - Photo
   - Name
   - Breed
   - Age
   - Gender
-  - Veterinarian's data (name, clinic name, phone number, email and address)
-  - Maximum breathing rate (30 BPM, breaths per minute, is the default value)
-- As a user, I want to be able to click on a dog's card on **My Dogs** page and be redirected to the **Dog Profile** page.
-- As a user, I want to see the dog's breathing data on the **Dog Profile** page:
-  - **Name**
-  - **Photo**
+  - Veterinarian's details (name, clinic name, phone number, email, address)
+  - Maximum breathing rate (default is 30 BPM, Breaths per minute)
+- After saving, I am redirected back to the **My Dogs** page.
+
+#### My Dogs Page --> Dog Profile Page
+
+- As a user, I want to click on a dog card on **My Dogs** page and be redirected to its **Dog Profile** page.
+- As a user, I want to see the following information in the **Dog Profile** page:
+  - **Dog Info**: name, photo
   - **Resting respiratory rate**:
-    - Maximum breath rate, eg 30 BPM - the one set by the user under the **Add Dog** page
-    - Average breath rate, eg 28 BPM - the average of all the breaths logged by the user
-  - **Veterinarian** (if a veterinarian was added under the **Add Dog** page, display the veterinarian's data; if not, display a button to add a veterinarian and user is redirected to the **Add Dog** page)
-  - **Share data**: The date range selected in the **Breathing Logs** section is the one being shared here.
-    - Display a button to share the data via email. When clicked, an email modal is displayed with name of the dog, graph and list of logs as body of the email.
-    - Display a button to download the data as a PDF file. When clicked, a PDF file is downloaded with name of the dog, graph and list of logs.
-  - **Breathing Logs**: User has the option to select a date range to display the data on the graph and the list of logs: modal with options 'Last 7' logs, 'Last 15' logs, 'Last 30' logs or 'All logs'. This selection is the one being sent by email or downloaded as a PDF file.
-    - Show a graph with the breathing rate history of the dog.
-    - Show a list of all the logs, with the date, time and breathing rate. Each log has a button to delete the log.
-- As a user, I want to click on button 'Add Breathing Rate' at the bottom of the **Dog Profile** page and be redirected to the **Breathing Monitor** page.
-- As a user, I want to be able to select a length measurement on the **Breathing Monitor** page: modal with options 15 Seconds, 30 Seconds, 60 Seconds.
-- As a user, I want to be able to log a breathing rate manually on the **Breathing Monitor** page, by tapping on the heart icon; one breath is logged per tap. The seconds are decreasing as the user taps, and the the Breath Count is increasing on every tap.
-- As a user, I can activate the sound of the heart beat by clicking on the sound icon on the top right corner of the **Breathing Monitor** page.
-- As a user, I can see a modal with the Breath Count, the Seconds and the BPM, as well as a field to enter a comment:
-  - When confirmed, the log is saved and the user is redirected back to the **Breathing Monitor** page.
-  - When cancelled, the log is not saved and the user is redirected back to the **Breathing Monitor** page.
-- As a user, I can stop the log by clicking on the left arrow icon on the top left corner of the **Breathing Monitor** page. This will take the user back to the **Dog Profile** page.
-- As a user, I am redirected to a **Not Found** page when I try to access a page that does not exist.
+    - Maximum breath rate, eg 30 BPM (set when adding dog under **Add Dog** page)
+    - Average breath rate, eg 28 BPM (average of all the breaths logged by the user)
+  - **Veterinarian**:
+    - If added, show the vet info
+    - If not, show a "+" button to add vet info (redirects to **Add Dog** page)
+  - **Share data**:
+    - Select a date range (model with options Last 7, 15, 30, All logs)
+    - Share via email (opens email form with dog name, graph, logs as the body of the email)
+    - Download PDF (includes same content)
+  - **Breathing Logs**:
+    - Graph of breathing rate history
+    - List of logs (date, time, BPM, delete button per log)
+
+#### Dog Profile Page --> Breathing Monitor Page
+
+- As a user, I want to click the 'Add Breathing Rate' button at the bottom of the **Dog Profile** page to go to the **Breathing Monitor** page.
+- As a user, I want to select a duration for measurement on the **Breathing Monitor** page: modal with options 15 Seconds, 30 Seconds, 60 Seconds.
+- As a user, I want to manually tap a heart icon to log a breath in the **Breathing Monitor** page:
+  - Seconds decrease as user taps
+  - Breath count increases with each tap
+- As a user, I can enable heartbeat sound via a sound icon on the top right corner of the **Breathing Monitor** page.
+- As a user, and once the measurement is done, I can view a modal showing:
+  - Breath Count
+  - Seconds
+  - BPM
+  - Comment field
+  - Confirm: saves log and closes modal
+  - Cancel: discards log and closes modal
+- As a user, I can stop the log by clicking on the left arrow icon on the top left corner of the **Breathing Monitor** page and return to the **Dog Profile** page.
 
 ## Project Structure
 
@@ -126,6 +191,46 @@ pet-breath-counter-typescript/
 ├── package-lock.json # Dependency lock file  
 ├── package.json # Root workspace configuration  
 └── README.md # Project documentation
+
+## RESTful API Design
+
+#### Auth Routes (`/api/auth`)
+
+| Method | Endpoint                 | Description                                               | Logged in User? |
+| ------ | ------------------------ | --------------------------------------------------------- | --------------- |
+| POST   | `/register`              | Register a new user                                       | ❌ No           |
+| POST   | `/login`                 | Log in and return JWT token                               | ❌ No           |
+| POST   | `/login/google`          | Log in or register with Google OAuth                      | ❌ No           |
+| GET    | `/logout`                | Log out user (server must clear the cookie)               | ✅ Yes          |
+| ? POST | `/forgot-password`       | Send reset link to user's email (token is generated here) | ❌ No           |
+| ? POST | `/reset-password/:token` | Reset password using token (token proves user identity)   | ❌ No           |
+
+#### User Routes (`/api/user`)
+
+| Method  | Endpoint | Description                                 | Logged in User? |
+| ------- | -------- | ------------------------------------------- | --------------- |
+| GET     | `/me`    | Get current user profile                    | ✅ Yes          |
+| DELETE  | `/me`    | Delete user account and all related data    | ✅ Yes          |
+| ? PATCH | `/me`    | Update user details (name, email, password) | ✅ Yes          |
+
+#### Dog Routes (`api/dogs`)
+
+| Method | Endpoint | Description                         | Logged in User? |
+| ------ | -------- | ----------------------------------- | --------------- |
+| GET    | `/`      | Get all dogs for the logged-in user | ✅ Yes          |
+| POST   | `/`      | Add a new doge                      | ✅ Yes          |
+| GET    | `/:id`   | Get a specific dog profile          | ✅ Yes          |
+| PATCH  | `/:id`   | Update an existing dog profile      | ✅ Yes          |
+| DELETE | `/:id`   | Delete a dog                        | ✅ Yes          |
+
+#### Breathing Log Routes (`api/dogs/:dogId/breathing-logs`)
+
+| Method | Endpoint  | Description                                                             | Logged in User? |
+| ------ | --------- | ----------------------------------------------------------------------- | --------------- |
+| POST   | `/`       | Add a new breathing log to a dog                                        | ✅ Yes          |
+| GET    | `/`       | Get all breathing logs for a specific dog (supports date range filters) | ✅ Yes          |
+| GET    | `/:logId` | Get a specific breathing log by its ID                                  | ✅ Yes          |
+| DELETE | `/:logId` | Delete a specific breathing log by its ID                               | ✅ Yes          |
 
 ## Getting Started
 
@@ -185,14 +290,20 @@ pet-breath-counter-typescript/
 
 ### TODO
 
-- [ ] Set up MongoDB connection
+- [x] Implement error handling
+- [x] Set up MongoDB connection
+- [x] Set up testing environment
+- [x] Create API documentation
+- [x] Create models
+- [ ] Implement routing
+- [ ] Create controllers
+- [ ] Test controllers
+- [ ] Create middleware checkToken
+- [ ] Create context & reducers
+- [ ] Set up axios config file in utils/ for api calls
+- [ ] Set up React Routing
 - [ ] Implement authentication system
-- [ ] Create user model
-- [ ] Set up testing environment
 - [ ] Configure CI/CD pipeline
-- [ ] Add API documentation
-- [ ] Implement error handling
-- [ ] Add logging system
 
 ## Testing Strategy
 
