@@ -1,5 +1,4 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import mongoose from "mongoose";
 import User from "../User";
 
 describe("User Model Test", () => {

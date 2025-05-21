@@ -1,3 +1,8 @@
+/**
+ * @file db.ts
+ * @description Database connection
+ */
+
 import mongoose from "mongoose";
 
 export default async function connectDB(): Promise<void> {

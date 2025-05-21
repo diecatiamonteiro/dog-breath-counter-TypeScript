@@ -194,7 +194,7 @@ pet-breath-counter-typescript/
 
 ## RESTful API Design
 
-#### Auth Routes (`/api/auth`)
+#### Authentication endpoints (`/api/auth`)
 
 | Method | Endpoint                 | Description                                               | Logged in User? |
 | ------ | ------------------------ | --------------------------------------------------------- | --------------- |
@@ -202,10 +202,10 @@ pet-breath-counter-typescript/
 | POST   | `/login`                 | Log in and return JWT token                               | ❌ No           |
 | POST   | `/login/google`          | Log in or register with Google OAuth                      | ❌ No           |
 | GET    | `/logout`                | Log out user (server must clear the cookie)               | ✅ Yes          |
-| ? POST | `/forgot-password`       | Send reset link to user's email (token is generated here) | ❌ No           |
-| ? POST | `/reset-password/:token` | Reset password using token (token proves user identity)   | ❌ No           |
+| POST   | `/forgot-password`       | Send reset link to user's email (token is generated here) | ❌ No           |
+| POST   | `/reset-password/:token` | Reset password using token (token proves user identity)   | ❌ No           |
 
-#### User Routes (`/api/user`)
+#### User management endpoints (`/api/user`)
 
 | Method  | Endpoint | Description                                 | Logged in User? |
 | ------- | -------- | ------------------------------------------- | --------------- |
@@ -213,17 +213,17 @@ pet-breath-counter-typescript/
 | DELETE  | `/me`    | Delete user account and all related data    | ✅ Yes          |
 | ? PATCH | `/me`    | Update user details (name, email, password) | ✅ Yes          |
 
-#### Dog Routes (`api/dogs`)
+#### Dog management endpoints (`api/dogs`)
 
 | Method | Endpoint | Description                         | Logged in User? |
 | ------ | -------- | ----------------------------------- | --------------- |
 | GET    | `/`      | Get all dogs for the logged-in user | ✅ Yes          |
-| POST   | `/`      | Add a new doge                      | ✅ Yes          |
+| POST   | `/`      | Add a new dog                       | ✅ Yes          |
 | GET    | `/:id`   | Get a specific dog profile          | ✅ Yes          |
 | PATCH  | `/:id`   | Update an existing dog profile      | ✅ Yes          |
 | DELETE | `/:id`   | Delete a dog                        | ✅ Yes          |
 
-#### Breathing Log Routes (`api/dogs/:dogId/breathing-logs`)
+#### Breathing log management endpoints (`api/dogs/:dogId/breathing-logs`)
 
 | Method | Endpoint  | Description                                                             | Logged in User? |
 | ------ | --------- | ----------------------------------------------------------------------- | --------------- |
@@ -295,7 +295,7 @@ pet-breath-counter-typescript/
 - [x] Set up testing environment
 - [x] Create API documentation
 - [x] Create models
-- [ ] Implement routing
+- [x] Implement routing
 - [ ] Create controllers
 - [ ] Test controllers
 - [ ] Create middleware checkToken
