@@ -296,9 +296,10 @@ pet-breath-counter-typescript/
 - [x] Create API documentation
 - [x] Create models
 - [x] Implement routing
-- [ ] Create controllers
+- [x] Create checkToken middleware
+- [x] Test checkToken middleware
+- [ ] Code controllers
 - [ ] Test controllers
-- [ ] Create middleware checkToken
 - [ ] Create context & reducers
 - [ ] Set up axios config file in utils/ for api calls
 - [ ] Set up React Routing

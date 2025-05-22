@@ -1,6 +1,6 @@
 /**
  * @file checkToken.ts
- * @description Middleware to check if the user is authenticated*
+ * @description Middleware to check if the user is authenticated
  */
 
 import { AuthenticatedRequest } from "../types/express";

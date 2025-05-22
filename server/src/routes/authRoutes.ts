@@ -8,13 +8,17 @@ import {
   register,
   resetPassword,
 } from "../controllers/authController";
+import {
+  validateLoginRequest,
+  validateRegisterRequest,
+} from "../middleware/validateRequest";
 
 // Create a new router
 const authRouter = express.Router();
 
 authRouter
-  .post("/register", register)
-  .post("/login", login)
+  .post("/register", validateRegisterRequest, register) 
+  .post("/login", validateLoginRequest, login)
   .post("/login/google", loginGoogle)
   .get("/logout", checkToken, logout) // protected route
   .post("/forgot-password", forgotPassword)

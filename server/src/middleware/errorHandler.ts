@@ -1,3 +1,8 @@
+/**
+ * @file errorHandler.ts
+ * @description Middleware to handle errors
+ */
+
 import createError from "http-errors";
 import { Request, Response, NextFunction } from "express";
 
