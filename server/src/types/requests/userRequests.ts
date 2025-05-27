@@ -18,3 +18,10 @@ export interface LoginRequestBody {
 export interface GoogleLoginRequestBody {
   token: string; // The ID token from Google
 }
+
+export interface UpdateUserRequestBody {
+  email?: string;
+  password?: string;
+  firstName?: string;
+  lastName?: string;
+}
