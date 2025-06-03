@@ -3,6 +3,11 @@
  * @description Test suite for userController: getUser, deleteUser, updateUser
  */
 
+// TOP OF FILE: mock BEFORE imports that use it
+vi.mock("../../utils/transaction", () => ({
+  withTransaction: vi.fn().mockImplementation((callback) => callback(null)),
+}));
+
 import { describe, it, expect, beforeEach, vi, Mock } from "vitest";
 import { Response } from "express";
 import mongoose from "mongoose";
@@ -12,6 +17,7 @@ import BreathingLog from "../../models/BreathingLog";
 import { getUser, deleteUser, updateUser } from "../userController";
 import { AuthenticatedRequest } from "../../types/express";
 import { UpdateUserRequestBody } from "../../types/requests/userRequests";
+import { withTransaction } from "../../utils/transaction";
 
 describe("User Controller", () => {
   let mockReq: Partial<AuthenticatedRequest>;
@@ -70,21 +76,23 @@ describe("User Controller", () => {
 
       expect(mockRes.json).toHaveBeenCalledWith({
         message: "User profile retrieved successfully",
-        data: {user: expect.objectContaining({
-          email: testUser.email,
-          firstName: testUser.firstName,
-          lastName: testUser.lastName,
-          dogs: expect.arrayContaining([
-            expect.objectContaining({
-              name: "Max",
-            }),
-          ]),
-          breathingLogs: expect.arrayContaining([
-            expect.objectContaining({
-              bpm: 24,
-            }),
-          ]),
-        }),}
+        data: {
+          user: expect.objectContaining({
+            email: testUser.email,
+            firstName: testUser.firstName,
+            lastName: testUser.lastName,
+            dogs: expect.arrayContaining([
+              expect.objectContaining({
+                name: "Max",
+              }),
+            ]),
+            breathingLogs: expect.arrayContaining([
+              expect.objectContaining({
+                bpm: 24,
+              }),
+            ]),
+          }),
+        },
       });
     });
 
@@ -107,6 +115,12 @@ describe("User Controller", () => {
   });
 
   describe("deleteUser", () => {
+    beforeEach(() => {
+      // Clear any mocks before each test
+      vi.clearAllMocks();
+      // vi.resetModules();
+    });
+
     it("should delete user and all associated data", async () => {
       // Create test dog
       const dog = await Dog.create({
@@ -141,14 +155,15 @@ describe("User Controller", () => {
 
       expect(mockRes.json).toHaveBeenCalledWith({
         message: "User account and all associated data deleted successfully",
+        data: { deletedUserId: testUser._id.toString() },
       });
     });
 
     it("should handle database errors", async () => {
-      // Mock User.deleteOne to throw an error
-      vi.spyOn(User, "deleteOne").mockRejectedValueOnce(
-        new Error("Database error")
-      );
+      // simulate failure
+      (withTransaction as any).mockImplementationOnce(() => {
+        throw new Error("Database error during user deletion");
+      });
 
       await deleteUser(
         mockReq as AuthenticatedRequest,
@@ -156,11 +171,11 @@ describe("User Controller", () => {
         mockNext
       );
 
-      // Check if error was handled
+      // Check if error was handled with the correct error message
       expect(mockNext).toHaveBeenCalledWith(
         expect.objectContaining({
           status: 400,
-          message: "Database error",
+          message: "Database error during user deletion",
         })
       );
 
@@ -195,11 +210,13 @@ describe("User Controller", () => {
       // Check response
       expect(mockRes.json).toHaveBeenCalledWith({
         message: "User profile updated successfully",
-        data: { user: expect.objectContaining({
-          firstName: "Updated",
-          lastName: "Name",
-          email: "updated@example.com",
-        })},
+        data: {
+          user: expect.objectContaining({
+            firstName: "Updated",
+            lastName: "Name",
+            email: "updated@example.com",
+          }),
+        },
       });
     });
 

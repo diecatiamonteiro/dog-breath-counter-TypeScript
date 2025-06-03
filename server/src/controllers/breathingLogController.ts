@@ -4,6 +4,7 @@ import { Controller } from "../types/controller";
 import { AuthenticatedRequest } from "../types/express";
 import { CreateBreathingLogRequestBody } from "../types/requests/userRequests";
 import createError from "http-errors";
+import { withTransaction } from "../utils/transaction";
 
 /**
  * @desc   Create a breathing log for a specific dog
@@ -132,59 +133,37 @@ export const deleteBreathingLogById: Controller<AuthenticatedRequest> = async (
   res,
   next
 ) => {
-  const isTestEnv = process.env.NODE_ENV === "test";
-  let session: mongoose.ClientSession | null = null; // prepare a session for the transaction
-
   try {
-    if (!isTestEnv) {
-      // If not in test environment, start a session for transaction to ensure all deletions happen together or not at all (if any delete operation fails, nothing is deleted); if in test environment, don't start a session and don't use transactions because test database doenst support transactions
-      session = await mongoose.startSession();
-      session.startTransaction();
-    }
+    const result = await withTransaction(async (session) => {
+      // Find the breathing log to delete
+      const breathingLogToDelete = await BreathingLog.findOne({
+        _id: req.params.logId,
+        dogId: req.params.dogId,
+        userId: req.user?._id,
+      }).session(session);
 
-    // Find the breathing log to delete
-    const breathingLogToDelete = await (session
-      ? BreathingLog.findOne({
-          _id: req.params.logId,
-          dogId: req.params.dogId,
-          userId: req.user?._id,
-        }).session(session)
-      : BreathingLog.findOne({
-          _id: req.params.logId,
-          dogId: req.params.dogId,
-          userId: req.user?._id,
-        }));
+      if (!breathingLogToDelete) {
+        throw createError(404, "Breathing log not found");
+      }
 
-    if (!breathingLogToDelete) {
-      throw createError(404, "Breathing log not found");
-    }
+      // Delete the breathing log
+      await breathingLogToDelete.deleteOne({ session });
 
-    // Delete the breathing log
-    await (session
-      ? breathingLogToDelete.deleteOne({ session })
-      : breathingLogToDelete.deleteOne());
-
-    // If everything went well, commit the transaction, ie permanently delete the breathing log
-    if (session) {
-      await session.commitTransaction();
-    }
+      // Return the breathing log ID so FE knows which breathing log to remove from state
+      return req.params.logId;
+    });
 
     res.json({
       message: "Breathing log deleted successfully",
       data: { deletedBreathingLogId: req.params.logId }, // So FE knows which breathing log to remove from state
     });
   } catch (error) {
-    if (session) {
-      await session.abortTransaction();
-      await session.endSession();
-    }
-
     if (error instanceof createError.HttpError) {
       return next(error);
     }
 
     if (error instanceof mongoose.Error.CastError) {
-      return next(createError(400, "Invalid dog ID format"));
+      return next(createError(400, "Invalid breathing log ID format"));
     }
 
     if (error instanceof Error) {

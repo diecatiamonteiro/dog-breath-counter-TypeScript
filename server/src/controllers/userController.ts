@@ -7,6 +7,7 @@ import { UpdateUserRequestBody } from "../types/requests/userRequests";
 import createError from "http-errors";
 import { validateEmail, validatePassword } from "../utils/validation";
 import mongoose from "mongoose";
+import { withTransaction } from "../utils/transaction";
 
 /**
  * @desc   Get current user profile with their dogs and breathing logs
@@ -65,70 +66,48 @@ export const deleteUser: Controller<AuthenticatedRequest> = async (
 ) => {
   const userId = req.user?._id;
 
-  const isTestEnv = process.env.NODE_ENV === "test";
-
-  let session: mongoose.ClientSession | null = null;
-
   try {
-    if (!isTestEnv) {
-      // If not in test environment, start a session for transaction to ensure all deletions happen together or not at all (if any delete operation fails, nothing is deleted); if in test environment, don't start a session and don't use transactions because test database doenst support transactions
-      session = await mongoose.startSession();
-      session.startTransaction();
-    }
+    const result = await withTransaction(async (session) => {
+      // First find the user
+      const userToDelete = await User.findOne({ _id: userId }).session(session);
 
-    // Find all users' dogs
-    const dogs = await (session
-      ? Dog.find({ userId }).session(session)
-      : Dog.find({ userId }));
+      if (!userToDelete) {
+        throw createError(404, "User not found");
+      }
 
-    // Delete ALL breathing logs associated with either the user or their dogs
-    await (session
-      ? BreathingLog.deleteMany({
-          $or: [{ userId }, { dogId: { $in: dogs.map((dog) => dog._id) } }],
-        }).session(session)
-      : BreathingLog.deleteMany({
-          $or: [{ userId }, { dogId: { $in: dogs.map((dog) => dog._id) } }],
-        }));
+      // Find all user's dogs
+      const dogs = await Dog.find({ userId }).session(session);
 
-    // Delete all dogs from the user
-    await (session
-      ? Dog.deleteMany({ userId }).session(session)
-      : Dog.deleteMany({ userId }));
+      // Delete ALL breathing logs
+      await BreathingLog.deleteMany({
+        $or: [{ userId }, { dogId: { $in: dogs.map((dog) => dog._id) } }],
+      }).session(session);
 
-    // Delete user
-    const deletedUser = await (session
-      ? User.deleteOne({ _id: userId }).session(session)
-      : User.deleteOne({ _id: userId }));
+      // Delete all dogs
+      await Dog.deleteMany({ userId }).session(session);
 
-    if (deletedUser.deletedCount === 0) {
-      throw createError(404, "User not found");
-    }
+      // Delete the user
+      await userToDelete.deleteOne({ session });
 
-    if (session) {
-      await session.commitTransaction();
-    }
+      // Return the user ID so FE knows which user to remove from state
+      return userId.toString();
+    });
 
     res.json({
       message: "User account and all associated data deleted successfully",
+      data: { deletedUserId: result }, // So FE knows which user to remove from state
     });
   } catch (error) {
-    if (session) {
-      try {
-        await session.abortTransaction();
-      } catch (abortErr) {
-        console.error("Failed to abort transaction:", abortErr);
-      }
+    if (error instanceof createError.HttpError) {
+      return next(error);
     }
-
+    if (error instanceof mongoose.Error.CastError) {
+      return next(createError(400, "Invalid user ID format"));
+    }
     if (error instanceof Error) {
-      const status = "status" in error ? (error as any).status : 400;
-      return next(createError(status, error.message));
+      return next(createError(400, error.message));
     }
-    return next(createError(400, "Unexpected error"));
-  } finally {
-    if (session) {
-      session.endSession();
-    }
+    return next(createError(500, "An unexpected error occurred"));
   }
 };
 
@@ -190,7 +169,7 @@ export const updateUser: Controller<
 
     res.json({
       message: "User profile updated successfully",
-      data: {user: updatedUser},
+      data: { user: updatedUser },
     });
   } catch (error) {
     if (error instanceof Error) {

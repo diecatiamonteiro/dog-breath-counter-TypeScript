@@ -8,6 +8,7 @@ import {
 } from "../types/requests/userRequests";
 import mongoose from "mongoose";
 import BreathingLog from "../models/BreathingLog";
+import { withTransaction } from "../utils/transaction";
 /**
  * @desc   Get all dogs from the logged-in user
  * @route  GET /api/dogs
@@ -145,56 +146,34 @@ export const deleteDog: Controller<AuthenticatedRequest> = async (
   res,
   next
 ) => {
-  const isTestEnv = process.env.NODE_ENV === "test";
-  let session: mongoose.ClientSession | null = null; // prepare a session for the transaction
-
   try {
-    if (!isTestEnv) {
-      // If not in test environment, start a session for transaction to ensure all deletions happen together or not at all (if any delete operation fails, nothing is deleted); if in test environment, don't start a session and don't use transactions because test database doenst support transactions
-      session = await mongoose.startSession();
-      session.startTransaction();
-    }
+    const result = await withTransaction(async (session) => {
+      // Find the dog to delete
+      const dogToDelete = await Dog.findOne({
+        _id: req.params.id,
+        userId: req.user?._id,
+      }).session(session);
 
-    // Find the dog to delete
-    const dogToDelete = await (session
-      ? Dog.findOne({
-          _id: req.params.id,
-          userId: req.user?._id,
-        }).session(session)
-      : Dog.findOne({
-          _id: req.params.id,
-          userId: req.user?._id,
-        }));
+      if (!dogToDelete) {
+        throw createError(404, "Dog not found");
+      }
 
-    if (!dogToDelete) {
-      throw createError(404, "Dog not found");
-    }
+      // Delete all breathing logs associated with the dog
+      await BreathingLog.deleteMany({ dogId: dogToDelete._id }).session(
+        session
+      );
 
-    // Delete all breathing logs associated with the dog
-    await (session
-      ? BreathingLog.deleteMany({ dogId: dogToDelete._id }).session(session)
-      : BreathingLog.deleteMany({ dogId: dogToDelete._id }));
+      // Delete the dog
+      await dogToDelete.deleteOne({ session });
 
-    // Delete the dog
-    await (session
-      ? dogToDelete.deleteOne({ session })
-      : dogToDelete.deleteOne());
-
-    // If everything went well, commit the transaction, ie permanently delete the dog and breathing logs
-    if (session) {
-      await session.commitTransaction();
-    }
-
+      // Return the dog ID so FE knows which dog to remove from state
+      return req.params.id;
+    });
     res.json({
       message: "Dog and associated breathing logs deleted successfully",
       data: { deletedDogId: req.params.id }, // So FE knows which dog to remove from state
     });
   } catch (error) {
-    if (session) {
-      await session.abortTransaction();
-      await session.endSession();
-    }
-
     if (error instanceof createError.HttpError) {
       return next(error);
     }
