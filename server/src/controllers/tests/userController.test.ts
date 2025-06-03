@@ -70,7 +70,7 @@ describe("User Controller", () => {
 
       expect(mockRes.json).toHaveBeenCalledWith({
         message: "User profile retrieved successfully",
-        data: expect.objectContaining({
+        data: {user: expect.objectContaining({
           email: testUser.email,
           firstName: testUser.firstName,
           lastName: testUser.lastName,
@@ -84,7 +84,7 @@ describe("User Controller", () => {
               bpm: 24,
             }),
           ]),
-        }),
+        }),}
       });
     });
 
@@ -186,10 +186,21 @@ describe("User Controller", () => {
         mockNext
       );
 
+      // Check database update
       const updatedUser = await User.findById(testUser._id);
       expect(updatedUser?.firstName).toBe("Updated");
       expect(updatedUser?.lastName).toBe("Name");
       expect(updatedUser?.email).toBe("updated@example.com");
+
+      // Check response
+      expect(mockRes.json).toHaveBeenCalledWith({
+        message: "User profile updated successfully",
+        data: { user: expect.objectContaining({
+          firstName: "Updated",
+          lastName: "Name",
+          email: "updated@example.com",
+        })},
+      });
     });
 
     it("should not allow duplicate email", async () => {

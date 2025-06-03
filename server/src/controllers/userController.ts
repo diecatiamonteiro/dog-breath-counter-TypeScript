@@ -23,7 +23,7 @@ export const getUser: Controller<AuthenticatedRequest> = async (
     const [user, dogs, breathingLogs] = await Promise.all([
       User.findById(req.user?._id),
       Dog.find({ userId: req.user?._id }).sort({ createdAt: -1 }),
-      BreathingLog.find({ userId: req.user?._id }).sort({ createdAt: -1 })
+      BreathingLog.find({ userId: req.user?._id }).sort({ createdAt: -1 }),
     ]);
 
     if (!user) {
@@ -32,7 +32,7 @@ export const getUser: Controller<AuthenticatedRequest> = async (
 
     // Combine the data
     const userData = user.toJSON();
-    const responseData = {
+    const getUserData = {
       ...userData,
       dogs,
       breathingLogs,
@@ -40,7 +40,7 @@ export const getUser: Controller<AuthenticatedRequest> = async (
 
     res.json({
       message: "User profile retrieved successfully",
-      data: responseData,
+      data: { user: getUserData },
     });
   } catch (error) {
     if (error instanceof Error && "status" in error) {
@@ -77,21 +77,17 @@ export const deleteUser: Controller<AuthenticatedRequest> = async (
     }
 
     // Find all users' dogs
-    const dogs = await (session ? Dog.find({ userId }).session(session) : Dog.find({ userId }));
+    const dogs = await (session
+      ? Dog.find({ userId }).session(session)
+      : Dog.find({ userId }));
 
     // Delete ALL breathing logs associated with either the user or their dogs
     await (session
       ? BreathingLog.deleteMany({
-          $or: [
-            { userId },
-            { dogId: { $in: dogs.map((dog) => dog._id) } },
-          ],
+          $or: [{ userId }, { dogId: { $in: dogs.map((dog) => dog._id) } }],
         }).session(session)
       : BreathingLog.deleteMany({
-          $or: [
-            { userId },
-            { dogId: { $in: dogs.map((dog) => dog._id) } },
-          ],
+          $or: [{ userId }, { dogId: { $in: dogs.map((dog) => dog._id) } }],
         }));
 
     // Delete all dogs from the user
@@ -125,7 +121,7 @@ export const deleteUser: Controller<AuthenticatedRequest> = async (
     }
 
     if (error instanceof Error) {
-      const status = 'status' in error ? (error as any).status : 400;
+      const status = "status" in error ? (error as any).status : 400;
       return next(createError(status, error.message));
     }
     return next(createError(400, "Unexpected error"));
@@ -194,7 +190,7 @@ export const updateUser: Controller<
 
     res.json({
       message: "User profile updated successfully",
-      data: updatedUser,
+      data: {user: updatedUser},
     });
   } catch (error) {
     if (error instanceof Error) {

@@ -41,7 +41,7 @@ export const register: Controller<{ body: RegisterRequestBody }> = async (
 
     res.status(201).json({
       message: "User registered successfully",
-      data: user,
+      data: { user },
     });
   } catch (error) {
     if (error instanceof Error) {
@@ -80,12 +80,12 @@ export const login: Controller<{ body: LoginRequestBody }> = async (
     setAuthCookie(user, res);
 
     // Remove password from response
-    const userResponse = user.toObject() as Record<string, any>;
-    delete userResponse.password;
+    const loggedInUser = user.toObject() as Record<string, any>;
+    delete loggedInUser.password;
 
     res.json({
       message: "Login successful",
-      data: userResponse,
+      data: {user: loggedInUser},
     });
   } catch (error) {
     if (error instanceof Error) {
@@ -156,12 +156,12 @@ export const loginGoogle: Controller<{ body: GoogleLoginRequestBody }> = async (
     setAuthCookie(user, res);
 
     // Remove password from response
-    const userResponse = user.toObject() as Record<string, any>;
-    delete userResponse.password;
+    const loggedInGoogleUser = user.toObject() as Record<string, any>;
+    delete loggedInGoogleUser.password;
 
     res.json({
       message: "Google login successful",
-      data: userResponse,
+      data: {user: loggedInGoogleUser},
     });
   } catch (error) {
     if (error instanceof Error) {

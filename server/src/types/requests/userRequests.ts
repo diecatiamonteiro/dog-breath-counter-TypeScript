@@ -25,3 +25,35 @@ export interface UpdateUserRequestBody {
   firstName?: string;
   lastName?: string;
 }
+
+export interface CreateDogRequestBody {
+  name: string;
+  photo?: string;
+  breed?: string;
+  birthYear?: number;
+  gender?: string;
+  maxBreathingRate: number;
+  veterinarian?: {
+    name?: string;
+    clinicName?: string;
+    phoneNumber?: string;
+    email?: string;
+    address?: string;
+  };
+}
+
+export interface UpdateDogRequestBody {
+  name?: string;
+  photo?: string;
+  breed?: string;
+  birthYear?: number;
+  gender?: string;
+  maxBreathingRate?: number;
+  veterinarian?: {
+    name?: string;
+    clinicName?: string;
+    phoneNumber?: string;
+    email?: string;
+    address?: string;
+  }
+} 

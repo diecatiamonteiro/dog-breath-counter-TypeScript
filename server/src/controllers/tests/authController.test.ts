@@ -69,11 +69,13 @@ describe("Auth Controller - Register", () => {
     expect(mockRes.status).toHaveBeenLastCalledWith(201);
     expect(mockRes.json).toHaveBeenCalledWith({
       message: "User registered successfully",
-      data: expect.objectContaining({
-        email: mockReq.body.email,
-        firstName: mockReq.body.firstName,
-        lastName: mockReq.body.lastName,
-      }),
+      data: {
+        user: expect.objectContaining({
+          email: mockReq.body.email,
+          firstName: mockReq.body.firstName,
+          lastName: mockReq.body.lastName,
+        }),
+      },
     });
 
     // Check if cookie was set in the response
@@ -223,9 +225,11 @@ describe("Auth Controller - Login", () => {
 
     expect(mockRes.json).toHaveBeenCalledWith({
       message: "Login successful",
-      data: expect.objectContaining({
-        email: testUser.email,
-      }),
+      data: {
+        user: expect.objectContaining({
+          email: testUser.email,
+        }),
+      },
     });
 
     expect(mockRes.cookie).toHaveBeenCalledWith(
@@ -363,12 +367,14 @@ describe("Auth Controller - Google Login", () => {
     // Check response
     expect(mockRes.json).toHaveBeenCalledWith({
       message: "Google login successful",
-      data: expect.objectContaining({
-        email: mockGooglePayload.email,
-        firstName: "John",
-        lastName: "Doe",
-        googleId: mockGooglePayload.sub,
-      }),
+      data: {
+        user: expect.objectContaining({
+          email: mockGooglePayload.email,
+          firstName: "John",
+          lastName: "Doe",
+          googleId: mockGooglePayload.sub,
+        }),
+      },
     });
   });
 
