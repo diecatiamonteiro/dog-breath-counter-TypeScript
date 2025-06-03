@@ -55,5 +55,12 @@ export interface UpdateDogRequestBody {
     phoneNumber?: string;
     email?: string;
     address?: string;
-  }
-} 
+  };
+}
+
+export interface CreateBreathingLogRequestBody {
+  breathCount: number;
+  duration: number;
+  bpm: number;
+  comment?: string;
+}
