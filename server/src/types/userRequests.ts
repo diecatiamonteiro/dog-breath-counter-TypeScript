@@ -1,9 +1,10 @@
 /**
  * @file userRequests.ts
- * @description Types for user requests
+ * @description Types for user requests.
+ *              Used in the controllers files.
  */
 
-import { CloudinaryPhoto } from './cloudinary';
+import { CloudinaryPhoto } from "./cloudinary";
 
 export interface RegisterRequestBody {
   firstName: string;
@@ -30,7 +31,7 @@ export interface UpdateUserRequestBody {
 
 export interface CreateDogRequestBody {
   name: string;
-  photo?:CloudinaryPhoto;
+  photo?: CloudinaryPhoto;
   breed?: string;
   birthYear?: number;
   gender?: string;
@@ -46,7 +47,7 @@ export interface CreateDogRequestBody {
 
 export interface UpdateDogRequestBody {
   name?: string;
-  photo?:CloudinaryPhoto;
+  photo?: CloudinaryPhoto;
   breed?: string;
   birthYear?: number;
   gender?: string;

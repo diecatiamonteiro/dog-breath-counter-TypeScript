@@ -1,3 +1,8 @@
+/**
+ * @file dogController.ts
+ * @description Controller for dog routes: getAllDogs, createDog, getDogById, updateDog, deleteDog
+ */
+
 import Dog from "../models/Dog";
 import { Controller } from "../types/controller";
 import { AuthenticatedRequest } from "../types/express";

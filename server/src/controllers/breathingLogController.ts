@@ -1,3 +1,8 @@
+/**
+ * @file breathingLogController.ts
+ * @description Controller for breathing log routes: createBreathingLog, getAllBreathingLogs, getBreathingLogById, deleteBreathingLogById
+ */
+
 import mongoose from "mongoose";
 import BreathingLog from "../models/BreathingLog";
 import Dog from "../models/Dog";

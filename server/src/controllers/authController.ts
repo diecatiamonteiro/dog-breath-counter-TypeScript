@@ -1,3 +1,8 @@
+/**
+ * @file authController.ts
+ * @description Controller for authentication routes: register, login, login with Google, logout, forgot password (not implemented), reset password (not implemented)
+ */
+
 import User from "../models/User";
 import { Controller } from "../types/controller";
 import { AuthenticatedRequest } from "../types/express";
@@ -85,7 +90,7 @@ export const login: Controller<{ body: LoginRequestBody }> = async (
 
     res.json({
       message: "Login successful",
-      data: {user: loggedInUser},
+      data: { user: loggedInUser },
     });
   } catch (error) {
     if (error instanceof Error) {
@@ -161,7 +166,7 @@ export const loginGoogle: Controller<{ body: GoogleLoginRequestBody }> = async (
 
     res.json({
       message: "Google login successful",
-      data: {user: loggedInGoogleUser},
+      data: { user: loggedInGoogleUser },
     });
   } catch (error) {
     if (error instanceof Error) {

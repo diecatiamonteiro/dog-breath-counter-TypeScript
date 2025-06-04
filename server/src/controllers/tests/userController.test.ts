@@ -3,7 +3,7 @@
  * @description Test suite for userController: getUser, deleteUser, updateUser
  */
 
-// TOP OF FILE: mock BEFORE imports that use it
+// Mock transaction before deleteUser is called
 vi.mock("../../utils/transaction", () => ({
   withTransaction: vi.fn().mockImplementation((callback) => callback(null)),
 }));

@@ -1,3 +1,8 @@
+/**
+ * @file User.ts
+ * @description User model
+ */
+
 import { Schema, model, Document } from "mongoose";
 import bcrypt from "bcrypt";
 

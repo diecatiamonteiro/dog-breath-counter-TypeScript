@@ -1,3 +1,8 @@
+/**
+ * @file User.test.ts
+ * @description Test suite for User model
+ */
+
 import { describe, it, expect, beforeEach } from "vitest";
 import User from "../User";
 

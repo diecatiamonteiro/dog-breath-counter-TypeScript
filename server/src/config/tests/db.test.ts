@@ -1,3 +1,8 @@
+/**
+ * @file db.test.ts
+ * @description Test suite for database connection: connectDB
+ */
+
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import mongoose from "mongoose";
 import connectDB from "../db";

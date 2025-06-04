@@ -1,7 +1,7 @@
 /**
  * @file express.d.ts
  * @description Type declarations for Express request objects.
- * This file extends the Request interface to include user and isAuthenticated properties.
+ *              This file extends the Request interface to include user and isAuthenticated properties.
  */
 
 import { Request } from "express";

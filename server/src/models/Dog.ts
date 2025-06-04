@@ -1,3 +1,8 @@
+/**
+ * @file Dog.ts
+ * @description Dog model
+ */
+
 import { Schema, model, Document } from "mongoose";
 import { CloudinaryPhoto } from "../types/cloudinary";
 

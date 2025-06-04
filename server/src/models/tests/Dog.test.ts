@@ -1,3 +1,8 @@
+/**
+ * @file Dog.test.ts
+ * @description Test suite for Dog model
+ */
+
 import { describe, it, expect, beforeEach } from "vitest";
 import mongoose from "mongoose";
 import Dog from "../Dog";

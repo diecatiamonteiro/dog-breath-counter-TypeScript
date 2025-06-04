@@ -1,3 +1,10 @@
+/**
+ * @file index.ts
+ * @description Main file for the backend.
+ *              It initializes the Express app, connects to the database, and starts the server.
+ *              It also handles CORS, error handling, and other middleware.
+ */
+
 import express, { Request, Response } from "express";
 import "dotenv/config";
 import connectDB from "./config/db";

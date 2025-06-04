@@ -1,6 +1,8 @@
 /**
  * @file cloudinary.ts
- * @description Cloudinary configuration file
+ * @description Cloudinary configuration file: initializes and exports the Cloudinary instance with environment-based configuration.
+ *              This instance is used across the backend to upload, delete, or manage media assets.
+ *
  */
 
 import { v2 as cloudinary } from "cloudinary";

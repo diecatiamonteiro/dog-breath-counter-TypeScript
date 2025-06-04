@@ -1,3 +1,8 @@
+/**
+ * @file userController.ts
+ * @description Controller for user routes: getUser, deleteUser, updateUser
+ */
+
 import BreathingLog from "../models/BreathingLog";
 import Dog from "../models/Dog";
 import User from "../models/User";

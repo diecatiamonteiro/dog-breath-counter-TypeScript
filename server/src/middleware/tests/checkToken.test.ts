@@ -1,7 +1,11 @@
+/**
+ * @file checkToken.test.ts
+ * @description Test suite for checkToken middleware
+ */
+
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import createError from "http-errors";
 import checkToken from "../checkToken";
 import { AuthenticatedRequest } from "../../types/express";
 import User from "../../models/User";

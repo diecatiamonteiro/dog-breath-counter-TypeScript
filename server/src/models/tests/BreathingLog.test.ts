@@ -1,3 +1,8 @@
+/**
+ * @file BreathingLog.test.ts
+ * @description Test suite for BreathingLog model
+ */
+
 import { describe, it, expect, beforeEach } from "vitest";
 import mongoose from "mongoose";
 import BreathingLog from "../BreathingLog";

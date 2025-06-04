@@ -1,3 +1,8 @@
+/**
+ * @file BreathingLog.ts
+ * @description BreathingLog model
+ */
+
 import { Schema, model, Document } from "mongoose";
 
 export interface IBreathingLog extends Document {

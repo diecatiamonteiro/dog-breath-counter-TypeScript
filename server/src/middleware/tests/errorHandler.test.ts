@@ -1,3 +1,8 @@
+/**
+ * @file errorHandler.test.ts
+ * @description Test suite for errorHandler middleware
+ */
+
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { Request, Response, NextFunction } from "express";
 import { RouteNotFoundError, globalErrorHandler } from "../errorHandler";
