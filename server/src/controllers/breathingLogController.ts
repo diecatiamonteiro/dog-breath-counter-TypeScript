@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
 import BreathingLog from "../models/BreathingLog";
+import Dog from "../models/Dog";
 import { Controller } from "../types/controller";
 import { AuthenticatedRequest } from "../types/express";
-import { CreateBreathingLogRequestBody } from "../types/requests/userRequests";
+import { CreateBreathingLogRequestBody } from "../types/userRequests";
 import createError from "http-errors";
 import { withTransaction } from "../utils/transaction";
 
@@ -15,11 +16,29 @@ export const createBreathingLog: Controller<
   AuthenticatedRequest & { body: CreateBreathingLogRequestBody }
 > = async (req, res, next) => {
   try {
+    // First check if the dog exists and belongs to the user
+    const dog = await Dog.findOne({
+      _id: req.params.dogId,
+      userId: req.user?._id,
+    });
+
+    if (!dog) {
+      throw createError(404, "Dog not found");
+    }
+
+    // Validate that the breathing rate doesn't exceed the dog's max rate
+    const calculatedBPM = req.body.breathCount * (60 / req.body.duration);
+    if (calculatedBPM > dog.maxBreathingRate) {
+      throw createError(400, `Breathing rate ${calculatedBPM} exceeds dog's maximum rate of ${dog.maxBreathingRate}`);
+    }
+
     const breathingLogData = {
       ...req.body,
-      dogId: req.params.dogId,
+      dogId: dog._id,
       userId: req.user?._id,
+      bpm: calculatedBPM
     };
+
     const newBreathingLog = await BreathingLog.create(breathingLogData);
 
     res.status(201).json({
@@ -27,6 +46,12 @@ export const createBreathingLog: Controller<
       data: { breathingLog: newBreathingLog },
     });
   } catch (error) {
+    if (error instanceof createError.HttpError) {
+      return next(error);
+    }
+    if (error instanceof mongoose.Error.ValidationError) {
+      return next(createError(400, error.message));
+    }
     if (error instanceof Error) {
       return next(createError(400, error.message));
     }

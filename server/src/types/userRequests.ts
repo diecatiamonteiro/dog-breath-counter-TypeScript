@@ -3,6 +3,8 @@
  * @description Types for user requests
  */
 
+import { CloudinaryPhoto } from './cloudinary';
+
 export interface RegisterRequestBody {
   firstName: string;
   lastName: string;
@@ -28,7 +30,7 @@ export interface UpdateUserRequestBody {
 
 export interface CreateDogRequestBody {
   name: string;
-  photo?: string;
+  photo?:CloudinaryPhoto;
   breed?: string;
   birthYear?: number;
   gender?: string;
@@ -44,7 +46,7 @@ export interface CreateDogRequestBody {
 
 export interface UpdateDogRequestBody {
   name?: string;
-  photo?: string;
+  photo?:CloudinaryPhoto;
   breed?: string;
   birthYear?: number;
   gender?: string;

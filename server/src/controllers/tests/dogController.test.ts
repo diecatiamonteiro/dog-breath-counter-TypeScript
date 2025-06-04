@@ -5,7 +5,7 @@
 
 import { describe, it, expect, beforeEach, vi, Mock } from "vitest";
 import { Response } from "express";
-import mongoose from "mongoose";
+import mongoose, { Document } from "mongoose";
 import Dog from "../../models/Dog";
 import BreathingLog from "../../models/BreathingLog";
 import { AuthenticatedRequest } from "../../types/express";
@@ -20,8 +20,19 @@ import {
 import {
   CreateDogRequestBody,
   UpdateDogRequestBody,
-} from "../../types/requests/userRequests";
+} from "../../types/userRequests";
 import createError from "http-errors";
+import cloudinary from "../../config/cloudinary";
+import { IDog } from "../../models/Dog";
+
+// Mock cloudinary
+vi.mock("../../config/cloudinary", () => ({
+  default: {
+    uploader: {
+      destroy: vi.fn().mockResolvedValue({ result: "ok" }),
+    },
+  },
+}));
 
 describe("Dog Controller", () => {
   let mockReq: Partial<AuthenticatedRequest>;
@@ -29,10 +40,19 @@ describe("Dog Controller", () => {
   let mockNext: Mock;
   let testUser: any;
 
+  // Mock photo data
+  const mockPhotoData = {
+    url: "https://res.cloudinary.com/demo/image/upload/dog.jpg",
+    publicId: "pets/dog123"
+  };
+
   beforeEach(async () => {
     // Clear collections
     await Dog.deleteMany({});
     await BreathingLog.deleteMany({});
+
+    // Reset cloudinary mock
+    vi.mocked(cloudinary.uploader.destroy).mockClear();
 
     // Create test user
     testUser = await User.create({
@@ -140,6 +160,39 @@ describe("Dog Controller", () => {
         }),
       });
     });
+
+    it("should create a new dog with photo", async () => {
+      mockReq = {
+        user: testUser,
+        body: {
+          name: "Rex",
+          maxBreathingRate: 35,
+          photo: mockPhotoData
+        },
+      };
+
+      await createDog(
+        mockReq as AuthenticatedRequest & { body: CreateDogRequestBody },
+        mockRes as Response,
+        mockNext
+      );
+
+      expect(mockRes.status).toHaveBeenCalledWith(201);
+      expect(mockRes.json).toHaveBeenCalledWith({
+        message: "Dog created successfully",
+        data: expect.objectContaining({
+          dog: expect.objectContaining({
+            name: "Rex",
+            maxBreathingRate: 35,
+            userId: testUser._id,
+            photo: expect.objectContaining({
+              url: mockPhotoData.url,
+              publicId: mockPhotoData.publicId
+            })
+          }),
+        }),
+      });
+    });
   });
 
   describe("getDogById", () => {
@@ -227,6 +280,54 @@ describe("Dog Controller", () => {
       });
     });
 
+    it("should update a dog's photo and delete old photo", async () => {
+      // Create a dog with initial photo
+      const createdDog = await Dog.create({
+        userId: testUser._id,
+        name: "Max",
+        maxBreathingRate: 30,
+        photo: {
+          url: "https://old-photo.jpg",
+          publicId: "pets/old123"
+        }
+      });
+
+      const dogId = createdDog._id as mongoose.Types.ObjectId;
+
+      // New photo data
+      const newPhotoData = {
+        url: "https://new-photo.jpg",
+        publicId: "pets/new123"
+      };
+
+      mockReq = {
+        user: testUser,
+        params: { id: dogId.toString() },
+        body: {
+          photo: newPhotoData
+        },
+      };
+
+      await updateDog(
+        mockReq as AuthenticatedRequest & { body: UpdateDogRequestBody },
+        mockRes as Response,
+        mockNext
+      );
+
+      // Check if old photo was deleted
+      expect(cloudinary.uploader.destroy).toHaveBeenCalledWith("pets/old123");
+
+      // Check if dog was updated with new photo
+      expect(mockRes.json).toHaveBeenCalledWith({
+        message: "Dog updated successfully",
+        data: {
+          dog: expect.objectContaining({
+            photo: expect.objectContaining(newPhotoData)
+          }),
+        },
+      });
+    });
+
     it("should return 404 if dog to update not found", async () => {
       mockReq = {
         user: testUser,
@@ -279,13 +380,58 @@ describe("Dog Controller", () => {
       );
 
       expect(mockRes.json).toHaveBeenCalledWith({
-        message: "Dog and associated breathing logs deleted successfully",
+        message: "Dog and all associated data deleted successfully",
         data: { deletedDogId: dog._id.toString() },
       });
 
       // Verify dog and breathing logs are deleted
       const deletedDog = await Dog.findById(dog._id);
       const deletedLogs = await BreathingLog.find({ dogId: dog._id });
+      expect(deletedDog).toBeNull();
+      expect(deletedLogs).toHaveLength(0);
+    });
+
+    it("should delete a dog with photo and all associated data", async () => {
+      const createdDog = await Dog.create({
+        userId: testUser._id,
+        name: "Max",
+        maxBreathingRate: 30,
+        photo: mockPhotoData
+      });
+
+      const dogId = createdDog._id as mongoose.Types.ObjectId;
+
+      await BreathingLog.create({
+        dogId: dogId,
+        userId: testUser._id,
+        breathCount: 12,
+        duration: 30,
+        bpm: 24,
+      });
+
+      mockReq = {
+        user: testUser,
+        params: { id: dogId.toString() },
+      };
+
+      await deleteDog(
+        mockReq as AuthenticatedRequest,
+        mockRes as Response,
+        mockNext
+      );
+
+      // Verify photo deletion was attempted
+      expect(cloudinary.uploader.destroy).toHaveBeenCalledWith(mockPhotoData.publicId);
+
+      // Use toString() for ObjectId comparison
+      expect(mockRes.json).toHaveBeenCalledWith({
+        message: "Dog and all associated data deleted successfully",
+        data: { deletedDogId: expect.any(String) },
+      });
+
+      // Verify dog and breathing logs are deleted
+      const deletedDog = await Dog.findById(dogId);
+      const deletedLogs = await BreathingLog.find({ dogId: dogId });
       expect(deletedDog).toBeNull();
       expect(deletedLogs).toHaveLength(0);
     });

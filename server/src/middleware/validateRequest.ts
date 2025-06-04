@@ -7,7 +7,7 @@ import { Controller } from "../types/controller";
 import {
   LoginRequestBody,
   RegisterRequestBody,
-} from "../types/requests/userRequests";
+} from "../types/userRequests";
 import { validateEmail, validatePassword } from "../utils/validation";
 import createError from "http-errors";
 

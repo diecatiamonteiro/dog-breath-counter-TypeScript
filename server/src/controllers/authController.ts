@@ -5,7 +5,7 @@ import {
   GoogleLoginRequestBody,
   LoginRequestBody,
   RegisterRequestBody,
-} from "../types/requests/userRequests";
+} from "../types/userRequests";
 import createError from "http-errors";
 import { clearAuthCookie, setAuthCookie } from "../utils/auth";
 import { OAuth2Client } from "google-auth-library";

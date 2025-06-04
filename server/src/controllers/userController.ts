@@ -3,7 +3,7 @@ import Dog from "../models/Dog";
 import User from "../models/User";
 import { Controller } from "../types/controller";
 import { AuthenticatedRequest } from "../types/express";
-import { UpdateUserRequestBody } from "../types/requests/userRequests";
+import { UpdateUserRequestBody } from "../types/userRequests";
 import createError from "http-errors";
 import { validateEmail, validatePassword } from "../utils/validation";
 import mongoose from "mongoose";

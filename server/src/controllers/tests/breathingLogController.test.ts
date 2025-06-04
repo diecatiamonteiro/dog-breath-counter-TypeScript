@@ -15,7 +15,7 @@ import {
   getBreathingLogById,
   deleteBreathingLogById,
 } from "../breathingLogController";
-import { CreateBreathingLogRequestBody } from "../../types/requests/userRequests";
+import { CreateBreathingLogRequestBody } from "../../types/userRequests";
 import createError from "http-errors";
 import Dog from "../../models/Dog";
 

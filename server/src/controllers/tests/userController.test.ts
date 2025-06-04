@@ -16,7 +16,7 @@ import Dog from "../../models/Dog";
 import BreathingLog from "../../models/BreathingLog";
 import { getUser, deleteUser, updateUser } from "../userController";
 import { AuthenticatedRequest } from "../../types/express";
-import { UpdateUserRequestBody } from "../../types/requests/userRequests";
+import { UpdateUserRequestBody } from "../../types/userRequests";
 import { withTransaction } from "../../utils/transaction";
 
 describe("User Controller", () => {

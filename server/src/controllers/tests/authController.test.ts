@@ -15,7 +15,7 @@ import {
   GoogleLoginRequestBody,
   LoginRequestBody,
   RegisterRequestBody,
-} from "../../types/requests/userRequests";
+} from "../../types/userRequests";
 import { OAuth2Client } from "google-auth-library";
 import { AuthenticatedRequest } from "../../types/express";
 

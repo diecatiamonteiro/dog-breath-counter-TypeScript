@@ -1,9 +1,10 @@
 import { Schema, model, Document } from "mongoose";
+import { CloudinaryPhoto } from "../types/cloudinary";
 
 export interface IDog extends Document {
   userId: Schema.Types.ObjectId;
   name: string;
-  photo?: string;
+  photo?: CloudinaryPhoto;
   breed?: string;
   birthYear?: number;
   gender?: string;
@@ -24,7 +25,13 @@ const DogSchema = new Schema<IDog>(
   {
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     name: { type: String, required: true },
-    photo: { type: String },
+    photo: {
+      type: {
+        url: { type: String, required: true },
+        publicId: { type: String, required: true }
+      },
+      required: false
+    },
     breed: { type: String },
     birthYear: {
       type: Number,

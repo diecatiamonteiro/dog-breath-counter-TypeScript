@@ -1,5 +1,6 @@
 import express from "express";
 import checkToken from "../middleware/checkToken";
+import { validatePhotoData } from "../middleware/validatePhoto";
 import {
   createDog,
   deleteDog,
@@ -14,9 +15,9 @@ const dogRouter = express.Router();
 // All routes are protected, ie require a valid JWT token, ie user must be logged in
 dogRouter
   .get("/", checkToken, getAllDogs)
-  .post("/", checkToken, createDog)
+  .post("/", checkToken, validatePhotoData, createDog)
   .get("/:id", checkToken, getDogById)
-  .patch("/:id", checkToken, updateDog)
+  .patch("/:id", checkToken, validatePhotoData, updateDog)
   .delete("/:id", checkToken, deleteDog);
 
 export default dogRouter;

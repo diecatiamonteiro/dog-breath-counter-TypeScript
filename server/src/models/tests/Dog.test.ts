@@ -13,6 +13,10 @@ describe("Dog Model Test", () => {
       userId: new mongoose.Types.ObjectId(),
       name: "Max",
       birthYear: 2020,
+      photo: {
+        url: "https://res.cloudinary.com/demo/image/upload/dog.jpg",
+        publicId: "pets/dog123",
+      },
       gender: "male",
       maxBreathingRate: 25,
       veterinarian: {
@@ -24,7 +28,8 @@ describe("Dog Model Test", () => {
     const dog = await Dog.create(validDog);
     expect(dog.userId.toString()).toBe(validDog.userId.toString());
     expect(dog.name).toBe("Max");
-    expect(dog.photo).toBeUndefined();
+    expect(dog.photo?.url).toBe("https://res.cloudinary.com/demo/image/upload/dog.jpg");
+    expect(dog.photo?.publicId).toBe("pets/dog123");
     expect(dog.breed).toBeUndefined();
     expect(dog.birthYear).toBe(2020);
     expect(dog.gender).toBe("male");
