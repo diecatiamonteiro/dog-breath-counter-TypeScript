@@ -78,7 +78,7 @@ When a dog has or is at risk of developing a heart condition, monitoring their r
 
 ### DevOps
 
-- **CI/CD**: GitHub Actions (to be implemented)
+- **CI/CD**: GitHub Actions (CD to be implemented)
 - **Version Control**: Git
 - **Code Quality**:
   - TypeScript strict mode
@@ -156,9 +156,9 @@ When a dog has or is at risk of developing a heart condition, monitoring their r
 ## Project Structure
 
 pet-breath-counter-typescript/  
-├── **.github**/ # GitHub configurations 
-│ ├── workflows/  
-│ │ ├── mode.js.yml # CI pipeline for building and testing client/ and server/ using Node.js
+├── **.github**/ # GitHub configurations             
+│ ├── workflows/                
+│ │ ├── mode.js.yml # CI pipeline for building and testing client/ and server/ using Node.js                
 ├── **client**/ # Next.js frontend  
 │ ├── src/  
 │ │ ├── app/ # Next.js app router  
