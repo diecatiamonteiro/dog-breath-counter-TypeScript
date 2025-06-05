@@ -19,6 +19,7 @@ When a dog has or is at risk of developing a heart condition, monitoring their r
 - [Development Notes](#development-notes)
 - [Testing Strategy](#testing-strategy)
 - [CI/CD Pipeline](#ci-cd-pipeline)
+- [To Do](#todo)
 - [Author](#author)
 
 ## App Overview
@@ -288,6 +289,28 @@ pet-breath-counter-typescript/
 - Basic Express server configuration
 - Environment configuration
 
+## Testing Strategy
+
+- **Frontend**: Unit tests for components and logic using Vitest + React Testing Library
+- **Backend**: Unit and integration tests with Vitest + Supertest (to be decided)
+- **E2E**: To be decided (possibly Cypress)
+- **CI**: All tests run on pull requests via GitHub Actions
+
+## CI/CD Pipeline
+
+### Implemented:
+
+- **Server side unit tests**: Run on every push and PR
+- **Build process**: Both client and server are built in CI (Node 18, 20, and 22)
+
+### Planned steps:
+
+- **Code linting** – ESLint integration planned for both client and server
+- **Type checking** – TypeScript check (`tsc --noEmit`) will be added to CI
+- **Client side unit tests** – Tests to be added for the React frontend
+- **Integration tests** – E2E with Cypress
+- **Deployment** – Netlify or Vercel & Render
+
 ### TODO
 
 - [x] Implement error handling
@@ -300,30 +323,13 @@ pet-breath-counter-typescript/
 - [x] Test checkToken middleware
 - [X] Code controllers
 - [X] Test controllers
-- [ ] Implement Cloudinary
+- [X] Implement Cloudinary
+- [X] Configure CI pipeline
 - [ ] Create context & reducers
 - [ ] Set up axios config file in utils/ for api calls
 - [ ] Set up React Routing
-- [ ] Implement authentication system
-- [ ] Configure CI/CD pipeline
-
-## Testing Strategy
-
-- **Frontend**: Unit tests for components and logic using Vitest + React Testing Library
-- **Backend**: Unit and integration tests with Vitest + Supertest (to be decided)
-- **E2E**: To be decided (possibly Cypress)
-- **CI**: All tests run on pull requests via GitHub Actions
-
-## CI/CD Pipeline
-
-Planned steps:
-
-1. Code linting
-2. Type checking
-3. Unit tests
-4. Integration tests
-5. Build process
-6. Deployment
+- [ ] Configure CD pipeline 
+- [ ] Integration tests (Cypress)
 
 ## Author
 
