@@ -158,7 +158,7 @@ When a dog has or is at risk of developing a heart condition, monitoring their r
 pet-breath-counter-typescript/  
 ├── **.github**/ # GitHub configurations             
 │ ├── workflows/                
-│ │ ├── mode.js.yml # CI pipeline for building and testing client/ and server/ using Node.js                
+│ │ ├── node.js.yml # CI pipeline for building and testing client/ and server/ using Node.js                
 ├── **client**/ # Next.js frontend  
 │ ├── src/  
 │ │ ├── app/ # Next.js app router  
