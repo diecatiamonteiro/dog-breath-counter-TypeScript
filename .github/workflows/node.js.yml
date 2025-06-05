@@ -26,13 +26,16 @@ jobs:
     - name: Install server dependencies
       working-directory: ./server
       run: npm ci
-      
+
     - name: Create server env file
       working-directory: ./server
       run: |
         touch .env
         echo "NODE_ENV=test" >> .env
         echo "JWT_SECRET=test-secret" >> .env
+        echo "NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=test" >> .env
+        echo "NEXT_PUBLIC_CLOUDINARY_API_KEY=test" >> .env
+        echo "CLOUDINARY_API_SECRET=test" >> .env
         
     - name: Build server
       working-directory: ./server
