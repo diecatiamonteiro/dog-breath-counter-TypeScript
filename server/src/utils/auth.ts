@@ -35,7 +35,7 @@ export const clearAuthCookie = (res: Response): void => {
   res.cookie("jwtToken", "", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    sameSite: "none",
     maxAge: 0, // Expire immediately
   });
 };
