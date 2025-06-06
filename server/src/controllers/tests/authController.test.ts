@@ -85,7 +85,8 @@ describe("Auth Controller - Register", () => {
       expect.objectContaining({
         httpOnly: true,
         secure: false, // false in test environment
-        sameSite: "none",
+        sameSite: "lax",
+        path: "/",
         maxAge: 7 * 24 * 60 * 60 * 1000,
       })
     );
@@ -238,7 +239,8 @@ describe("Auth Controller - Login", () => {
       expect.objectContaining({
         httpOnly: true,
         secure: false,
-        sameSite: "none",
+        sameSite: "lax",
+        path: "/",
         maxAge: 7 * 24 * 60 * 60 * 1000,
       })
     );
@@ -478,7 +480,8 @@ describe("Auth Controller - Logout", () => {
       expect.objectContaining({
         httpOnly: true,
         secure: false, // false in test environment
-        sameSite: "none",
+        sameSite: "lax",
+        path: "/",
         maxAge: 0,
       })
     );

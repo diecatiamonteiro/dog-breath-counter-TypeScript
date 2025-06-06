@@ -19,11 +19,15 @@ export const setAuthCookie = (user: IUser, res: Response): void => {
     { expiresIn: "7d" }
   );
 
+  const isProduction = process.env.NODE_ENV === "production";
+  
   res.cookie("jwtToken", token, {
     httpOnly: true, // Prevents JavaScript access (XSS protection)
-    secure: process.env.NODE_ENV === "production", // HTTPS only in production
-    sameSite: "none", // Required for cross-domain cookies
+    secure: isProduction, // HTTPS only in production
+    sameSite: isProduction ? "none" : "lax", // "none" for production (cross-domain), "lax" for development
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    path: "/", // Ensure cookie is available for all paths
+    domain: isProduction ? ".vercel.app" : undefined, // Set domain in production
   });
 };
 
@@ -32,10 +36,14 @@ export const setAuthCookie = (user: IUser, res: Response): void => {
  * @param  {Response} res - Express response object
  */
 export const clearAuthCookie = (res: Response): void => {
+  const isProduction = process.env.NODE_ENV === "production";
+
   res.cookie("jwtToken", "", {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "none",
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
     maxAge: 0, // Expire immediately
+    path: "/",
+    domain: isProduction ? ".vercel.app" : undefined,
   });
 };

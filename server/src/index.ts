@@ -28,11 +28,13 @@ app.use(cookieParser());
 
 // CORS configuration
 const allowedOrigins = [
-  "http://localhost:3000", // development
+  "http://localhost:3000", // development client
+  "http://localhost:5000", // development server
   "https://pawpulse-breathcounter.vercel.app", // production - Vercel domain
   // Add other allowed domains
 ];
 
+// CORS configuration
 app.use(
   cors({
     origin: (origin, callback) => {
@@ -81,6 +83,8 @@ declare global {
     interface ProcessEnv {
       PORT: string;
       DB_URI: string;
+      JWT_SECRET: string;
+      NODE_ENV: 'development' | 'production';
       // Add other env variables used in the project
     }
   }
@@ -96,6 +100,7 @@ const startServer = async () => {
 
     app.listen(port, () => {
       console.log(`✅ Server running at http://localhost:${port}`);
+      console.log('✅ CORS enabled for origins:', allowedOrigins);
     });
   } catch (error) {
     console.error("❌ Failed to start server:", error);
