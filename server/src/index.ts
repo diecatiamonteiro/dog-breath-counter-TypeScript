@@ -14,6 +14,10 @@ import {
   globalErrorHandler,
   RouteNotFoundError,
 } from "./middleware/errorHandler";
+import authRouter from "./routes/authRoutes";
+import userRouter from "./routes/userRoutes";
+import dogRouter from "./routes/dogRoutes";
+import breathingLogRouter from "./routes/breathingLogRoutes";
 
 // Initialize Express
 export const app = express();
@@ -60,6 +64,12 @@ app.use(
 app.get("/", (req: Request, res: Response) => {
   res.json({ message: "Hello from the backend!" });
 });
+
+// Mount API routes
+app.use("/api/auth", authRouter);
+app.use("/api/user", userRouter);
+app.use("/api/dogs", dogRouter);
+app.use("/api/breathing-logs", breathingLogRouter);
 
 // Error handling middleware
 app.use(RouteNotFoundError);
