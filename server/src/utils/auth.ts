@@ -22,7 +22,7 @@ export const setAuthCookie = (user: IUser, res: Response): void => {
   res.cookie("jwtToken", token, {
     httpOnly: true, // Prevents JavaScript access (XSS protection)
     secure: process.env.NODE_ENV === "production", // HTTPS only in production
-    sameSite: "strict", // CSRF protection
+    sameSite: "none", // Required for cross-domain cookies
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
   });
 };

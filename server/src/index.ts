@@ -25,7 +25,7 @@ app.use(cookieParser());
 // CORS configuration
 const allowedOrigins = [
   "http://localhost:3000", // development
-  "https://yourdomain.com", // production
+  "https://pawpulse-breathcounter.vercel.app", // production - Vercel domain
   // Add other allowed domains
 ];
 
