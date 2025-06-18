@@ -3,6 +3,8 @@
  * @description Context provider for the app. Imported in layout.tsx.
  */
 
+"use client";
+
 import {
   UserAction,
   userInitialState,
