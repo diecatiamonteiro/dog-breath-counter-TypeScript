@@ -7,15 +7,6 @@
 
 import mongoose from "mongoose";
 
-// Declare the type for NODE_ENV to include "test"
-declare global {
-  namespace NodeJS {
-    interface ProcessEnv {
-      NODE_ENV: "development" | "production" | "test";
-    }
-  }
-}
-
 // Callback function we want to run inside a transaction
 type TransactionCallback = (
   session: mongoose.ClientSession | null // argument iseither a session or null if in test mode

@@ -84,7 +84,7 @@ declare global {
       PORT: string;
       DB_URI: string;
       JWT_SECRET: string;
-      NODE_ENV: 'development' | 'production';
+      NODE_ENV: 'development' | 'production' | 'test';
       // Add other env variables used in the project
     }
   }
