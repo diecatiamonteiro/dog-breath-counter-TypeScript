@@ -10,21 +10,30 @@ import {
   userInitialState,
   userReducer,
 } from "@/reducers/userReducer";
+import {
+  DogAction,
+  dogInitialState,
+  dogReducer,
+} from "@/reducers/dogReducer";
 import { createContext, useContext, useReducer } from "react";
 import { UserState } from "@/types/UserTypes";
+import { DogState } from "@/types/DogTypes";
 
 type AppContextType = {
   userState: UserState;
   userDispatch: React.Dispatch<UserAction>;
+  dogState: DogState;
+  dogDispatch: React.Dispatch<DogAction>;
 };
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const [userState, userDispatch] = useReducer(userReducer, userInitialState);
+  const [dogState, dogDispatch] = useReducer(dogReducer, dogInitialState);
 
   return (
-    <AppContext.Provider value={{ userState, userDispatch }}>
+    <AppContext.Provider value={{ userState, userDispatch, dogState, dogDispatch }}>
       {children}
     </AppContext.Provider>
   );

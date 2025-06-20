@@ -74,7 +74,15 @@ DogSchema.virtual("age").get(function (this: IDog) {
 });
 
 // Include virtual fields when converting document to JSON and to plain JS object
-DogSchema.set("toJSON", { virtuals: true });
+DogSchema.set("toJSON", { 
+  virtuals: true,
+  transform: (_doc: any, ret: any) => {
+    ret.id = ret._id;
+    delete ret._id;
+    delete ret.__v;
+    return ret;
+  }
+});
 DogSchema.set("toObject", { virtuals: true });
 
 export default model<IDog>("Dog", DogSchema);

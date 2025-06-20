@@ -16,24 +16,26 @@ export interface Veterinarian {
   address?: string;
 }
 
+// Matches Dog model
 export interface Dog {
   id: string;
   userId: string;
   name: string;
-  photo?: CloudinaryPhoto;
+  photo?: CloudinaryPhoto; // see above
   breed?: string;
   birthYear?: number;
-  gender?: 'male' | 'female';
+  gender?: string;
   maxBreathingRate: number;
-  veterinarian?: Veterinarian;
+  veterinarian?: Veterinarian; // see above
   age?: number;
   createdAt: string;
   updatedAt: string;
 }
 
+// Dog initial state
 export interface DogState {
-  dogs: Dog[];
-  selectedDog: Dog | null;
+  dogs: Dog[]; // all dogs from user
+  selectedDog: Dog | null; // one dog profile
   isLoading: boolean;
   error: string | null;
-} 
+}

@@ -71,6 +71,7 @@ export const userReducer = (
         user: action.payload.data.user,
         isAuthenticated: true,
       };
+
     case USER_ACTIONS.GET_USER_DATA:
       return {
         ...state,
@@ -79,10 +80,12 @@ export const userReducer = (
         dogs: action.payload.data?.user.dogs,
         breathingLogs: action.payload.data?.user.breathingLogs,
       };
+
     case USER_ACTIONS.LOGOUT:
       return {
         ...userInitialState,
       };
+
     case USER_ACTIONS.DELETE_USER:
       if (action.payload.data.deletedUserId === state.user?.id) {
         return {
@@ -90,16 +93,19 @@ export const userReducer = (
         };
       }
       return state; // If IDs don't match, no change
+
     case USER_ACTIONS.SET_LOADING:
       return {
         ...state,
         isLoading: action.payload,
       };
+
     case USER_ACTIONS.SET_ERROR:
       return {
         ...state,
         error: action.payload,
       };
+
     default:
       return state;
   }

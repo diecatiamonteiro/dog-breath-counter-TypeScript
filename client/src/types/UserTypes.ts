@@ -6,6 +6,7 @@
 import { BreathingLog } from "./BreathingLogTypes";
 import { Dog } from "./DogTypes";
 
+// Matches User model
 export interface User {
   id: string;
   email: string;
@@ -16,6 +17,7 @@ export interface User {
   updatedAt: string;
 }
 
+// User initial state
 export interface UserState {
   user: User | null;
   isAuthenticated: boolean;

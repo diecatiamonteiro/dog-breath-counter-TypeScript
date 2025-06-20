@@ -27,7 +27,7 @@ export const getAllDogs: Controller<AuthenticatedRequest> = async (
 ) => {
   try {
     const allDogs = await Dog.find({ userId: req.user?._id }).sort({
-      createdAt: -1, // ascending order
+      createdAt: -1, // descending order (newest first)
     });
 
     res.json({
@@ -52,8 +52,8 @@ export const createDog: Controller<
 > = async (req, res, next) => {
   try {
     // Validate required fields
-    if (!req.body.name || !req.body.maxBreathingRate) {
-      throw createError(400, "Name and maxBreathingRate are required");
+    if (!req.body.name) {
+      throw createError(400, "Name is required");
     }
 
     const dogData = {
@@ -146,18 +146,22 @@ export const updateDog: Controller<
     }
 
     // Prepare update data with all possible fields
-    const updateData = {
+    const updateData: any = {
       name: req.body.name ?? existingDog.name,
       photo: req.body.photo ?? existingDog.photo,
       breed: req.body.breed ?? existingDog.breed,
       birthYear: req.body.birthYear ?? existingDog.birthYear,
       gender: req.body.gender ?? existingDog.gender,
       maxBreathingRate: req.body.maxBreathingRate ?? existingDog.maxBreathingRate,
-      veterinarian: {
+    };
+
+    // Only update veterinarian if it's actually provided
+    if (req.body.veterinarian !== undefined) {
+      updateData.veterinarian = {
         ...existingDog.veterinarian,
         ...req.body.veterinarian
-      }
-    };
+      };
+    }
 
     const updatedDog = await Dog.findByIdAndUpdate(
       existingDog._id,

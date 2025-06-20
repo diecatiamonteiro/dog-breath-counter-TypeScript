@@ -41,4 +41,14 @@ const BreathingLogSchema = new Schema<IBreathingLog>(
   { timestamps: true }
 );
 
+// Transform _id to id and remove __v when converting to JSON
+BreathingLogSchema.set("toJSON", {
+  transform: (_doc: any, ret: any) => {
+    ret.id = ret._id;
+    delete ret._id;
+    delete ret.__v;
+    return ret;
+  },
+});
+
 export default model<IBreathingLog>("BreathingLog", BreathingLogSchema);
