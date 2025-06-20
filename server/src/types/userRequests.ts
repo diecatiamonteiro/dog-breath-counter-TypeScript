@@ -63,7 +63,6 @@ export interface UpdateDogRequestBody {
 
 export interface CreateBreathingLogRequestBody {
   breathCount: number;
-  duration: number;
-  bpm: number;
+  duration: 15 | 30 | 60; // Fixed: match backend enum values
   comment?: string;
 }
