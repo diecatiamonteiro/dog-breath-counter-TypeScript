@@ -4,7 +4,6 @@
  */
 
 import { BreathingLog, BreathingLogState } from "@/types/BreathingLogTypes";
-import { act } from "react";
 
 export const breathingLogInitialState: BreathingLogState = {
   breathingLogs: [], // all logs from a dog
