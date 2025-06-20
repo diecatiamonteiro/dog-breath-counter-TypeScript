@@ -329,7 +329,7 @@ pet-breath-counter-typescript/
 - [X] Implement Cloudinary
 - [X] Configure CI pipeline
 - [X] Create context & reducers
-- [ ] Set up axios config file in utils/ for api calls
+- [X] Set up axios config file in src/lib/ for api calls
 - [ ] Set up React Routing
 - [ ] Configure CD pipeline 
 - [ ] Integration tests (Cypress)
