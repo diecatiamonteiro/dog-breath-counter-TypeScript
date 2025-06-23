@@ -24,7 +24,7 @@ export const getErrorMessage = (error: AxiosError<APIError>): string => {
     typeof error.response.data === "object" &&
     "message" in error.response.data
   ) {
-    return (error.response.data as any).message;
+    return (error.response.data as { message: string }).message;
   }
   // 3rd- Fall back to axios error message
   if (error.message) {
