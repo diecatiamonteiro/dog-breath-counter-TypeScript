@@ -186,7 +186,7 @@ export const getUserProfile = async (
       type: USER_ACTIONS.GET_USER_DATA,
       payload: {
         data: {
-          user: res.data.user, // what about dogs and breathing logs?
+          user: res.data.user, // user object includes dogs & breathing logs
         },
       },
     });

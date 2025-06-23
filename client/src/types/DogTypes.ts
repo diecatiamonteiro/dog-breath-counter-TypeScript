@@ -39,3 +39,25 @@ export interface DogState {
   isLoading: boolean;
   error: string | null;
 }
+
+export interface AddDogData {
+  name: string;
+  photo?: CloudinaryPhoto; // see above
+  breed?: string;
+  birthYear?: number;
+  gender?: string;
+  maxBreathingRate: number;
+  veterinarian?: Veterinarian; // see above
+  age?: number;
+}
+
+export interface UpdateDogData {
+  name: string;
+  photo?: CloudinaryPhoto; // see above
+  breed?: string;
+  birthYear?: number;
+  gender?: string;
+  maxBreathingRate: number;
+  veterinarian?: Veterinarian; // see above
+  age?: number;
+}
