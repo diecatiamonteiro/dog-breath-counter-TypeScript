@@ -156,9 +156,9 @@ When a dog has or is at risk of developing a heart condition, monitoring their r
 ## Project Structure
 
 pet-breath-counter-typescript/  
-├── **.github**/ # GitHub configurations             
-│ ├── workflows/                
-│ │ ├── node.js.yml # CI pipeline for building and testing client/ and server/ using Node.js                
+├── **.github**/ # GitHub configurations  
+│ ├── workflows/  
+│ │ ├── node.js.yml # CI pipeline for building and testing client/ and server/ using Node.js  
 ├── **client**/ # Next.js frontend  
 │ ├── src/  
 │ │ ├── app/ # Next.js app router  
@@ -324,14 +324,16 @@ pet-breath-counter-typescript/
 - [x] Implement routing
 - [x] Create checkToken middleware
 - [x] Test checkToken middleware
-- [X] Code controllers
-- [X] Test controllers
-- [X] Implement Cloudinary
-- [X] Configure CI pipeline
-- [X] Create context & reducers
-- [X] Set up axios config file in src/lib/ for api calls
+- [x] Code controllers
+- [x] Test controllers
+- [x] Implement Cloudinary
+- [x] Configure CI pipeline
+- [x] Create context & reducers
+- [x] Set up axios config file in src/lib/ for api calls
+- [x] Create functions for api calls (user, dog, breathing log)
 - [ ] Set up React Routing
-- [ ] Configure CD pipeline 
+- [ ] Set up layout
+- [ ] Configure CD pipeline
 - [ ] Integration tests (Cypress)
 
 ## Author
