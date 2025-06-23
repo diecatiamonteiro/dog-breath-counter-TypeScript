@@ -26,3 +26,26 @@ export interface UserState {
   isLoading: boolean;
   error: string | null;
 }
+
+export interface RegisterUserData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+}
+
+export interface LoginUserData {
+  email: string;
+  password: string;
+}
+
+export interface GoogleLoginUserData {
+  token: string; // The ID token from Google
+}
+
+export interface UpdateUserData {
+  email?: string;
+  password?: string;
+  firstName?: string;
+  lastName?: string;
+}
