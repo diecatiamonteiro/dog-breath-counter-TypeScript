@@ -331,8 +331,9 @@ pet-breath-counter-typescript/
 - [x] Create context & reducers
 - [x] Set up axios config file in src/lib/ for api calls
 - [x] Create functions for api calls (user, dog, breathing log)
-- [ ] Set up React Routing
-- [ ] Set up layout
+- [x] Set up React Routing
+- [x] Set up layout
+- [ ] Implement FE functionality
 - [ ] Configure CD pipeline
 - [ ] Integration tests (Cypress)
 
