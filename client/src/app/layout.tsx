@@ -3,7 +3,6 @@ import { Nunito } from "next/font/google";
 import "./globals.css";
 import { AppProvider } from "../context/Context";
 import { AxiosProvider } from "../components/AxiosProvider";
-import Navigation from "@/components/navigation/Navigation";
 import Container from "@/components/Container";
 import NavigationDesktop from "@/components/navigation/desktop/NavigationDesktop";
 import NavigationMobile from "@/components/navigation/mobile/NavigationMobile";
