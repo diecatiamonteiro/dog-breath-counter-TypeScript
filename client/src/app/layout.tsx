@@ -63,7 +63,7 @@ export default function RootLayout({
             {/* Mobile Layout with Top Bar and Bottom Navigation */}
             <div className="block lg:hidden">
               <NavigationMobile />
-              <Container className="py-8 pb-32">{children}</Container>
+              <Container className="pt-6 pb-32">{children}</Container>
             </div>
           </AppProvider>
         </AxiosProvider>

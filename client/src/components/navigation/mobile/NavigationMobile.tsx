@@ -1,3 +1,8 @@
+/**
+ * @file NavigationMobile.tsx
+ * @description Mobile navigation menu until lg screens
+ */
+
 "use client";
 
 import Link from "next/link";
@@ -11,32 +16,33 @@ export default function NavigationMobile() {
   return (
     <>
       {/* Top Bar with Logo */}
-      <div className="w-full bg-primary-light border-b border-primary/20">
+      <div className="w-full bg-navbar-bg border-b border-primary/20">
         <nav className="flex lg:hidden items-center justify-center px-4 py-3">
           <Link href="/" className="block">
-            {/* Dark logo - shown in light mode */}
+            {/* Dark logo - light mode */}
             <Image
-              src="/logo-dark.png"
+              src="/logos/logo-dark.png"
+              loading="lazy"
               width={80}
               height={18}
-              alt="Paw Pulse Logo"
-              className="logo-dark w-auto h-auto"
+              alt="Paw Pulse Dark Logo"
+              className="block dark:hidden "
             />
 
-            {/* Light logo - shown in dark mode */}
+            {/* Light logo - dark mode */}
             <Image
-              src="/logo-light.png"
+              src="/logos/logo-light.png"
               width={80}
               height={18}
-              alt="Paw Pulse Logo Light"
-              className="logo-light w-auto h-auto"
+              alt="Paw Pulse Light Logo"
+              className="hidden dark:block"
             />
           </Link>
         </nav>
       </div>
 
-      {/* Bottom Tab Navigation with Footer */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 lg:hidden z-50">
+      {/* Bottom Tab Navigation */}
+      <div className="fixed bottom-0 left-0 right-0 bg-navbar-items-bg border-t border-primary/20 z-50 lg:hidden">
         {/* Navigation Tabs */}
         <nav className="flex items-center justify-around px-2 py-2">
           {navItems.map((item) => {
@@ -54,7 +60,7 @@ export default function NavigationMobile() {
                     ${
                       isActive
                         ? "bg-primary text-white shadow-md"
-                        : "text-gray-500 bg-transparent"
+                        : "text-foreground/60 bg-transparent"
                     }
                   `}
                 >
@@ -64,8 +70,8 @@ export default function NavigationMobile() {
                 {/* Label */}
                 <span
                   className={`
-                    text-xs font-medium transition-all duration-200
-                    ${isActive ? "text-primary" : "text-gray-500"}
+                    text-xs text-center font-bold transition-all duration-200
+                    ${isActive ? "text-primary" : "text-foreground/60"}
                   `}
                 >
                   {item.label}
@@ -74,13 +80,6 @@ export default function NavigationMobile() {
             );
           })}
         </nav>
-
-        {/* Footer Section */}
-        <div className="px-4 py-2 border-b border-gray-100 bg-gray-50">
-          <div className="text-xs text-gray-500 text-center">
-            <p>&copy; 2025 Paw Pulse. All rights reserved</p>
-          </div>
-        </div>
       </div>
     </>
   );

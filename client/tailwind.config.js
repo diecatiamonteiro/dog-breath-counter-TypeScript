@@ -12,12 +12,17 @@ module.exports = {
         sans: ["var(--font-nunito)"],
       },
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
-        primaryLight: "var(--primary-light)",
-        primary: "var(--primary)",
-        primaryDark: "var(--primary-dark)",
-        accent: "var(--accent)",
+        background: "var(--background) / <alpha-value>)",
+        foreground: "var(--foreground) / <alpha-value>)",
+
+        navbarBg: "var(--navbar-bg) / <alpha-value>)",
+        navbarItemsBg: "var(--navbar-items-bg) / <alpha-value>)",
+        navbarIcons: "var(--navbar-icons) / <alpha-value>)",
+
+        primaryLight: "var(--primary-light) / <alpha-value>)",
+        primary: "var(--primary) / <alpha-value>)",
+        primaryDark: "var(--primary-dark) / <alpha-value>)",
+        accent: "var(--accent) / <alpha-value>)",
       },
     },
   },
