@@ -1,5 +1,4 @@
 import express from "express";
-import checkToken from "../middleware/checkToken";
 import {
   forgotPassword,
   login,
@@ -20,7 +19,7 @@ authRouter
   .post("/register", validateRegisterRequest, register) 
   .post("/login", validateLoginRequest, login)
   .post("/login/google", loginGoogle)
-  .get("/logout", checkToken, logout) // protected route
+  .get("/logout", logout) // no checkToken - users should be able to logout without authentication
   .post("/forgot-password", forgotPassword)
   .post("/reset-password/:token", resetPassword);
 

@@ -275,7 +275,7 @@ describe("Auth Controller - Login", () => {
     expect(mockNext).toHaveBeenCalledWith(
       expect.objectContaining({
         status: 401,
-        message: "Invalid email or password",
+        message: "User not found",
       })
     );
   });
@@ -308,24 +308,19 @@ describe("Auth Controller - Login", () => {
   });
 });
 
-// Mock google-auth-library
-vi.mock("google-auth-library", () => ({
-  OAuth2Client: vi.fn().mockImplementation(() => ({
-    verifyIdToken: vi.fn(),
-  })),
-}));
+// Mock fetch for Google API calls
+global.fetch = vi.fn();
 
 describe("Auth Controller - Google Login", () => {
   let mockReq: { body: GoogleLoginRequestBody };
   let mockRes: Partial<Response>;
   let mockNext: Mock;
-  let mockVerifyIdToken: Mock;
 
-  const mockGooglePayload = {
+  const mockGoogleUserInfo = {
     email: "test@example.com",
     given_name: "John",
     family_name: "Doe",
-    sub: "google123",
+    id: "google123",
   };
 
   beforeEach(async () => {
@@ -333,7 +328,7 @@ describe("Auth Controller - Google Login", () => {
 
     mockReq = {
       body: {
-        token: "valid_google_token",
+        token: "valid_google_access_token",
       },
     };
 
@@ -345,56 +340,52 @@ describe("Auth Controller - Google Login", () => {
 
     mockNext = vi.fn();
 
-    // Setup OAuth2Client mock
-    mockVerifyIdToken = vi.fn().mockResolvedValue({
-      getPayload: () => mockGooglePayload,
+    // Mock successful Google API response
+    (fetch as Mock).mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve(mockGoogleUserInfo),
     });
-
-    // Important: Mock the implementation for each test
-    (OAuth2Client as unknown as Mock).mockImplementation(() => ({
-      verifyIdToken: mockVerifyIdToken,
-    }));
   });
 
   it("should create new user and login with valid Google token", async () => {
     await loginGoogle(mockReq as any, mockRes as Response, mockNext);
 
+    // Check if fetch was called with correct parameters
+    expect(fetch).toHaveBeenCalledWith(
+      'https://www.googleapis.com/oauth2/v2/userinfo',
+      {
+        headers: {
+          Authorization: 'Bearer valid_google_access_token',
+        },
+      }
+    );
+
     // Check if user was created
-    const user = await User.findOne({ email: mockGooglePayload.email });
+    const user = await User.findOne({ email: mockGoogleUserInfo.email });
     expect(user).toBeDefined();
     expect(user?.firstName).toBe("John");
     expect(user?.lastName).toBe("Doe");
-    expect(user?.googleId).toBe(mockGooglePayload.sub);
+    expect(user?.googleId).toBe(mockGoogleUserInfo.id);
 
     // Check response
     expect(mockRes.json).toHaveBeenCalledWith({
       message: "Google login successful",
       data: {
         user: expect.objectContaining({
-          email: mockGooglePayload.email,
+          email: mockGoogleUserInfo.email,
           firstName: "John",
           lastName: "Doe",
-          googleId: mockGooglePayload.sub,
+          googleId: mockGoogleUserInfo.id,
         }),
       },
     });
   });
 
   it("should handle invalid Google token", async () => {
-    mockVerifyIdToken.mockRejectedValueOnce(new Error("Invalid token"));
-
-    await loginGoogle(mockReq as any, mockRes as Response, mockNext);
-
-    expect(mockNext).toHaveBeenCalledWith(
-      expect.objectContaining({
-        message: expect.stringContaining("Invalid token"),
-      })
-    );
-  });
-
-  it("should handle missing payload from Google", async () => {
-    mockVerifyIdToken.mockResolvedValueOnce({
-      getPayload: () => null,
+    // Mock failed Google API response
+    (fetch as Mock).mockResolvedValue({
+      ok: false,
+      statusText: "Unauthorized",
     });
 
     await loginGoogle(mockReq as any, mockRes as Response, mockNext);
@@ -406,12 +397,14 @@ describe("Auth Controller - Google Login", () => {
     );
   });
 
-  it("should handle missing email in payload", async () => {
-    mockVerifyIdToken.mockResolvedValueOnce({
-      getPayload: () => ({
-        sub: "google123",
+  it("should handle missing email in user info", async () => {
+    // Mock Google API response without email
+    (fetch as Mock).mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({
         given_name: "John",
         family_name: "Doe",
+        id: "google123",
       }),
     });
 
@@ -427,7 +420,7 @@ describe("Auth Controller - Google Login", () => {
   it("should link Google account to existing user", async () => {
     // Create existing user without Google ID
     const existingUser = await User.create({
-      email: mockGooglePayload.email,
+      email: mockGoogleUserInfo.email,
       firstName: "Jane",
       lastName: "Smith",
       password: "Password123!",
@@ -437,7 +430,7 @@ describe("Auth Controller - Google Login", () => {
 
     // Check if Google ID was linked
     const updatedUser = await User.findById(existingUser._id);
-    expect(updatedUser?.googleId).toBe(mockGooglePayload.sub);
+    expect(updatedUser?.googleId).toBe(mockGoogleUserInfo.id);
   });
 });
 

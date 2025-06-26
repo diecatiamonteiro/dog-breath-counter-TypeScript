@@ -72,7 +72,7 @@ export const login: Controller<{ body: LoginRequestBody }> = async (
     // Check if user exists
     const user = await User.findOne({ email }).select("+password");
     if (!user) {
-      return next(createError(401, "Invalid email or password"));
+      return next(createError(401, "User not found"));
     }
 
     // Check if password is correct
@@ -116,35 +116,36 @@ export const loginGoogle: Controller<{ body: GoogleLoginRequestBody }> = async (
       throw createError(400, "Google token is required");
     }
 
-    // Verify the token
-    const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-    const ticket = await client.verifyIdToken({
-      idToken: token,
-      audience: process.env.GOOGLE_CLIENT_ID,
+    // Use the access token to get user info from Google
+    const userInfoResponse = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
 
-    // Extract the payload from the ticket (email, name, picture, etc.)
-    const payload = ticket.getPayload();
-    if (!payload || !payload.email) {
+    if (!userInfoResponse.ok) {
       throw createError(400, "Invalid Google token");
     }
 
-    const {
-      email,
-      given_name, // Changed from name to given_name
-      family_name, // Added family_name
-      sub: googleId,
-    } = payload;
+    // Extract user info from Google
+    const userInfo = await userInfoResponse.json();
 
-    // Check if user exists
+    // Destructure user info from Google
+    const { email, given_name, family_name, id: googleId } = userInfo;
+
+    if (!email) {
+      throw createError(400, "Invalid Google token - no email found");
+    }
+
+    // Check if user exists in database
     let user = await User.findOne({ email });
 
     if (!user) {
       // Create new user if they don't exist
       user = await User.create({
         email,
-        firstName: given_name || "Unknown", // Use given_name for firstName
-        lastName: family_name || "Unknown", // Use family_name for lastName
+        firstName: given_name || "Unknown",
+        lastName: family_name || "Unknown",
         googleId,
         // Generate a random password for Google users
         password:
@@ -152,7 +153,7 @@ export const loginGoogle: Controller<{ body: GoogleLoginRequestBody }> = async (
           Math.random().toString(36).slice(-12),
       });
     } else if (!user.googleId) {
-      // If user exists but doesn't have googleId, link the accounts
+      // If user exists but doesn't have googleId, add googleId to user and link accounts
       user.googleId = googleId;
       await user.save();
     }
@@ -179,15 +180,15 @@ export const loginGoogle: Controller<{ body: GoogleLoginRequestBody }> = async (
 /**
  * @desc   Log out user (server must clear the cookie)
  * @route  GET /api/auth/logout
- * @access Protected
+ * @access Public (no authentication required)
  */
-export const logout: Controller<AuthenticatedRequest> = async (
+export const logout: Controller = async (
   req,
   res,
   next
 ) => {
   try {
-    // Clear the JWT token cookie
+    // Clear the JWT token cookie (regardless of authentication status)
     clearAuthCookie(res);
 
     res.json({
