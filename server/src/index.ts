@@ -84,7 +84,14 @@ declare global {
       PORT: string;
       DB_URI: string;
       JWT_SECRET: string;
-      NODE_ENV: 'development' | 'production' | 'test';
+      NODE_ENV: "development" | "production" | "test";
+      GOOGLE_CLIENT_ID: string;
+      GOOGLE_CLIENT_SECRET: string;
+      GOOGLE_REDIRECT_URI?: string;
+      NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: string;
+      NEXT_PUBLIC_CLOUDINARY_API_KEY: string;
+      CLOUDINARY_API_SECRET: string;
+      NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET: string;
       // Add other env variables used in the project
     }
   }
@@ -100,7 +107,7 @@ const startServer = async () => {
 
     app.listen(port, () => {
       console.log(`✅ Server running at http://localhost:${port}`);
-      console.log('✅ CORS enabled for origins:', allowedOrigins);
+      console.log("✅ CORS enabled for origins:", allowedOrigins);
     });
   } catch (error) {
     console.error("❌ Failed to start server:", error);

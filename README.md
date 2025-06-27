@@ -327,14 +327,13 @@ pet-breath-counter-typescript/
 - [x] Code controllers
 - [x] Test controllers
 - [x] Implement Cloudinary
-- [x] Configure CI pipeline
+- [x] Configure CI/CD pipeline
 - [x] Create context & reducers
 - [x] Set up axios config file in src/lib/ for api calls
 - [x] Create functions for api calls (user, dog, breathing log)
 - [x] Set up React Routing
 - [x] Set up layout
-- [ ] Implement FE functionality
-- [ ] Configure CD pipeline
+- [x] Implement auth in FE
 - [ ] Integration tests (Cypress)
 
 ## Author

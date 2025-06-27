@@ -163,14 +163,6 @@ export default function AuthForm({
           </p>
         </div>
 
-        {isSubmitting || userState.isLoading ? (
-          <span className="flex items-center justify-center">
-            <LoadingSpinner />
-          </span>
-        ) : (
-          <></>
-        )}
-
         {/* Google login button */}
         <button
           type="button"
