@@ -1,10 +1,26 @@
+/**
+ * @file NavItems.tsx
+ * @description Navigation items for desktop and mobile for both authenticated and unauthenticated users
+ */
+
 import { PiDogBold } from "react-icons/pi";
 import { MdOutlineSettings } from "react-icons/md";
 import { FiHome } from "react-icons/fi";
 import { PiSignInBold } from "react-icons/pi";
 import { TbLogout2 } from "react-icons/tb";
 
-export const navItems = [
+// Navigation items for unauthenticated users
+export const publicNavItems = [
+  { href: "/", label: "Home", icon: <FiHome className="w-7 h-7" /> },
+  {
+    href: "/auth",
+    label: "Sign In",
+    icon: <PiSignInBold className="w-7 h-7" />,
+  },
+];
+
+// Navigation items for authenticated users
+export const privateNavItems = [
   { href: "/", label: "Home", icon: <FiHome className="w-7 h-7" /> },
   {
     href: "/my-dogs",
@@ -17,18 +33,16 @@ export const navItems = [
     icon: <MdOutlineSettings className="w-7 h-7" />,
   },
   {
-    href: "/login",
-    label: "Login",
-    icon: <PiSignInBold className="w-7 h-7" />,
-  },
-  {
-    href: "/register",
-    label: "Register",
-    icon: <PiSignInBold className="w-7 h-7" />,
-  },
-  {
     href: "/logout",
-    label: "Logout",
+    label: "Sign Out",
     icon: <TbLogout2 className="w-7 h-7" />,
   },
 ];
+
+// Legacy export for backward compatibility
+export const navItems = publicNavItems;
+
+// Helper function to get navigation items based on auth status
+export const getNavItems = (isAuthenticated: boolean) => {
+  return isAuthenticated ? privateNavItems : publicNavItems;
+};
