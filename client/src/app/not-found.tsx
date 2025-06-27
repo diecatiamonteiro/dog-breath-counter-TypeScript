@@ -8,11 +8,11 @@ export default function NotFound() {
           Uh-oh... 
         </h2>
         <h2 className="text-2xl font-bold text-foreground mb-4">
-    Something's Offbeat!
+        Something’s Offbeat…
         </h2>
         <p className="text-foreground/70 mb-8">
-          This page could not be found. But don't worry, your pup's data is
-          still in rhythm.
+        This page could not be found. But don’t worry, your pup’s data is still in rhythm.
+
         </p>
         <Link
           href="/"
