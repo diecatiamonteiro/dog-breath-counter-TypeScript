@@ -27,6 +27,8 @@ export const PasswordRequirements = ({ password }: { password: string }) => {
     },
   ];
 
+  if (!password) return null;
+
   return (
     <div className="mt-2">
       <p className="text-xs font-medium text-foreground/70 mb-2">

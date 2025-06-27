@@ -17,6 +17,7 @@ import { PasswordRequirements } from "./PasswordRequirements";
 import LoadingSpinner from "@/app/loading";
 import { useGoogleLogin } from "@react-oauth/google";
 import { validateForm, loginWithEmail, loginWithGoogle } from "./util";
+import ShowHidePassword from "./showHidePassword";
 
 // Type alias to restrict values to 2 possible strings and control mode on the form
 type AuthMode = "login" | "register";
@@ -46,6 +47,7 @@ export default function AuthForm({
     password: "",
     confirmPassword: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
 
   // Form validation state
   const [errors, setErrors] = useState<Record<string, string>>({}); // errors for form fields key, value (eg, email: "Invalid email")
@@ -277,19 +279,25 @@ export default function AuthForm({
             >
               Password
             </label>
+            <div className="relative">
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               id={`password-${mode}-${uniqueId}`}
               name="password"
               value={formData.password}
               onChange={handleInputChange}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-navbar-items-bg placeholder-foreground/50 transition-colors ${
+              className={`relative w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-navbar-items-bg placeholder-foreground/50 transition-colors ${
                 errors.password
                   ? "border-accent"
                   : "border-primary/30 focus:border-primary"
               }`}
               placeholder="••••••••"
             />
+            <ShowHidePassword
+              show={showPassword}
+              onToggle={() => setShowPassword(!showPassword)}
+            />
+            </div>
             {errors.password && (
               <p className="mt-1 text-sm text-accent">{errors.password}</p>
             )}
@@ -309,19 +317,25 @@ export default function AuthForm({
               >
                 Confirm Password
               </label>
+              <div className="relative">
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 id={`confirmPassword-${mode}-${uniqueId}`}
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleInputChange}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-navbar-items-bg placeholder-foreground/50 transition-colors ${
+                className={`relativew-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-navbar-items-bg placeholder-foreground/50 transition-colors ${
                   errors.confirmPassword
                     ? "border-accent"
                     : "border-primary/30 focus:border-primary"
                 }`}
                 placeholder="••••••••"
               />
+              <ShowHidePassword
+                show={showPassword}
+                onToggle={() => setShowPassword(!showPassword)}
+              />
+              </div>
               {errors.confirmPassword && (
                 <p className="mt-1 text-sm text-accent">
                   {errors.confirmPassword}
