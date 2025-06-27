@@ -286,7 +286,7 @@ export default function AuthForm({
               name="password"
               value={formData.password}
               onChange={handleInputChange}
-              className={`relative w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-navbar-items-bg placeholder-foreground/50 transition-colors ${
+              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-navbar-items-bg placeholder-foreground/50 transition-colors ${
                 errors.password
                   ? "border-accent"
                   : "border-primary/30 focus:border-primary"
@@ -324,7 +324,7 @@ export default function AuthForm({
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleInputChange}
-                className={`relativew-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-navbar-items-bg placeholder-foreground/50 transition-colors ${
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-navbar-items-bg placeholder-foreground/50 transition-colors ${
                   errors.confirmPassword
                     ? "border-accent"
                     : "border-primary/30 focus:border-primary"
