@@ -4,11 +4,19 @@
  *              It takes server error responses and converts them into user-friendly error messages
  */
 
-export const handleAuthError = (error: any): string => {
+interface AxiosError {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+}
+
+export const handleAuthError = (error: unknown): string => {
   let errorMsg = "An error occurred. Please try again.";
 
   if (error && typeof error === "object" && "response" in error) {
-    const axiosError = error as any;
+    const axiosError = error as AxiosError;
     const serverMessage = axiosError.response?.data?.message;
 
     if (serverMessage) {

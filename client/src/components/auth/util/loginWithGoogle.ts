@@ -8,12 +8,14 @@ import { googleLoginUser } from "@/api/userApi";
 import { GoogleLoginUserData } from "@/types/UserTypes";
 import { Dispatch } from "react";
 import { handleAuthError } from "./errorHandler";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { UserAction } from "@/reducers/userReducer";
 
 interface LoginWithGoogleParams {
   tokenResponse: { access_token: string };
-  userDispatch: Dispatch<any>;
+  userDispatch: Dispatch<UserAction>;
   onSuccess?: () => void;
-  router: any;
+  router: AppRouterInstance;
 }
 
 export const loginWithGoogle = async ({

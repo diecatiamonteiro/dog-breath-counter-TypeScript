@@ -26,7 +26,7 @@ export default function NavigationDesktop() {
     try {
       await logoutUser(userDispatch);
       router.push("/");
-    } catch (error) {
+    } catch {
       toast.error("Failed to log out");
     }
   };

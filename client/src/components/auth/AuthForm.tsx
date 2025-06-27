@@ -11,7 +11,7 @@
 
 import { useAppContext } from "@/context/Context";
 import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState, useId } from "react";
+import { useEffect, useState, useId } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { PasswordRequirements } from "./PasswordRequirements";
 import LoadingSpinner from "@/app/loading";
@@ -25,14 +25,12 @@ type AuthMode = "login" | "register";
 interface AuthFormProps {
   defaultMode?: AuthMode;
   onSuccess?: () => void;
-  className?: string;
 }
 
 export default function AuthForm({
   // Destructured function parameter with default values
   defaultMode = "login",
   onSuccess, // undefined if not passed
-  className = "",
 }: AuthFormProps) {
   const router = useRouter();
   const { userState, userDispatch } = useAppContext();
@@ -110,7 +108,7 @@ export default function AuthForm({
       if (!result.success && result.error) {
         setErrorMessage(result.error);
       }
-    } catch (error) {
+    } catch {
       setErrorMessage("An unexpected error occurred. Please try again.");
     } finally {
       setIsSubmitting(false);
@@ -133,14 +131,13 @@ export default function AuthForm({
         if (!result.success && result.error) {
           setErrorMessage(result.error);
         }
-      } catch (error) {
+      } catch {
         setErrorMessage("Google authentication failed. Please try again.");
       } finally {
         setIsSubmitting(false);
       }
     },
-    onError: (error) => {
-      console.error("Google OAuth error:", error);
+    onError: () => {
       setErrorMessage("Google authentication failed. Please try again.");
       setIsSubmitting(false);
     },

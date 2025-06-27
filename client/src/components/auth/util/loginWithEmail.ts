@@ -8,6 +8,8 @@ import { loginUser, registerUser } from "@/api/userApi";
 import { LoginUserData, RegisterUserData } from "@/types/UserTypes";
 import { Dispatch } from "react";
 import { handleAuthError } from "./errorHandler";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { UserAction } from "@/reducers/userReducer";
 
 type AuthMode = "login" | "register";
 
@@ -22,9 +24,9 @@ interface FormData {
 interface LoginWithEmailParams {
   mode: AuthMode;
   formData: FormData;
-  userDispatch: Dispatch<any>;
+  userDispatch: Dispatch<UserAction>;
   onSuccess?: () => void;
-  router: any;
+  router: AppRouterInstance;
 }
 
 export const loginWithEmail = async ({
