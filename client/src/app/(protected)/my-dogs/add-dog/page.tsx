@@ -19,7 +19,7 @@ export default function AddDogPage() {
 
   // Context state
   const { dogState, dogDispatch } = useAppContext();
-  const { isLoading, error, selectedDog } = dogState;
+  const { isLoading } = dogState;
 
   // Form state
   const [formData, setFormData] = useState({
@@ -147,7 +147,7 @@ export default function AddDogPage() {
 
       await addDog(dogDispatch, dogData);
       router.push("/my-dogs");
-    } catch (error) {
+    } catch {
       setServerErrors("Failed to create dog. Please try again.");
     } finally {
       setIsSubmitting(false);
