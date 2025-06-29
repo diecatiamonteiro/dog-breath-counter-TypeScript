@@ -43,7 +43,7 @@ const DogSchema = new Schema<IDog>(
       validate: {
         validator: function (value: number) {
           const currentYear = new Date().getFullYear();
-          return !value || (value >= 1990 && value <= currentYear);
+          return !value || (value >= 2000 && value <= currentYear);
         },
         message: "Invalid birth year",
       },
