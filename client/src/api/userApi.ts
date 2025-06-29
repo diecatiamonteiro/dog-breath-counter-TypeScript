@@ -43,15 +43,15 @@ export const registerUser = async (
   dispatch({ type: USER_ACTIONS.SET_ERROR, payload: null }); // clears prev errors
 
   try {
-    const res = await axios.post<{ user: User }>(
+    const res = await axios.post<{ message: string; data: { user: User } }>(
       "/api/auth/register",
       userData
     );
     dispatch({
       type: USER_ACTIONS.REGISTER_SUCCESS,
-      payload: { data: { user: res.data.user } },
+      payload: { data: { user: res.data.data.user } },
     });
-    return res.data.user;
+    return res.data.data.user;
   } catch (error) {
     const errorMessage = isAxiosError(error)
       ? getErrorMessage(error)
@@ -80,12 +80,12 @@ export const loginUser = async (
   dispatch({ type: USER_ACTIONS.SET_ERROR, payload: null }); // clears prev errors
 
   try {
-    const res = await axios.post<{ user: User }>("/api/auth/login", userData);
+    const res = await axios.post<{ message: string; data: { user: User } }>("/api/auth/login", userData);
     dispatch({
       type: USER_ACTIONS.LOGIN_SUCCESS,
-      payload: { data: { user: res.data.user } },
+      payload: { data: { user: res.data.data.user } },
     });
-    return res.data.user;
+    return res.data.data.user;
   } catch (error) {
     const errorMessage = isAxiosError(error)
       ? getErrorMessage(error)
@@ -114,15 +114,15 @@ export const googleLoginUser = async (
   dispatch({ type: USER_ACTIONS.SET_ERROR, payload: null }); // clears prev errors
 
   try {
-    const res = await axios.post<{ user: User }>(
+    const res = await axios.post<{ message: string; data: { user: User } }>(
       "/api/auth/login/google",
       userData
     );
     dispatch({
       type: USER_ACTIONS.LOGIN_SUCCESS,
-      payload: { data: { user: res.data.user } },
+      payload: { data: { user: res.data.data.user } },
     });
-    return res.data.user;
+    return res.data.data.user;
   } catch (error) {
     const errorMessage = isAxiosError(error)
       ? getErrorMessage(error)
@@ -180,17 +180,18 @@ export const getUserProfile = async (
 
   try {
     const res = await axios.get<{
-      user: User & { dogs: Dog[]; breathingLogs: BreathingLog[] };
+      message: string;
+      data: { user: User & { dogs: Dog[]; breathingLogs: BreathingLog[] } };
     }>("/api/user/me");
     dispatch({
       type: USER_ACTIONS.GET_USER_DATA,
       payload: {
         data: {
-          user: res.data.user, // user object includes dogs & breathing logs
+          user: res.data.data.user, // Fix: access nested data structure
         },
       },
     });
-    return res.data.user;
+    return res.data.data.user;
   } catch (error) {
     const errorMessage = isAxiosError(error)
       ? getErrorMessage(error)
@@ -255,16 +256,16 @@ export const deleteUserAccount = async (
   dispatch({ type: USER_ACTIONS.SET_ERROR, payload: null }); // clears prev errors
 
   try {
-    const res = await axios.delete<{ deletedUserId: string }>("/api/user/me");
+    const res = await axios.delete<{ message: string; data: { deletedUserId: string } }>("/api/user/me");
     dispatch({
       type: USER_ACTIONS.DELETE_USER,
       payload: {
         data: {
-          deletedUserId: res.data.deletedUserId,
+          deletedUserId: res.data.data.deletedUserId,
         },
       },
     });
-    return res.data.deletedUserId;
+    return res.data.data.deletedUserId;
   } catch (error) {
     const errorMessage = isAxiosError(error)
       ? getErrorMessage(error)

@@ -12,7 +12,6 @@ import { getNavItems } from "../NavItems";
 import { useAppContext } from "@/context/Context";
 import { logoutUser } from "@/api/userApi";
 import { toast } from "react-toastify";
-import LoadingSpinner from "@/app/loading";
 
 export default function NavigationDesktop() {
   const pathname = usePathname();
@@ -20,7 +19,8 @@ export default function NavigationDesktop() {
   const { userState, userDispatch } = useAppContext();
 
   // Get navigation items based on authentication status
-  const navItems = getNavItems(userState.isAuthenticated);
+  // Show authenticated navigation by default to avoid showing only Home & Sign In during refresh
+  const navItems = getNavItems(true);
 
   const handleLogout = async () => {
     try {
@@ -59,16 +59,6 @@ export default function NavigationDesktop() {
           </Link>
         </div>
 
-        {/* User Info (if authenticated) */}
-        {userState.isAuthenticated && userState.user && (
-          <div className="mb-6 px-4 py-3 bg-primary/10 rounded-lg">
-            <p className="text-sm font-medium text-foreground">Welcome back,</p>
-            <p className="text-sm text-foreground/70">
-              {userState.user.firstName} {userState.user.lastName}
-            </p>
-          </div>
-        )}
-
         {/* Navigation Items */}
         <div className="flex flex-col space-y-2 flex-1">
           {navItems.map((item) => {
@@ -84,14 +74,16 @@ export default function NavigationDesktop() {
                   className="group flex flex-row gap-2 w-full"
                 >
                   {/* Icon */}
-                  <div className={`
+                  <div
+                    className={`
                     flex items-center justify-center px-4 py-3 rounded-lg transition-all duration-200
                     ${
                       isActive
                         ? "bg-navbar-icons text-white shadow-md"
                         : "text-primary bg-primary/10 group-hover:bg-primary/50 group-hover:text-foreground"
                     }
-                  `}>
+                  `}
+                  >
                     {item.icon}
                   </div>
 
@@ -99,7 +91,7 @@ export default function NavigationDesktop() {
                   <div className="flex items-center px-4 py-3 rounded-lg transition-all duration-200 font-medium w-full text-foreground bg-transparent group-hover:bg-primary/20 group-hover:text-foreground">
                     {userState.isLoading ? (
                       <div className="flex items-center gap-2">
-                        <LoadingSpinner className="w-7 h-7" />
+                        <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
                         Signing out...
                       </div>
                     ) : (

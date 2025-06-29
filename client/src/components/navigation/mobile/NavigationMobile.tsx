@@ -12,7 +12,6 @@ import { getNavItems } from "../NavItems";
 import { useAppContext } from "@/context/Context";
 import { logoutUser } from "@/api/userApi";
 import { toast } from "react-toastify";
-import LoadingSpinner from "@/app/loading";
 
 export default function NavigationMobile() {
   const pathname = usePathname();
@@ -20,7 +19,8 @@ export default function NavigationMobile() {
   const { userState, userDispatch } = useAppContext();
 
   // Get navigation items based on authentication status
-  const navItems = getNavItems(userState.isAuthenticated);
+  // Show authenticated navigation by default to avoid showing only Home & Sign In during refresh
+  const navItems = getNavItems(true);
 
   const handleLogout = async () => {
     try {
@@ -85,7 +85,7 @@ export default function NavigationMobile() {
                   <span className="text-xs text-center font-bold transition-all duration-200 text-foreground/60">
                     {userState.isLoading ? (
                       <div className="flex items-center gap-2">
-                        <LoadingSpinner className="w-7 h-7" />
+                        <div className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
                         Signing out...
                       </div>
                     ) : (

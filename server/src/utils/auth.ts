@@ -27,7 +27,7 @@ export const setAuthCookie = (user: IUser, res: Response): void => {
     sameSite: isProduction ? "none" : "lax", // "none" for production (cross-domain), "lax" for development
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     path: "/", // Ensure cookie is available for all paths
-    domain: isProduction ? ".vercel.app" : undefined, // Set domain in production
+    domain: isProduction ? ".vercel.app" : "localhost", // Set domain explicitly for development
   });
 };
 
@@ -44,6 +44,6 @@ export const clearAuthCookie = (res: Response): void => {
     sameSite: isProduction ? "none" : "lax",
     maxAge: 0, // Expire immediately
     path: "/",
-    domain: isProduction ? ".vercel.app" : undefined,
+    domain: isProduction ? ".vercel.app" : "localhost", // Set domain explicitly for development
   });
 };
