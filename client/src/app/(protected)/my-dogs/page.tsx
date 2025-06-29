@@ -10,13 +10,27 @@ import { MdAddCircleOutline } from "react-icons/md";
 import { RiArrowRightSLine, RiDeleteBin7Line } from "react-icons/ri";
 
 export default function MyDogsPage() {
-  const { dogState, dogDispatch } = useAppContext();
+  const { dogState, dogDispatch, userState, authLoading } = useAppContext();
   const { isLoading, error, dogs } = dogState;
 
-  // Load dogs on first mount only
+  // Load dogs only when user is authenticated and auth check is complete
   useEffect(() => {
-    getAllDogs(dogDispatch);
-  }, [dogDispatch]);
+    if (!authLoading && userState.isAuthenticated) {
+      getAllDogs(dogDispatch);
+    }
+  }, [dogDispatch, authLoading, userState.isAuthenticated]);
+
+  // Show loading while authentication is being checked
+  if (authLoading) {
+    return (
+      <div className="max-w-5xl p-4">
+        <div className="bg-navbar-bg/70 rounded-lg shadow-lg border border-primary/20 p-8 text-left">
+          <h2 className="text-xl font-semibold mb-4">Loading your dogs...</h2>
+          <LoadingSpinner />
+        </div>
+      </div>
+    );
+  }
 
   if (error) {
     return (
@@ -145,7 +159,7 @@ export default function MyDogsPage() {
             <div className="col-span-full text-left py-12">
               <h2 className="text-xl font-semibold mb-4">No dogs found</h2>
               <p className="text-foreground/70 mb-6">
-                You haven’t added any dogs yet. Start by adding your first dog!
+                You haven't added any dogs yet. Start by adding your first dog!
               </p>
             </div>
           )}

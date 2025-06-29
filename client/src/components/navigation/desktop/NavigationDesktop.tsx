@@ -16,11 +16,11 @@ import { toast } from "react-toastify";
 export default function NavigationDesktop() {
   const pathname = usePathname();
   const router = useRouter();
-  const { userState, userDispatch } = useAppContext();
+  const { userState, userDispatch, authLoading } = useAppContext();
 
   // Get navigation items based on authentication status
-  // Show authenticated navigation by default to avoid showing only Home & Sign In during refresh
-  const navItems = getNavItems(true);
+  // Show authenticated navigation during initial load, then use actual state
+  const navItems = getNavItems(authLoading ? true : userState.isAuthenticated);
 
   const handleLogout = async () => {
     try {
