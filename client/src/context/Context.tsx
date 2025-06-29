@@ -47,7 +47,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
       
       try {
         await getUserProfile(userDispatch);
-      } catch (error) {
+      } catch {
         // User is not authenticated, which is fine
         console.log("Authentication check failed - user not logged in");
       } finally {
