@@ -19,15 +19,18 @@ export const setAuthCookie = (user: IUser, res: Response): void => {
     { expiresIn: "7d" }
   );
 
+  // Professional approach: Use NODE_ENV=production for deployment
+  // Alternative: Use process.env.DEPLOYMENT_ENV if you need custom deployment detection
   const isProduction = process.env.NODE_ENV === "production";
-  
+
   res.cookie("jwtToken", token, {
     httpOnly: true, // Prevents JavaScript access (XSS protection)
     secure: isProduction, // HTTPS only in production
     sameSite: isProduction ? "none" : "lax", // "none" for production (cross-domain), "lax" for development
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     path: "/", // Ensure cookie is available for all paths
-    domain: isProduction ? ".vercel.app" : "localhost", // Set domain explicitly for development
+    // Remove domain restriction for cross-domain deployments, only set domain for local development
+    ...(isProduction ? {} : { domain: "localhost" }),
   });
 };
 
@@ -44,6 +47,7 @@ export const clearAuthCookie = (res: Response): void => {
     sameSite: isProduction ? "none" : "lax",
     maxAge: 0, // Expire immediately
     path: "/",
-    domain: isProduction ? ".vercel.app" : "localhost", // Set domain explicitly for development
+    // Remove domain restriction for cross-domain deployments, only set domain for local development
+    ...(isProduction ? {} : { domain: "localhost" }),
   });
 };
