@@ -7,7 +7,8 @@
 import axios from "axios";
 
 export const setAxiosDefaults = () => {
-  axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_URL; // in development uses url from .env.local; in production from .env
+  // axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_URL; // in development uses url from .env.local; in production from .env
+  axios.defaults.baseURL = ""; // use relative paths
   axios.defaults.withCredentials = true;
   axios.defaults.headers.common["Content-Type"] = "application/json";
 };
