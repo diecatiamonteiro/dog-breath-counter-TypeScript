@@ -61,7 +61,7 @@ export default function NavigationMobile() {
       </div>
 
       {/* Bottom Tab Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 bg-navbar-items-bg border-t border-primary/20 z-50 lg:hidden">
+      <div className="fixed bottom-0 left-0 right-0 bg-main-text-bg border-t border-primary/20 z-50 lg:hidden">
         {/* Navigation Tabs */}
         <nav className="flex items-center justify-center px-2 py-2">
           {navItems.map((item) => {

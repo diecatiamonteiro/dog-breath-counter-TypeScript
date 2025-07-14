@@ -12,6 +12,7 @@ import { getNavItems } from "../NavItems";
 import { useAppContext } from "@/context/Context";
 import { logoutUser } from "@/api/userApi";
 import { toast } from "react-toastify";
+import LoadingSpinner from "@/app/loading";
 
 export default function NavigationDesktop() {
   const pathname = usePathname();
@@ -32,7 +33,7 @@ export default function NavigationDesktop() {
   };
 
   return (
-    <div className="h-screen w-64 md:w-72 lg:w-80 xl:w-96 bg-navbar-bg flex-shrink-0 border-r border-primary/20">
+    <div className="h-screen w-64 md:w-72 lg:w-76 bg-navbar-bg flex-shrink-0 border-r border-primary/20">
       <nav className="h-full flex flex-col py-6 px-4">
         {/* Logo Section */}
         <div className="mb-12 px-2">
@@ -80,7 +81,7 @@ export default function NavigationDesktop() {
                     ${
                       isActive
                         ? "bg-navbar-icons text-white shadow-md"
-                        : "text-primary bg-primary/10 group-hover:bg-primary/50 group-hover:text-foreground"
+                        : "text-primary bg-primary/20 group-hover:bg-primary/50 group-hover:text-foreground"
                     }
                   `}
                   >
@@ -91,7 +92,7 @@ export default function NavigationDesktop() {
                   <div className="flex items-center px-4 py-3 rounded-lg transition-all duration-200 font-medium w-full text-foreground bg-transparent group-hover:bg-primary/20 group-hover:text-foreground">
                     {userState.isLoading ? (
                       <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
+                        <LoadingSpinner size="sm" color="white" />
                         Signing out...
                       </div>
                     ) : (
@@ -115,7 +116,7 @@ export default function NavigationDesktop() {
                     ${
                       isActive
                         ? "bg-navbar-icons text-white shadow-md"
-                        : "text-primary bg-primary/10 group-hover:bg-primary/50 group-hover:text-foreground"
+                        : "text-primary bg-primary/20 group-hover:bg-primary/50 group-hover:text-foreground"
                     }
                   `}
                 >

@@ -151,8 +151,8 @@ export default function AuthForm({
   };
 
   return (
-    <div className="max-w-lg mx-auto">
-      <div className="bg-navbar-bg/70 rounded-lg shadow-lg border border-primary/20 p-8">
+    <div className="max-w-lg">
+      <div className="bg-navbar-bg rounded-lg shadow-lg border border-primary/20 p-8">
         {/* Header */}
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-foreground mb-2">
@@ -170,7 +170,7 @@ export default function AuthForm({
           type="button"
           onClick={() => handleGoogleLogin()}
           disabled={isSubmitting || userState.isLoading}
-          className="w-full flex items-center justify-center gap-3 bg-navbar-items-bg border border-primary/30 rounded-lg px-4 py-3 font-medium hover:bg-primary/50 focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed mb-6 transition-colors transition-duration-300"
+          className="w-full flex items-center justify-center gap-3 bg-main-text-bg border border-primary/30 rounded-lg px-4 py-3 font-medium hover:bg-primary/50 focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed mb-6 transition-colors transition-duration-300"
         >
           <FcGoogle className="w-5 h-5" />
           Continue with Google
@@ -206,7 +206,7 @@ export default function AuthForm({
                   name="firstName"
                   value={formData.firstName}
                   onChange={handleInputChange}
-                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-navbar-items-bg placeholder-foreground/50 transition-colors ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-main-text-bg placeholder-foreground/50 transition-colors ${
                     errors.firstName
                       ? "border-accent"
                       : "border-primary/30 focus:border-primary"
@@ -231,7 +231,7 @@ export default function AuthForm({
                   name="lastName"
                   value={formData.lastName}
                   onChange={handleInputChange}
-                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-navbar-items-bg placeholder-foreground/50 transition-colors ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-main-text-bg placeholder-foreground/50 transition-colors ${
                     errors.lastName
                       ? "border-accent"
                       : "border-primary/30 focus:border-primary"
@@ -259,7 +259,7 @@ export default function AuthForm({
               name="email"
               value={formData.email}
               onChange={handleInputChange}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-navbar-items-bg placeholder-foreground/50 transition-colors ${
+              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-main-text-bg placeholder-foreground/50 transition-colors ${
                 errors.email
                   ? "border-accent"
                   : "border-primary/30 focus:border-primary"
@@ -286,7 +286,7 @@ export default function AuthForm({
               name="password"
               value={formData.password}
               onChange={handleInputChange}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-navbar-items-bg placeholder-foreground/50 transition-colors ${
+              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-main-text-bg placeholder-foreground/50 transition-colors ${
                 errors.password
                   ? "border-accent"
                   : "border-primary/30 focus:border-primary"
@@ -324,7 +324,7 @@ export default function AuthForm({
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleInputChange}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-navbar-items-bg placeholder-foreground/50 transition-colors ${
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-main-text-bg placeholder-foreground/50 transition-colors ${
                   errors.confirmPassword
                     ? "border-accent"
                     : "border-primary/30 focus:border-primary"

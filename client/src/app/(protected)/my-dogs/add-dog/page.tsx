@@ -13,6 +13,7 @@ import { addDog } from "@/api/dogApi";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { RiArrowLeftSLine } from "react-icons/ri";
+import Button from "@/components/Button";
 
 export default function AddDogPage() {
   const router = useRouter();
@@ -155,16 +156,18 @@ export default function AddDogPage() {
   };
 
   return (
-    <div className="max-w-5xl p-4">
-      <div className="bg-navbar-bg/70 rounded-lg shadow-lg border border-primary/20 p-8">
-        <Link href={"/my-dogs"}>
-          <span className="w-fit flex items-center mb-12 pl-2 pr-4 py-2 bg-primary/10 text-primary rounded-lg hover:bg-primary hover:text-white transition-all duration-200 text-sm font-medium shadow-md">
-            <RiArrowLeftSLine className="w-6 h-6" />
-            Back to My Dogs
-          </span>
-        </Link>
+    <div className="max-w-5xl">
+      <div>
+        <Button
+          href="/my-dogs"
+          variant="ghost"
+          icon={<RiArrowLeftSLine className="w-7 h-7" />}
+          className="mb-4 lg:mb-16"
+        >
+          My Dogs
+        </Button>
 
-        <h1 className="text-2xl font-bold mb-6">Add New Dog</h1>
+        <h1 className="text-2xl font-bold mb-8 lg:mb-16">Add New Dog</h1>
 
         {serverErrors && (
           <div className="mb-4 p-3 bg-accent/20 border border-accent rounded-lg">
@@ -189,8 +192,8 @@ export default function AddDogPage() {
                 name="dogName"
                 value={formData.dogName}
                 onChange={handleInputChange}
-                placeholder="Enter dog's name"
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-navbar-items-bg placeholder-foreground/50 transition-colors ${
+                placeholder="e.g.,April"
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-main-text-bg placeholder-foreground/50 transition-colors ${
                   formErrors.dogName
                     ? "border-accent"
                     : "border-primary/30 focus:border-primary"
@@ -207,7 +210,7 @@ export default function AddDogPage() {
                 htmlFor="maxBreathingRate"
                 className="block text-sm font-medium mb-1"
               >
-                Max Breathing Rate *
+                Max Breaths Per Minute *
               </label>
               <input
                 type="number"
@@ -218,7 +221,7 @@ export default function AddDogPage() {
                 placeholder="30"
                 min="1"
                 max="60"
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-navbar-items-bg placeholder-foreground/50 transition-colors ${
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-main-text-bg placeholder-foreground/50 transition-colors ${
                   formErrors.maxBreathingRate
                     ? "border-accent"
                     : "border-primary/30 focus:border-primary"
@@ -251,7 +254,7 @@ export default function AddDogPage() {
                 placeholder="e.g., 2020"
                 min="2000"
                 max={new Date().getFullYear()}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-navbar-items-bg placeholder-foreground/50 transition-colors ${
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-main-text-bg placeholder-foreground/50 transition-colors ${
                   formErrors.birthYear
                     ? "border-accent"
                     : "border-primary/30 focus:border-primary"
@@ -276,7 +279,7 @@ export default function AddDogPage() {
                 value={formData.breed}
                 onChange={handleInputChange}
                 placeholder="e.g., Golden Retriever"
-                className="w-full px-3 py-2 border border-primary/30 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-navbar-items-bg placeholder-foreground/50 transition-colors"
+                className="w-full px-3 py-2 border border-primary/30 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-main-text-bg placeholder-foreground/50 transition-colors"
               />
             </div>
 
@@ -293,7 +296,7 @@ export default function AddDogPage() {
                 name="gender"
                 value={formData.gender}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-primary/30 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-navbar-items-bg transition-colors"
+                className="w-full px-3 py-2 border border-primary/30 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-main-text-bg transition-colors"
               >
                 <option value="">Select gender</option>
                 <option value="male">Male</option>
@@ -303,7 +306,7 @@ export default function AddDogPage() {
           </div>
 
           {/* Veterinarian Section */}
-          <div className="border-t border-primary/20 pt-6">
+          <div className="border-t border-primary/20 my-12 pt-10">
             <h3 className="text-lg font-medium mb-4">
               Veterinarian Information (Optional)
             </h3>
@@ -323,8 +326,8 @@ export default function AddDogPage() {
                   name="vetName"
                   value={formData.veterinarian.vetName}
                   onChange={handleVetInputChange}
-                  placeholder="Dr. Smith"
-                  className="w-full px-3 py-2 border border-primary/30 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-navbar-items-bg placeholder-foreground/50 transition-colors"
+                  placeholder="e.g., Dr. Smith"
+                  className="w-full px-3 py-2 border border-primary/30 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-main-text-bg placeholder-foreground/50 transition-colors"
                 />
               </div>
 
@@ -342,8 +345,8 @@ export default function AddDogPage() {
                   name="vetClinicName"
                   value={formData.veterinarian.vetClinicName}
                   onChange={handleVetInputChange}
-                  placeholder="Animal Care Clinic"
-                  className="w-full px-3 py-2 border border-primary/30 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-navbar-items-bg placeholder-foreground/50 transition-colors"
+                  placeholder="e.g., Animal Care Clinic"
+                  className="w-full px-3 py-2 border border-primary/30 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-main-text-bg placeholder-foreground/50 transition-colors"
                 />
               </div>
 
@@ -362,7 +365,7 @@ export default function AddDogPage() {
                   value={formData.veterinarian.vetPhoneNumber}
                   onChange={handleVetInputChange}
                   placeholder="Enter vet's phone number"
-                  className="w-full px-3 py-2 border border-primary/30 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-navbar-items-bg placeholder-foreground/50 transition-colors"
+                  className="w-full px-3 py-2 border border-primary/30 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-main-text-bg placeholder-foreground/50 transition-colors"
                 />
               </div>
 
@@ -380,8 +383,8 @@ export default function AddDogPage() {
                   name="vetEmail"
                   value={formData.veterinarian.vetEmail}
                   onChange={handleVetInputChange}
-                  placeholder="vet@clinic.com"
-                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-navbar-items-bg placeholder-foreground/50 transition-colors ${
+                  placeholder="e.g., vet@clinic.com"
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-main-text-bg placeholder-foreground/50 transition-colors ${
                     formErrors["veterinarian.vetEmail"]
                       ? "border-accent"
                       : "border-primary/30 focus:border-primary"
@@ -409,26 +412,24 @@ export default function AddDogPage() {
                   value={formData.veterinarian.vetAddress}
                   onChange={handleVetInputChange}
                   placeholder="Enter vet's address"
-                  className="w-full px-3 py-2 border border-primary/30 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-navbar-items-bg placeholder-foreground/50 transition-colors"
+                  className="w-full px-3 py-2 border border-primary/30 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-main-text-bg placeholder-foreground/50 transition-colors"
                 />
               </div>
             </div>
           </div>
 
           {/* Save Button */}
-          <button
+          <Button
             type="submit"
-            disabled={isSubmitting || isLoading}
-            className="w-full bg-primary text-white py-3 px-4 mt-8 rounded-lg font-medium hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            variant="primary"
+            size="lg"
+            fullWidth
+            loading={isSubmitting || isLoading}
+            loadingText="Saving..."
+            className="mt-8 mb-28 lg:mb-0"
           >
-            {isSubmitting || isLoading ? (
-              <span className="flex items-center justify-center gap-2">
-                <LoadingSpinner size="sm" color="white" /> Saving...
-              </span>
-            ) : (
-              "Save Dog"
-            )}
-          </button>
+            Save Dog
+          </Button>
         </form>
       </div>
     </div>

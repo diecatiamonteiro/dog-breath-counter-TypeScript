@@ -60,14 +60,14 @@ export default function RootLayout({
               <div className="hidden lg:flex h-screen">
                 <NavigationDesktop />
                 <div className="flex-1 overflow-auto">
-                  <Container className="py-8">{children}</Container>
+                  <Container>{children}</Container>
                 </div>
               </div>
 
               {/* Mobile Layout with Top Bar and Bottom Navigation */}
               <div className="block lg:hidden">
                 <NavigationMobile />
-                <Container className="pt-6 pb-32">{children}</Container>
+                <Container>{children}</Container>
               </div>
               
               {/* Toast Notifications */}

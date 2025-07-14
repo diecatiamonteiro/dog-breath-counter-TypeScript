@@ -3,9 +3,9 @@
 :root {
   --background: rgb(246, 244, 249); /* offwhite */
   --foreground: rgb(46, 46, 58); /* dark grey */
+  --main-text-bg: rgb(255, 255, 255); /* white */
 
-  --navbar-bg: rgb(216, 199, 233); /* light lavender */
-  --navbar-items-bg: rgb(255, 255, 255); /* white */
+  --navbar-bg: rgb(240, 226, 253); /* light lavender */
   --navbar-icons: rgb(140, 107, 177); /* dark lavender */
 
   --primary-light: rgb(216, 199, 233); /* light lavender */
@@ -22,7 +22,7 @@
   --color-foreground: var(--foreground);
 
   --color-navbar-bg: var(--navbar-bg);
-  --color-navbar-items-bg: var(--navbar-items-bg);
+  --color-main-text-bg: var(--main-text-bg);
   --color-navbar-icons: var(--navbar-icons);
   --color-accent: var(--accent);
   --color-primary-light: var(--primary-light);
@@ -33,15 +33,15 @@
 /* Override the root ones when device is on dark mode */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: rgb(45, 33, 61);
+    --background: rgb(29, 14, 46);
     --foreground: rgb(237, 237, 237);
+    --main-text-bg: rgb(37, 18, 59);
 
-    --navbar-bg: rgb(35, 25, 48);
-    --navbar-items-bg: rgb(14, 8, 20);
+    --navbar-bg: rgb(45, 26, 68);
     --navbar-icons: rgb(92, 54, 128);
 
     --primary-light: rgb(35, 25, 48);
-    --primary: rgb(140, 107, 177);
+    --primary: rgb(144, 102, 196);
     --primary-dark: rgb(92, 54, 128);
 
     --accent: rgb(239, 124, 142);

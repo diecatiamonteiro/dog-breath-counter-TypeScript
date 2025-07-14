@@ -16,7 +16,7 @@ module.exports = {
         foreground: "var(--foreground) / <alpha-value>)",
 
         navbarBg: "var(--navbar-bg) / <alpha-value>)",
-        navbarItemsBg: "var(--navbar-items-bg) / <alpha-value>)",
+        navbarItemsBg: "var(--main-text-bg) / <alpha-value>)",
         navbarIcons: "var(--navbar-icons) / <alpha-value>)",
 
         primaryLight: "var(--primary-light) / <alpha-value>)",
