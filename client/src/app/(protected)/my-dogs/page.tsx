@@ -96,7 +96,7 @@ export default function MyDogsPage() {
               .map((dog) => (
                 <div
                   key={dog.id}
-                  className="bg-main-text-bg rounded-lg p-4 sm:p-6 border border-primary/20 hover:border-primary/40 transition-colors"
+                  className="bg-main-text-bg rounded-lg p-4 sm:p-6 border border-primary/20 hover:border-primary/40 transition-colors last:mb-28 lg:mb-0"
                 >
                   <div className="flex flex-col gap-4 md:grid md:grid-cols-2 md:gap-6 md:items-center">
                     {/*  Image and Info */}
