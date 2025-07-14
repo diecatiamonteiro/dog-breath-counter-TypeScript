@@ -8,10 +8,8 @@
 import { useAppContext } from "@/context/Context";
 import { useEffect, useState } from "react";
 import { validateDogForm } from "./util/validateDogForm";
-import LoadingSpinner from "@/app/loading";
 import { addDog } from "@/api/dogApi";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { RiArrowLeftSLine } from "react-icons/ri";
 import Button from "@/components/Button";
 

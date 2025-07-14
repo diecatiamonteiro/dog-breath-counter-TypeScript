@@ -3,7 +3,6 @@
 import { deleteDog, getAllDogs } from "@/api/dogApi";
 import LoadingSpinner from "@/app/loading";
 import { useAppContext } from "@/context/Context";
-import Link from "next/link";
 import Image from "next/image";
 import { useEffect } from "react";
 import { MdAddCircleOutline } from "react-icons/md";
@@ -166,7 +165,7 @@ export default function MyDogsPage() {
             <div className="col-span-full text-left py-12">
               <h2 className="text-xl font-semibold mb-4">No dogs found</h2>
               <p className="text-foreground/70 mb-6">
-                You haven't added any dogs yet. Start by adding your first dog!
+                You haven`t added any dogs yet. Start by adding your first dog!
               </p>
             </div>
           )}
