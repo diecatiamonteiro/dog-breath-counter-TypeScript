@@ -47,7 +47,7 @@ describe("Breathing Log Controller", () => {
     // Setup mock request, response and next
     mockReq = {
       user: testUser,
-      params: { dogId: testDog._id.toString() },
+      params: { id: testDog._id.toString() },
     };
     mockRes = {
       json: vi.fn().mockReturnThis(),
@@ -140,7 +140,7 @@ describe("Breathing Log Controller", () => {
 
       mockReq = {
         user: testUser,
-        params: { dogId: dog._id.toString() },
+        params: { id: dog._id.toString() },
         query: { page: "1", limit: "2" },
       };
 
@@ -193,7 +193,7 @@ describe("Breathing Log Controller", () => {
       mockReq = {
         user: testUser,
         params: {
-          dogId: dog._id.toString(),
+          id: dog._id.toString(),
           logId: breathingLog._id.toString(),
         },
       };
@@ -221,7 +221,7 @@ describe("Breathing Log Controller", () => {
       mockReq = {
         user: testUser,
         params: {
-          dogId: new mongoose.Types.ObjectId().toString(),
+          id: new mongoose.Types.ObjectId().toString(),
           logId: new mongoose.Types.ObjectId().toString(),
         },
       };
@@ -263,7 +263,7 @@ describe("Breathing Log Controller", () => {
       mockReq = {
         user: testUser,
         params: {
-          dogId: dog._id.toString(),
+          id: dog._id.toString(),
           logId: breathingLog._id.toString(),
         },
       };
@@ -288,7 +288,7 @@ describe("Breathing Log Controller", () => {
       mockReq = {
         user: testUser,
         params: {
-          dogId: new mongoose.Types.ObjectId().toString(),
+          id: new mongoose.Types.ObjectId().toString(),
           logId: new mongoose.Types.ObjectId().toString(),
         },
       };
