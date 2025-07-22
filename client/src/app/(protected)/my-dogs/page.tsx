@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteDog, getAllDogs } from "@/api/dogApi";
+import { deleteDog, getAllDogs, getSelectedDog } from "@/api/dogApi";
 import LoadingSpinner from "@/app/loading";
 import { useAppContext } from "@/context/Context";
 import Image from "next/image";
@@ -73,6 +73,10 @@ export default function MyDogsPage() {
     }
   };
 
+  const handleViewDog = async (dogId: string) => {
+    await getSelectedDog(dogDispatch, dogId);
+  };
+
   return (
     <div className="max-w-5xl">
       <div className="">
@@ -117,15 +121,15 @@ export default function MyDogsPage() {
                       {/* Dog Info */}
                       <div className="flex-1 text-left">
                         <h3 className="text-lg sm:text-lg md:text-lg font-semibold text-foreground mb-1">
-                          {dog.name || "Unnamed Dog"}
+                          {dog.name.split(" ").map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ") || "Unnamed Dog"}
                         </h3>
 
                         <div className="space-y-0.5 text-sm sm:text-sm md:text-sm text-foreground/70">
                           {dog.age && <p>Age: {dog.age}</p>}
                           {dog.breed && <p>Breed: {dog.breed}</p>}
                           <p className="font-medium">
-                            Max Breaths/min:{" "}
-                            {dog.maxBreathingRate || "Not set"} bpm
+                            Max Breaths/min: {dog.maxBreathingRate || "Not set"}{" "}
+                            bpm
                           </p>
                         </div>
                       </div>
@@ -142,7 +146,7 @@ export default function MyDogsPage() {
                         }
                         iconPosition="right"
                         className="shadow-md text-sm md:text-sm flex-1 md:flex-none"
-                        onClick={(e) => e?.stopPropagation()} // Prevent card click
+                        onClick={() => handleViewDog(dog.id)} // Prevent card click
                       >
                         View Dog
                       </Button>

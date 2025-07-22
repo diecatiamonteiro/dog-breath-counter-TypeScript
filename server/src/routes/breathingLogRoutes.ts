@@ -7,10 +7,11 @@ import {
   getBreathingLogById,
 } from "../controllers/breathingLogController";
 
-// Create a new router
-const breathingLogRouter = express.Router();
+// Create a new router with mergeParams to access parent route params (dogId)
+const breathingLogRouter = express.Router({ mergeParams: true });
 
 // All routes are protected, ie require a valid JWT token, ie user must be logged in
+// These routes will be mounted at /api/dogs/:id/breathing-logs
 breathingLogRouter
   .post("/", checkToken, createBreathingLog)
   .get("/", checkToken, getAllBreathingLogs)

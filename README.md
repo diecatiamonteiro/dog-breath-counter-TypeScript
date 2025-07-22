@@ -334,6 +334,14 @@ pet-breath-counter-typescript/
 - [x] Set up React Routing
 - [x] Set up layout
 - [x] Implement auth in FE
+- [x] Implement /my-dogs page
+- [x] Implement /my-dogs/add-dog form page
+- [x] Implement /my-dogs/id/monitor-breathing page
+- [ ] Implement /my-dogs/id page with monitoring data
+- [ ] Implement edit dog data
+- [ ] Implement add dog photo via Cloudina
+- [ ] Implement user dashboard
+- [ ] Create homepage
 - [ ] Integration tests (Cypress)
 
 ## Author

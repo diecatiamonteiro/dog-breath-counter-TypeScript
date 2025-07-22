@@ -14,7 +14,7 @@ import { withTransaction } from "../utils/transaction";
 
 /**
  * @desc   Create a breathing log for a specific dog
- * @route  POST /api/dogs/:dogId/breathing-logs
+ * @route  POST /api/dogs/:id/breathing-logs
  * @access Protected
  */
 export const createBreathingLog: Controller<
@@ -23,7 +23,7 @@ export const createBreathingLog: Controller<
   try {
     // First check if the dog exists and belongs to the user
     const dog = await Dog.findOne({
-      _id: req.params.dogId,
+      _id: req.params.id,
       userId: req.user?._id,
     });
 
@@ -66,7 +66,7 @@ export const createBreathingLog: Controller<
 
 /**
  * @desc   Get all breathing logs for a specific dog with pagination
- * @route  GET /api/dogs/:dogId/breathing-logs
+ * @route  GET /api/dogs/:id/breathing-logs
  * @access Protected
  */
 export const getAllBreathingLogs: Controller<AuthenticatedRequest> = async (
@@ -82,7 +82,7 @@ export const getAllBreathingLogs: Controller<AuthenticatedRequest> = async (
 
     // Get all breathing logs for a specific dog
     const logs = await BreathingLog.find({
-      dogId: req.params.dogId,
+      dogId: req.params.id,
       userId: req.user?._id,
     })
       .sort({ createdAt: -1 }) // newest logs first
@@ -91,7 +91,7 @@ export const getAllBreathingLogs: Controller<AuthenticatedRequest> = async (
 
     // Get the total number of logs for the specific dog
     const total = await BreathingLog.countDocuments({
-      dogId: req.params.dogId,
+      dogId: req.params.id,
       userId: req.user?._id,
     });
 
@@ -117,7 +117,7 @@ export const getAllBreathingLogs: Controller<AuthenticatedRequest> = async (
 
 /**
  * @desc   Get one breathing log by its ID
- * @route  GET /api/dogs/:dogId/breathing-logs/:logId
+ * @route  GET /api/dogs/:id/breathing-logs/:logId
  * @access Protected
  */
 export const getBreathingLogById: Controller<AuthenticatedRequest> = async (
@@ -128,7 +128,7 @@ export const getBreathingLogById: Controller<AuthenticatedRequest> = async (
   try {
     const breathingLog = await BreathingLog.findOne({
       _id: req.params.logId, // find breathing log by route params (dogs/:dogId/breathing-logs/:logId)
-      dogId: req.params.dogId, // find breathing log by dog id
+      dogId: req.params.id, // find breathing log by dog id
       userId: req.user?._id, // find breathing log by user id
     });
 
@@ -155,7 +155,7 @@ export const getBreathingLogById: Controller<AuthenticatedRequest> = async (
 
 /**
  * @desc   Delete a breathing log by its ID
- * @route  DELETE /api/dogs/:dogId/breathing-logs/:logId
+ * @route  DELETE /api/dogs/:id/breathing-logs/:logId
  * @access Protected
  */
 export const deleteBreathingLogById: Controller<AuthenticatedRequest> = async (
@@ -168,7 +168,7 @@ export const deleteBreathingLogById: Controller<AuthenticatedRequest> = async (
       // Find the breathing log to delete
       const breathingLogToDelete = await BreathingLog.findOne({
         _id: req.params.logId,
-        dogId: req.params.dogId,
+        dogId: req.params.id,
         userId: req.user?._id,
       }).session(session);
 

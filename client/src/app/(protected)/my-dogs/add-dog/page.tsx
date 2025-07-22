@@ -162,7 +162,7 @@ export default function AddDogPage() {
           icon={<RiArrowLeftSLine className="w-7 h-7" />}
           className="mb-4 lg:mb-16"
         >
-          My Dogs
+          Back to My Dogs
         </Button>
 
         <h1 className="text-2xl font-bold mb-8 lg:mb-16">Add New Dog</h1>

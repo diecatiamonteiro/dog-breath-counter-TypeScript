@@ -17,7 +17,6 @@ import {
 import authRouter from "./routes/authRoutes";
 import userRouter from "./routes/userRoutes";
 import dogRouter from "./routes/dogRoutes";
-import breathingLogRouter from "./routes/breathingLogRoutes";
 
 // Initialize Express
 export const app = express();
@@ -71,7 +70,7 @@ app.get("/", (req: Request, res: Response) => {
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/dogs", dogRouter);
-app.use("/api/breathing-logs", breathingLogRouter);
+// Note: breathing log routes are now nested under dog routes
 
 // Error handling middleware
 app.use(RouteNotFoundError);

@@ -8,6 +8,7 @@ import {
   getDogById,
   updateDog,
 } from "../controllers/dogController";
+import breathingLogRouter from "./breathingLogRoutes";
 
 // Create a new router
 const dogRouter = express.Router();
@@ -19,5 +20,9 @@ dogRouter
   .get("/:id", checkToken, getDogById)
   .patch("/:id", checkToken, validatePhotoData, updateDog)
   .delete("/:id", checkToken, deleteDog);
+
+// Mount breathing log routes as nested routes under dogs
+// This will create routes like /api/dogs/:dogId/breathing-logs
+dogRouter.use("/:id/breathing-logs", breathingLogRouter);
 
 export default dogRouter;

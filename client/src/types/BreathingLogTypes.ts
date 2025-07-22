@@ -32,6 +32,6 @@ export interface BreathingLogState {
 
 export interface AddBreathingLogData {
   breathCount: number;
-  duration: 15 | 30 | 60; // Fixed: match backend enum values
+  duration: 15 | 30 | 60;
   comment?: string;
 }
