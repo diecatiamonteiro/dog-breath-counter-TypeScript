@@ -6,6 +6,7 @@
 "use client";
 
 import { getSelectedDog } from "@/api/dogApi";
+import { getAllBreathingLogs } from "@/api/breathingLogApi";
 import LoadingSpinner from "@/app/loading";
 import Button from "@/components/Button";
 import { useAppContext } from "@/context/Context";
@@ -18,7 +19,7 @@ import Image from "next/image";
 export default function DogProfilePage() {
   const params = useParams();
   const dogId = params.id as string;
-  const { dogState, dogDispatch, logState } = useAppContext();
+  const { dogState, dogDispatch, logState, logDispatch, userState } = useAppContext();
   const { selectedDog, isLoading, error } = dogState;
   const { breathingLogs } = logState;
 
@@ -26,6 +27,13 @@ export default function DogProfilePage() {
   useEffect(() => {
     getSelectedDog(dogDispatch, dogId);
   }, [dogId, dogDispatch]);
+
+  // Load breathing logs for this specific dog
+  useEffect(() => {
+    if (dogId) {
+      getAllBreathingLogs(logDispatch, dogId);
+    }
+  }, [dogId, logDispatch]);
 
   const dogName =
     selectedDog?.name &&
@@ -36,12 +44,20 @@ export default function DogProfilePage() {
 
   // Calculate average BPM from breathing logs for this dog
   const calculateAverageBPM = () => {
-    // Filter out any undefined/null entries and logs for this specific dog
-    const dogLogs = breathingLogs.filter((log) => log && log.dogId === dogId);
-    if (dogLogs.length === 0) return null;
+    // Use both logState.breathingLogs (from specific dog loading) and userState.breathingLogs (from profile loading)
+    // Combine both arrays and filter for this specific dog
+    const allLogs = [...breathingLogs, ...(userState.breathingLogs || [])];
+    const dogLogs = allLogs.filter((log) => log && log.dogId === dogId);
+    
+    // Remove duplicates based on log id
+    const uniqueLogs = dogLogs.filter((log, index, self) => 
+      index === self.findIndex(l => l.id === log.id)
+    );
+    
+    if (uniqueLogs.length === 0) return null;
 
-    const totalBPM = dogLogs.reduce((sum, log) => sum + log.bpm, 0);
-    return Math.round(totalBPM / dogLogs.length);
+    const totalBPM = uniqueLogs.reduce((sum, log) => sum + log.bpm, 0);
+    return Math.round(totalBPM / uniqueLogs.length);
   };
 
   const averageBPM = calculateAverageBPM();

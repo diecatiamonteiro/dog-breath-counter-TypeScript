@@ -39,12 +39,15 @@ export const getAllBreathingLogs = async (
 
   try {
     const res = await axios.get<{
-      breathingLogs: BreathingLog[];
-      pagination: {
-        page: number;
-        limit: number;
-        total: number;
-        totalPages: number;
+      message: string;
+      data: {
+        breathingLogs: BreathingLog[];
+        pagination: {
+          page: number;
+          limit: number;
+          total: number;
+          totalPages: number;
+        };
       };
     }>(`/api/dogs/${dogId}/breathing-logs?page=${page}&limit=${limit}`);
     
@@ -52,12 +55,12 @@ export const getAllBreathingLogs = async (
       type: LOG_ACTIONS.GET_ALL_LOGS,
       payload: { 
         data: { 
-          breathingLogs: res.data.breathingLogs,
-          pagination: res.data.pagination,
+          breathingLogs: res.data.data.breathingLogs,
+          pagination: res.data.data.pagination,
         } 
       },
     });
-    return res.data.breathingLogs;
+    return res.data.data.breathingLogs;
   } catch (error) {
     const errorMessage = isAxiosError(error)
       ? getErrorMessage(error)
@@ -88,15 +91,15 @@ export const createBreathingLog = async (
   dispatch({ type: LOG_ACTIONS.SET_ERROR, payload: null });
 
   try {
-    const res = await axios.post<{ breathingLog: BreathingLog }>(
+    const res = await axios.post<{ message: string; data: { breathingLog: BreathingLog } }>(
       `/api/dogs/${dogId}/breathing-logs`,
       logData
     );
     dispatch({
       type: LOG_ACTIONS.ADD_LOG,
-      payload: { data: { breathingLog: res.data.breathingLog } },
+      payload: { data: { breathingLog: res.data.data.breathingLog } },
     });
-    return res.data.breathingLog;
+    return res.data.data.breathingLog;
   } catch (error) {
     const errorMessage = isAxiosError(error)
       ? getErrorMessage(error)
@@ -127,14 +130,14 @@ export const getSelectedBreathingLog = async (
   dispatch({ type: LOG_ACTIONS.SET_ERROR, payload: null });
 
   try {
-    const res = await axios.get<{ breathingLog: BreathingLog }>(
+    const res = await axios.get<{ message: string; data: { breathingLog: BreathingLog } }>(
       `/api/dogs/${dogId}/breathing-logs/${logId}`
     );
     dispatch({
       type: LOG_ACTIONS.GET_SELECTED_LOG,
-      payload: { data: { breathingLog: res.data.breathingLog } },
+      payload: { data: { breathingLog: res.data.data.breathingLog } },
     });
-    return res.data.breathingLog;
+    return res.data.data.breathingLog;
   } catch (error) {
     const errorMessage = isAxiosError(error)
       ? getErrorMessage(error)
@@ -165,14 +168,14 @@ export const deleteBreathingLog = async (
   dispatch({ type: LOG_ACTIONS.SET_ERROR, payload: null });
 
   try {
-    const res = await axios.delete<{ deletedBreathingLogId: string }>(
+    const res = await axios.delete<{ message: string; data: { deletedBreathingLogId: string } }>(
       `/api/dogs/${dogId}/breathing-logs/${logId}`
     );
     dispatch({
       type: LOG_ACTIONS.DELETE_LOG,
-      payload: { data: { deletedBreathingLogId: res.data.deletedBreathingLogId } },
+      payload: { data: { deletedBreathingLogId: res.data.data.deletedBreathingLogId } },
     });
-    return res.data.deletedBreathingLogId;
+    return res.data.data.deletedBreathingLogId;
   } catch (error) {
     const errorMessage = isAxiosError(error)
       ? getErrorMessage(error)

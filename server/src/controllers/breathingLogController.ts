@@ -31,11 +31,8 @@ export const createBreathingLog: Controller<
       throw createError(404, "Dog not found");
     }
 
-    // Validate that the breathing rate doesn't exceed the dog's max rate
+    // Calculate BPM
     const calculatedBPM = req.body.breathCount * (60 / req.body.duration);
-    if (calculatedBPM > dog.maxBreathingRate) {
-      throw createError(400, `Breathing rate ${calculatedBPM} exceeds dog's maximum rate of ${dog.maxBreathingRate}`);
-    }
 
     const breathingLogData = {
       ...req.body,

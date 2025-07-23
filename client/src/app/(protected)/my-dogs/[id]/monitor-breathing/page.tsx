@@ -85,13 +85,19 @@ export default function MonitorBreathingPage() {
   };
 
   // Save breathing log
-  const handleSave = () => {
-    const logData = {
-      breathCount,
-      duration: selectedDuration as 15 | 30 | 60,
-      comment: comment,
-    };
-    createBreathingLog(logDispatch, dogId, logData);
+  const handleSave = async () => {
+    try {
+      const logData = {
+        breathCount,
+        duration: selectedDuration as 15 | 30 | 60,
+        comment: comment.trim() || undefined,
+      };
+      await createBreathingLog(logDispatch, dogId, logData);
+      // Success - the redirect happens via the href in the Button component
+    } catch (error) {
+      console.error("Failed to save breathing log:", error);
+      // Error handling is managed by the createBreathingLog function and reducer
+    }
   };
 
   // Reset state
