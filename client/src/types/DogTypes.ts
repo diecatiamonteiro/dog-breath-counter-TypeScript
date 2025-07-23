@@ -47,7 +47,7 @@ export interface AddDogData {
   birthYear?: number;
   gender?: string;
   maxBreathingRate: number;
-  veterinarian?: Veterinarian; // see above
+  veterinarian?: Veterinarian | null; // Allow null to clear veterinarian data
   age?: number;
 }
 
@@ -58,6 +58,6 @@ export interface UpdateDogData {
   birthYear?: number;
   gender?: string;
   maxBreathingRate: number;
-  veterinarian?: Veterinarian; // see above
+  veterinarian?: Veterinarian | null; // Allow null to clear veterinarian data
   age?: number;
 }

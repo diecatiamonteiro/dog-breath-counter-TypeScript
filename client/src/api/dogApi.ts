@@ -135,6 +135,7 @@ export const updateDog = async (
 
   try {
     const res = await axios.patch<{ message: string; data: { dog: Dog } }>(`/api/dogs/${dogId}`, dogData);
+    
     dispatch({
       type: DOG_ACTIONS.UPDATE_DOG,
       payload: { data: { dog: res.data.data.dog } },

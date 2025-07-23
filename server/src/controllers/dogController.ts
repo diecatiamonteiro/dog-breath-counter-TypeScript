@@ -155,12 +155,10 @@ export const updateDog: Controller<
       maxBreathingRate: req.body.maxBreathingRate ?? existingDog.maxBreathingRate,
     };
 
-    // Only update veterinarian if it's actually provided
-    if (req.body.veterinarian !== undefined) {
-      updateData.veterinarian = {
-        ...existingDog.veterinarian,
-        ...req.body.veterinarian
-      };
+    // Handle veterinarian data - allow null/undefined to clear the data
+    if (req.body.hasOwnProperty('veterinarian')) {
+      // If veterinarian is undefined, explicitly set to null to clear it in MongoDB
+      updateData.veterinarian = req.body.veterinarian === undefined ? null : req.body.veterinarian;
     }
 
     const updatedDog = await Dog.findByIdAndUpdate(
@@ -168,6 +166,8 @@ export const updateDog: Controller<
       updateData,
       { new: true, runValidators: true }
     );
+
+
 
     res.json({
       message: "Dog updated successfully",
