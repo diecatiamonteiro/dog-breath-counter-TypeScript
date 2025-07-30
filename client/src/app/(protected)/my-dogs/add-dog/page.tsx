@@ -6,13 +6,13 @@
 "use client";
 
 import { useAppContext } from "@/context/Context";
-import { useEffect, useState, useRef, useReducer } from "react";
+import { useEffect, useState, useRef } from "react";
 import { validateDogForm } from "./util/validateDogForm";
 import { addDog, getSelectedDog, updateDog } from "@/api/dogApi";
 import { useRouter, useSearchParams } from "next/navigation";
 import { RiArrowLeftSLine } from "react-icons/ri";
 import { TbLungsFilled } from "react-icons/tb";
-import { FaHospital, FaPaw, FaCamera } from "react-icons/fa";
+import { FaHospital, FaPaw } from "react-icons/fa";
 import Button from "@/components/Button";
 import { PetPhotoUploader } from "@/components/PetPhotoUploader";
 import { CloudinaryPhoto } from "@/types/DogTypes";
