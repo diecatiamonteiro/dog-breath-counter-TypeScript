@@ -7,6 +7,7 @@ import Image from "next/image";
 import { useEffect } from "react";
 import { MdAddCircleOutline } from "react-icons/md";
 import { RiArrowRightSLine, RiDeleteBin7Line } from "react-icons/ri";
+import { FaDog } from "react-icons/fa";
 import Button from "@/components/Button";
 
 export default function MyDogsPage() {
@@ -108,13 +109,19 @@ export default function MyDogsPage() {
                       {/* Dog Image */}
                       <div className="flex-shrink-0">
                         <div className="w-20 h-20 sm:w-18 sm:h-18 md:w-20 md:h-20 rounded-full border-2 border-primary/30 overflow-hidden bg-primary/10">
-                          <Image
-                            src="/logos/logo-light.png"
-                            alt={`${dog.name || "Dog"} photo`}
-                            width={80}
-                            height={80}
-                            className="w-full h-full object-cover"
-                          />
+                          {dog.photo?.url ? (
+                            <Image
+                              src={dog.photo.url}
+                              alt={`${dog.name || "Dog"} photo`}
+                              width={80}
+                              height={80}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/20 to-primary/10">
+                              <FaDog className="w-8 h-8 text-primary/50" />
+                            </div>
+                          )}
                         </div>
                       </div>
 

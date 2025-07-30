@@ -1,19 +1,21 @@
 /**
  * @file app/(protected)/my-dogs/add-dog/page.tsx
- * @description Add a new dog or edit existing dog when coming from the dog profile page (edit button)
+ * @description Add a new dog or edit existing dog when coming from the dog profile page (through the edit button)
  */
 
 "use client";
 
 import { useAppContext } from "@/context/Context";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useReducer } from "react";
 import { validateDogForm } from "./util/validateDogForm";
 import { addDog, getSelectedDog, updateDog } from "@/api/dogApi";
 import { useRouter, useSearchParams } from "next/navigation";
 import { RiArrowLeftSLine } from "react-icons/ri";
 import { TbLungsFilled } from "react-icons/tb";
-import { FaHospital, FaPaw } from "react-icons/fa";
+import { FaHospital, FaPaw, FaCamera } from "react-icons/fa";
 import Button from "@/components/Button";
+import { PetPhotoUploader } from "@/components/PetPhotoUploader";
+import { CloudinaryPhoto } from "@/types/DogTypes";
 
 export default function AddDogPage() {
   const router = useRouter();
@@ -23,6 +25,7 @@ export default function AddDogPage() {
   const isEditMode = !!editDogId;
 
   // Refs for section scrolling
+  const photoRef = useRef<HTMLDivElement>(null);
   const dogInfoRef = useRef<HTMLDivElement>(null);
   const breathingRef = useRef<HTMLDivElement>(null);
   const vetRef = useRef<HTMLDivElement>(null);
@@ -38,6 +41,7 @@ export default function AddDogPage() {
     birthYear: 0,
     gender: "",
     maxBreathingRate: 30,
+    photo: undefined as CloudinaryPhoto | undefined,
     veterinarian: {
       vetName: "",
       vetClinicName: "",
@@ -73,6 +77,7 @@ export default function AddDogPage() {
             birthYear: birthYear,
             gender: dogData.gender || "",
             maxBreathingRate: dogData.maxBreathingRate || 30,
+            photo: dogData.photo || undefined,
             veterinarian: {
               vetName: dogData.veterinarian?.name || "",
               vetClinicName: dogData.veterinarian?.clinicName || "",
@@ -97,6 +102,9 @@ export default function AddDogPage() {
       const scrollToSection = () => {
         let targetRef = null;
         switch (focusSection) {
+          case "photo":
+            targetRef = photoRef;
+            break;
           case "info":
             targetRef = dogInfoRef;
             break;
@@ -146,6 +154,7 @@ export default function AddDogPage() {
         birthYear: 0,
         gender: "",
         maxBreathingRate: 30,
+        photo: undefined,
         veterinarian: {
           vetName: "",
           vetClinicName: "",
@@ -209,6 +218,33 @@ export default function AddDogPage() {
     }
   };
 
+  // Handle photo upload
+  const handlePhotoUpload = (photo: CloudinaryPhoto) => {
+    setFormData((prev) => ({ ...prev, photo }));
+    // Clear any photo-related errors
+    if (formErrors.photo) {
+      setFormErrors((prev) => ({ ...prev, photo: "" }));
+    }
+    // Clear server errors when user makes changes
+    if (serverErrors) {
+      setServerErrors("");
+    }
+  };
+
+  // Handle photo upload error
+  const handlePhotoError = (error: string) => {
+    setFormErrors((prev) => ({ ...prev, photo: error }));
+  };
+
+  // Handle photo removal
+  const handlePhotoRemove = () => {
+    setFormData((prev) => ({ ...prev, photo: undefined }));
+    // Clear any photo-related errors
+    if (formErrors.photo) {
+      setFormErrors((prev) => ({ ...prev, photo: "" }));
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -220,8 +256,6 @@ export default function AddDogPage() {
 
     setIsSubmitting(true);
 
-
-
     try {
       // Process veterinarian data
       const vetData = {
@@ -231,9 +265,11 @@ export default function AddDogPage() {
         email: formData.veterinarian.vetEmail.trim() || undefined,
         address: formData.veterinarian.vetAddress.trim() || undefined,
       };
-      
+
       // Check if at least one field has data
-      const hasAnyVetData = Object.values(vetData).some(value => value !== undefined);
+      const hasAnyVetData = Object.values(vetData).some(
+        (value) => value !== undefined
+      );
 
       const dogData = {
         name: formData.dogName,
@@ -241,11 +277,10 @@ export default function AddDogPage() {
         birthYear: formData.birthYear || undefined,
         gender: formData.gender || undefined,
         maxBreathingRate: formData.maxBreathingRate,
+        photo: formData.photo || undefined,
         // Always include veterinarian property - null when empty to signal clearing
         veterinarian: hasAnyVetData ? vetData : null,
       };
-
-
 
       if (isEditMode && editDogId) {
         await updateDog(dogDispatch, editDogId, dogData);
@@ -314,7 +349,7 @@ export default function AddDogPage() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Dog Info Section */}
+          {/* Dog Info Section (includes photo) */}
           <div
             ref={dogInfoRef}
             className={`transition-all duration-300 rounded-lg p-1 ${
@@ -327,6 +362,33 @@ export default function AddDogPage() {
                 <h3 className="text-lg font-bold text-foreground">
                   Dog Information
                 </h3>
+              </div>
+
+              <div
+                ref={photoRef}
+                className={`bg-main-text-bg rounded-lg p-6 border border-primary-light/20 transition-all duration-300 rounded-lg p-1 ${
+                  focusSection === "photo" ? "bg-primary/5" : ""
+                }`}
+              >
+                <div className="flex justify-center">
+                  <PetPhotoUploader
+                    currentPhoto={formData.photo}
+                    onUpload={handlePhotoUpload}
+                    onError={handlePhotoError}
+                    onRemove={handlePhotoRemove}
+                  />
+                </div>
+
+                {formErrors.photo && (
+                  <p className="mt-2 text-sm text-accent text-center">
+                    {formErrors.photo}
+                  </p>
+                )}
+
+                <p className="mt-2 text-xs text-foreground/60 text-center">
+                  Upload a photo of your dog to help identify them. Max file
+                  size: 1.5MB
+                </p>
               </div>
 
               {/* Dog Name and Max Breathing Rate - Grouped */}
@@ -488,7 +550,7 @@ export default function AddDogPage() {
           {/* Veterinarian Section */}
           <div
             ref={vetRef}
-            className={`transition-all duration-300 rounded-lg p-1 ${
+            className={`transition-all duration-300 rounded-lg p-1 mb-24 ${
               focusSection === "vet" ? "bg-primary/5" : ""
             }`}
           >
@@ -616,7 +678,7 @@ export default function AddDogPage() {
             fullWidth
             loading={isSubmitting || isLoading}
             loadingText={isEditMode ? "Updating..." : "Saving..."}
-            className="mt-8 mb-28 lg:mb-0"
+            className="fixed bottom-8 max-w-5xl mt-8 mt-12 cursor-pointer"
           >
             {isEditMode ? "Update Dog" : "Save Dog"}
           </Button>

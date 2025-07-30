@@ -13,7 +13,8 @@ import { useAppContext } from "@/context/Context";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { RiArrowLeftSLine, RiAddLine, RiEditLine } from "react-icons/ri";
-
+import { FaDog } from "react-icons/fa";
+import { TbLungsFilled } from "react-icons/tb";
 import Image from "next/image";
 
 export default function DogProfilePage() {
@@ -145,18 +146,41 @@ export default function DogProfilePage() {
             <div className="flex flex-col sm:flex-row gap-4">
               {/* Dog Photo */}
               <div className="flex-shrink-0">
-                <div className="h-24 sm:w-40 sm:h-40 rounded-lg overflow-hidden flex items-center justify-center border border-primary">
+                <div className="w-full sm:w-40 h-40 rounded-lg overflow-hidden flex items-center justify-center border-2 border-primary/30 relative group">
                   {selectedDog?.photo?.url ? (
                     <Image
                       src={selectedDog.photo.url}
                       alt={`${selectedDog.name}'s photo`}
-                      width={140}
-                      height={140}
+                      width={160}
+                      height={160}
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="text-primary/60 text-center">
-                      <p className="text-xs">No photo</p>
+                    <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-primary/20 to-primary/10">
+                      <FaDog className="w-12 h-12 text-primary/50 mb-2" />
+                      <p className="text-xs text-primary/60 mb-3">No photo</p>
+                      <Button
+                        href={`/my-dogs/add-dog?edit=${dogId}&section=info`}
+                        variant="secondary"
+                        size="sm"
+                        className="text-xs px-3 py-1"
+                      >
+                        Add Photo
+                      </Button>
+                    </div>
+                  )}
+                  
+                  {/* Edit Photo Overlay - only visible when photo exists */}
+                  {selectedDog?.photo?.url && (
+                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <Button
+                        href={`/my-dogs/add-dog?edit=${dogId}&section=info`}
+                        variant="secondary"
+                        size="sm"
+                        className="text-xs"
+                      >
+                        Change Photo
+                      </Button>
                     </div>
                   )}
                 </div>
@@ -396,13 +420,16 @@ export default function DogProfilePage() {
       </div>
 
       {/* Sticky Monitor Breathing Button */}
-      <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-3xl">
+      <div className="fixed bottom-8 max-w-5xl mt-12 w-full">
         <Button
           href={`/my-dogs/${dogId}/monitor-breathing`}
           variant="primary"
-          className="w-full bg-accent hover:bg-accent/90 text-white font-semibold py-3 px-6 rounded-lg shadow-lg border-2 border-accent/20 backdrop-blur-sm"
+          size="lg"
+          className="w-full cursor-pointer"
         >
-          🫁 Monitor Breathing Now
+          <div className="flex items-center">
+            <TbLungsFilled className="w-7 h-7 inline-block mr-4 text-foreground" /> Monitor Breathing Now
+          </div>
         </Button>
       </div>
     </div>
