@@ -16,11 +16,14 @@ import { RiArrowLeftSLine, RiAddLine, RiEditLine } from "react-icons/ri";
 import { FaDog } from "react-icons/fa";
 import { TbLungsFilled } from "react-icons/tb";
 import Image from "next/image";
+import BreathingChart from "@/components/breathingLogs/BreathingChart";
+import Calendar from "@/components/breathingLogs/Calendar";
 
 export default function DogProfilePage() {
   const params = useParams();
   const dogId = params.id as string;
-  const { dogState, dogDispatch, logState, logDispatch, userState } = useAppContext();
+  const { dogState, dogDispatch, logState, logDispatch, userState } =
+    useAppContext();
   const { selectedDog, isLoading, error } = dogState;
   const { breathingLogs } = logState;
 
@@ -49,12 +52,12 @@ export default function DogProfilePage() {
     // Combine both arrays and filter for this specific dog
     const allLogs = [...breathingLogs, ...(userState.breathingLogs || [])];
     const dogLogs = allLogs.filter((log) => log && log.dogId === dogId);
-    
+
     // Remove duplicates based on log id
-    const uniqueLogs = dogLogs.filter((log, index, self) => 
-      index === self.findIndex(l => l.id === log.id)
+    const uniqueLogs = dogLogs.filter(
+      (log, index, self) => index === self.findIndex((l) => l.id === log.id)
     );
-    
+
     if (uniqueLogs.length === 0) return null;
 
     const totalBPM = uniqueLogs.reduce((sum, log) => sum + log.bpm, 0);
@@ -66,17 +69,15 @@ export default function DogProfilePage() {
   // Check if veterinarian data exists (any field has a value)
   const hasVeterinarianData = () => {
     const vetData = selectedDog?.veterinarian;
-    
+
     if (!vetData || vetData === null) return false;
-    
-    const hasData = (
+
+    const hasData =
       (vetData.name && vetData.name.trim()) ||
       (vetData.clinicName && vetData.clinicName.trim()) ||
       (vetData.phoneNumber && vetData.phoneNumber.trim()) ||
       (vetData.email && vetData.email.trim()) ||
-      (vetData.address && vetData.address.trim())
-    );
-    
+      (vetData.address && vetData.address.trim());
 
     return !!hasData;
   };
@@ -99,8 +100,8 @@ export default function DogProfilePage() {
       <div className="mx-auto">
         <div className="text-center">
           <h2 className="text-xl font-semibold mb-4">
-            We cannot show your dog&apos;s profile at the moment. Try refreshing the
-            page.
+            We cannot show your dog&apos;s profile at the moment. Try refreshing
+            the page.
           </h2>
           <p className="text-accent">{error}</p>
         </div>
@@ -169,7 +170,7 @@ export default function DogProfilePage() {
                       </Button>
                     </div>
                   )}
-                  
+
                   {/* Edit Photo Overlay - only visible when photo exists */}
                   {selectedDog?.photo?.url && (
                     <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
@@ -405,17 +406,30 @@ export default function DogProfilePage() {
           </div>
         </div>
 
-        {/* Breathing Logs Section - Placeholder */}
+        {/* Breathing Logs Section */}
         <div className="bg-main-text-bg rounded-lg shadow-md p-6 mb-8 border border-primary-light/20">
           <h2 className="text-xl font-semibold text-foreground mb-4">
             Breathing Logs
           </h2>
-          <div className="text-center py-8">
-            <div className="text-primary/60 text-4xl mb-4">📈</div>
-            <p className="text-foreground/70 mb-4">
-              Coming soon: View breathing rate history and manage logs
-            </p>
-          </div>
+
+          {breathingLogs.length === 0 ? (
+            <div className="bg-main-text-bg rounded-lg shadow-md p-6 border border-primary-light/20">
+              <div className="text-center py-8">
+                <div className="text-primary/60 text-4xl mb-4">📊</div>
+                <p className="text-foreground/70 mb-4">
+                  No breathing logs available
+                </p>
+                <p className="text-sm text-foreground/50">
+                  Start monitoring breathing to see data here
+                </p>
+              </div>
+            </div>
+          ) : (
+            <>
+              <BreathingChart logs={breathingLogs} selectedDog={selectedDog} />
+              <Calendar logs={breathingLogs} />
+            </>
+          )}
         </div>
       </div>
 
@@ -428,7 +442,8 @@ export default function DogProfilePage() {
           className="w-full cursor-pointer"
         >
           <div className="flex items-center">
-            <TbLungsFilled className="w-7 h-7 inline-block mr-4 text-foreground" /> Monitor Breathing Now
+            <TbLungsFilled className="w-7 h-7 inline-block mr-4 text-foreground" />{" "}
+            Monitor Breathing Now
           </div>
         </Button>
       </div>
