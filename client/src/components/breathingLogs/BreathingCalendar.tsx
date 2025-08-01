@@ -22,7 +22,7 @@ import { BreathingLog } from "@/types/BreathingLogTypes";
 import { useAppContext } from "@/context/Context";
 import { LOG_ACTIONS } from "@/reducers/breathingLogReducer";
 import Button from "../Button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 type Props = {
   logs: BreathingLog[]; // Raw breathing logs
@@ -34,7 +34,12 @@ export default function BreathingCalendar({ logs }: Props) {
   const { viewMode, selectedYear, selectedMonth } = logState;
 
   // State to track which days are expanded
-  const [expandedDays, setExpandedDays] = useState<Set<string>>(new Set());
+  const [expandedDays, setExpandedDays] = useState<Set<string>>(new Set()); // new Set() means that all days are hidden by default
+
+  // Collapse all expanded days when month or year changes
+  useEffect(() => {
+    setExpandedDays(new Set());
+  }, [selectedYear, selectedMonth]);
 
   // Process and group logs using shared utilities
   const processedData = processLogsForCalendar(logs);
