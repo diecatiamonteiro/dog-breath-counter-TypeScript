@@ -1,6 +1,11 @@
+/**
+ * @file breathingLogUtils.ts
+ * @description Utility functions for processing breathing logs
+ *              Used in the breathingChart and breathingCalendar components
+ */
+
 import { BreathingLog } from "@/types/BreathingLogTypes";
 
-// Types for processed data
 export type ProcessedLogForCalendar = {
   id: string;
   dateLong: string;
@@ -9,7 +14,11 @@ export type ProcessedLogForCalendar = {
   comment?: string;
 };
 
-// Helper functions for consistent date and time formatting
+// ============================================================================
+// DATE FORMATTING UTILITIES
+// ============================================================================
+
+// Format date as "DD MMM YY" (e.g., "15 Jan 25")
 export const formatDateShortYear = (date: string) => {
   return new Date(date).toLocaleDateString("en-UK", {
     day: "2-digit",
@@ -18,6 +27,7 @@ export const formatDateShortYear = (date: string) => {
   });
 };
 
+// Format date as "DD MMM YYYY" (e.g., "15 Jan 2025"
 export const formatDateLongYear = (date: string) => {
   return new Date(date).toLocaleDateString("en-UK", {
     day: "2-digit",
@@ -26,6 +36,22 @@ export const formatDateLongYear = (date: string) => {
   });
 };
 
+// Format month and year as "Month YYYY" (e.g., "January 2025")
+export const formatMonthYear = (year: number, month: number) => {
+  return new Date(year, month).toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric",
+  });
+};
+
+// Format month name only as "MMM" (e.g., "Jan")
+export const formatMonthName = (year: number, monthIndex: number) => {
+  return new Date(year, monthIndex).toLocaleDateString("en-US", {
+    month: "short",
+  });
+};
+
+// Format time as "HH:MM" (e.g., "14:30")
 export const formatTime = (date: string) => {
   return new Date(date).toLocaleTimeString("en-UK", {
     hour: "2-digit",
@@ -33,7 +59,14 @@ export const formatTime = (date: string) => {
   });
 };
 
-// Process logs for chart data
+// ============================================================================
+// DATA PROCESSING UTILITIES
+// ============================================================================
+
+/**
+ * Process raw breathing logs for chart display
+ * Returns sorted, filtered logs with formatted dates and chart-specific data
+ */
 export const processLogsForChart = (logs: BreathingLog[]) => {
   const sortedLogs = logs.sort(
     (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
@@ -53,8 +86,13 @@ export const processLogsForChart = (logs: BreathingLog[]) => {
     }));
 };
 
-// Process logs for calendar display
-export const processLogsForCalendar = (logs: BreathingLog[]): ProcessedLogForCalendar[] => {
+/**
+ * Process raw breathing logs for calendar display
+ * Returns filtered logs with formatted dates for calendar view
+ */
+export const processLogsForCalendar = (
+  logs: BreathingLog[]
+): ProcessedLogForCalendar[] => {
   return logs
     .filter((log) => log.bpm > 0)
     .map((log) => ({
@@ -66,7 +104,10 @@ export const processLogsForCalendar = (logs: BreathingLog[]): ProcessedLogForCal
     }));
 };
 
-// Group logs by date
+/**
+ * Group processed logs by date for calendar display
+ * Returns object with dates as keys and arrays of logs as values
+ */
 export const groupLogsByDate = (processedData: ProcessedLogForCalendar[]) => {
   return processedData.reduce((grouped, log) => {
     const date = log.dateLong;
@@ -74,4 +115,27 @@ export const groupLogsByDate = (processedData: ProcessedLogForCalendar[]) => {
     grouped[date].push(log);
     return grouped;
   }, {} as Record<string, ProcessedLogForCalendar[]>);
-}; 
+};
+
+// ============================================================================
+// NAVIGATION UTILITIES
+// ============================================================================
+
+/**
+ * Check if data exists for a specific year
+ * Returns true if any logs exist for the given year
+ */
+export const hasDataInYear = (year: number, dateGroups: Record<string, ProcessedLogForCalendar[]>) => {
+  return Object.keys(dateGroups).some(date => new Date(date).getFullYear() === year);
+};
+
+/**
+ * Check if data exists for a specific month and year
+ * Returns true if any logs exist for the given month/year combination
+ */
+export const hasDataInMonth = (year: number, month: number, dateGroups: Record<string, ProcessedLogForCalendar[]>) => {
+  return Object.keys(dateGroups).some(date => {
+    const dateObj = new Date(date);
+    return dateObj.getFullYear() === year && dateObj.getMonth() === month;
+  });
+};

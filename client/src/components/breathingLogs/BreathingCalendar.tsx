@@ -1,3 +1,5 @@
+"use client";
+
 import { MdChevronLeft, MdChevronRight, MdCalendarViewMonth, MdCalendarViewWeek } from "react-icons/md";
 import { FaRegCalendar} from "react-icons/fa";
 import { TbLungsFilled } from "react-icons/tb";
@@ -6,6 +8,8 @@ import {
   groupLogsByDate,
   formatMonthYear,
   formatMonthName,
+  hasDataInYear,
+  hasDataInMonth,
 } from "@/utils/breathingLogUtils";
 import { BreathingLog } from "@/types/BreathingLogTypes";
 import { useAppContext } from "@/context/Context";
@@ -15,7 +19,7 @@ type Props = {
   logs: BreathingLog[]; // Raw breathing logs
 };
 
-export default function Calendar({ logs }: Props) {
+export default function BreathingCalendar({ logs }: Props) {
   // Get navigation state from context
   const { logState, logDispatch } = useAppContext();
   const { viewMode, selectedYear, selectedMonth } = logState;
@@ -29,10 +33,22 @@ export default function Calendar({ logs }: Props) {
     return Math.min(...dayLogs.map(log => log.bpm));
   };
 
-
   const getDayLogs = (date: string) => {
     return dateGroups[date];
   };
+
+
+
+  // Get available years and months
+  const availableYears = Array.from(new Set(
+    Object.keys(dateGroups).map(date => new Date(date).getFullYear())
+  )).sort((a, b) => a - b);
+
+  const availableMonths = Array.from(new Set(
+    Object.keys(dateGroups)
+      .filter(date => new Date(date).getFullYear() === selectedYear)
+      .map(date => new Date(date).getMonth())
+  )).sort((a, b) => a - b);
 
   // Navigation handlers
   const handleViewModeChange = (mode: 'month' | 'year') => {
@@ -40,29 +56,83 @@ export default function Calendar({ logs }: Props) {
   };
 
   const handlePreviousMonth = () => {
-    if (selectedMonth === 0) {
-      logDispatch({ type: LOG_ACTIONS.SET_SELECTED_MONTH, payload: 11 });
-      logDispatch({ type: LOG_ACTIONS.SET_SELECTED_YEAR, payload: selectedYear - 1 });
-    } else {
+    // Check if previous month in current year has data
+    if (selectedMonth > 0 && hasDataInMonth(selectedYear, selectedMonth - 1, dateGroups)) {
       logDispatch({ type: LOG_ACTIONS.SET_SELECTED_MONTH, payload: selectedMonth - 1 });
+    } else {
+      // Check if previous year has data
+      const prevYear = selectedYear - 1;
+      if (hasDataInYear(prevYear, dateGroups)) {
+        // Find the last month with data in previous year
+        const prevYearMonths = Array.from(new Set(
+          Object.keys(dateGroups)
+            .filter(date => new Date(date).getFullYear() === prevYear)
+            .map(date => new Date(date).getMonth())
+        )).sort((a, b) => a - b);
+        
+        if (prevYearMonths.length > 0) {
+          logDispatch({ type: LOG_ACTIONS.SET_SELECTED_YEAR, payload: prevYear });
+          logDispatch({ type: LOG_ACTIONS.SET_SELECTED_MONTH, payload: prevYearMonths[prevYearMonths.length - 1] });
+        }
+      }
     }
   };
 
   const handleNextMonth = () => {
-    if (selectedMonth === 11) {
-      logDispatch({ type: LOG_ACTIONS.SET_SELECTED_MONTH, payload: 0 });
-      logDispatch({ type: LOG_ACTIONS.SET_SELECTED_YEAR, payload: selectedYear + 1 });
-    } else {
+    // Check if next month in current year has data
+    if (selectedMonth < 11 && hasDataInMonth(selectedYear, selectedMonth + 1, dateGroups)) {
       logDispatch({ type: LOG_ACTIONS.SET_SELECTED_MONTH, payload: selectedMonth + 1 });
+    } else {
+      // Check if next year has data
+      const nextYear = selectedYear + 1;
+      if (hasDataInYear(nextYear, dateGroups)) {
+        // Find the first month with data in next year
+        const nextYearMonths = Array.from(new Set(
+          Object.keys(dateGroups)
+            .filter(date => new Date(date).getFullYear() === nextYear)
+            .map(date => new Date(date).getMonth())
+        )).sort((a, b) => a - b);
+        
+        if (nextYearMonths.length > 0) {
+          logDispatch({ type: LOG_ACTIONS.SET_SELECTED_YEAR, payload: nextYear });
+          logDispatch({ type: LOG_ACTIONS.SET_SELECTED_MONTH, payload: nextYearMonths[0] });
+        }
+      }
     }
   };
 
   const handlePreviousYear = () => {
-    logDispatch({ type: LOG_ACTIONS.SET_SELECTED_YEAR, payload: selectedYear - 1 });
+    const prevYear = selectedYear - 1;
+    if (hasDataInYear(prevYear, dateGroups)) {
+      logDispatch({ type: LOG_ACTIONS.SET_SELECTED_YEAR, payload: prevYear });
+      // Set to first available month of previous year
+      const prevYearMonths = Array.from(new Set(
+        Object.keys(dateGroups)
+          .filter(date => new Date(date).getFullYear() === prevYear)
+          .map(date => new Date(date).getMonth())
+      )).sort((a, b) => a - b);
+      
+      if (prevYearMonths.length > 0) {
+        logDispatch({ type: LOG_ACTIONS.SET_SELECTED_MONTH, payload: prevYearMonths[0] });
+      }
+    }
   };
 
   const handleNextYear = () => {
-    logDispatch({ type: LOG_ACTIONS.SET_SELECTED_YEAR, payload: selectedYear + 1 });
+    const nextYear = selectedYear + 1;
+    if (hasDataInYear(nextYear, dateGroups)) {
+      logDispatch({ type: LOG_ACTIONS.SET_SELECTED_YEAR, payload: nextYear });
+      // Set to first available month of next year
+      const nextYearMonths = Array.from(new Set(
+        Object.keys(dateGroups)
+          .filter(date => new Date(date).getFullYear() === nextYear)
+          .map(date => new Date(date).getMonth())
+      )).sort((a, b) => a - b);
+      
+      if (nextYearMonths.length > 0) {
+        logDispatch({ type: LOG_ACTIONS.SET_SELECTED_MONTH, payload: nextYearMonths[0] });
+      }
+    }
   };
 
   // Filter all logs based on selected month/year and return the logs that match the selected month/year
@@ -160,7 +230,12 @@ export default function Calendar({ logs }: Props) {
           <div className="flex items-center justify-between mb-6 p-3 bg-primary/5 rounded-lg">
             <button 
               onClick={handlePreviousMonth}
-              className="flex items-center gap-1 text-primary hover:text-primary-dark transition-colors"
+              disabled={!hasDataInMonth(selectedYear, selectedMonth - 1, dateGroups) && !hasDataInYear(selectedYear - 1, dateGroups)}
+              className={`flex items-center gap-1 transition-colors ${
+                !hasDataInMonth(selectedYear, selectedMonth - 1, dateGroups) && !hasDataInYear(selectedYear - 1, dateGroups)
+                  ? 'text-gray-400 cursor-not-allowed'
+                  : 'text-primary hover:text-primary-dark'
+              }`}
             >
               <MdChevronLeft />
               <span>Previous</span>
@@ -168,7 +243,12 @@ export default function Calendar({ logs }: Props) {
             <h2 className="font-semibold text-foreground">{formatMonthYear(selectedYear, selectedMonth)}</h2>
             <button 
               onClick={handleNextMonth}
-              className="flex items-center gap-1 text-primary hover:text-primary-dark transition-colors"
+              disabled={!hasDataInMonth(selectedYear, selectedMonth + 1, dateGroups) && !hasDataInYear(selectedYear + 1, dateGroups)}
+              className={`flex items-center gap-1 transition-colors ${
+                !hasDataInMonth(selectedYear, selectedMonth + 1, dateGroups) && !hasDataInYear(selectedYear + 1, dateGroups)
+                  ? 'text-gray-400 cursor-not-allowed'
+                  : 'text-primary hover:text-primary-dark'
+              }`}
             >
               <span>Next</span>
               <MdChevronRight />
@@ -217,7 +297,12 @@ export default function Calendar({ logs }: Props) {
           <div className="flex items-center justify-between mb-6 p-3 bg-primary/5 rounded-lg">
             <button 
               onClick={handlePreviousYear}
-              className="flex items-center gap-1 text-primary hover:text-primary-dark transition-colors"
+              disabled={!hasDataInYear(selectedYear - 1, dateGroups)}
+              className={`flex items-center gap-1 transition-colors ${
+                !hasDataInYear(selectedYear - 1, dateGroups)
+                  ? 'text-gray-400 cursor-not-allowed'
+                  : 'text-primary hover:text-primary-dark'
+              }`}
             >
               <MdChevronLeft />
               <span>Previous Year</span>
@@ -225,7 +310,12 @@ export default function Calendar({ logs }: Props) {
             <h2 className="font-semibold text-foreground">{selectedYear}</h2>
             <button 
               onClick={handleNextYear}
-              className="flex items-center gap-1 text-primary hover:text-primary-dark transition-colors"
+              disabled={!hasDataInYear(selectedYear + 1, dateGroups)}
+              className={`flex items-center gap-1 transition-colors ${
+                !hasDataInYear(selectedYear + 1, dateGroups)
+                  ? 'text-gray-400 cursor-not-allowed'
+                  : 'text-primary hover:text-primary-dark'
+              }`}
             >
               <span>Next Year</span>
               <MdChevronRight />

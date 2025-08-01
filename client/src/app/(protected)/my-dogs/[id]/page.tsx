@@ -17,7 +17,7 @@ import { FaDog } from "react-icons/fa";
 import { TbLungsFilled } from "react-icons/tb";
 import Image from "next/image";
 import BreathingChart from "@/components/breathingLogs/BreathingChart";
-import Calendar from "@/components/breathingLogs/Calendar";
+import BreathingCalendar from "@/components/breathingLogs/BreathingCalendar";
 
 export default function DogProfilePage() {
   const params = useParams();
@@ -427,7 +427,7 @@ export default function DogProfilePage() {
           ) : (
             <>
               <BreathingChart logs={breathingLogs} selectedDog={selectedDog} />
-              <Calendar logs={breathingLogs} />
+              <BreathingCalendar logs={breathingLogs} />
             </>
           )}
         </div>

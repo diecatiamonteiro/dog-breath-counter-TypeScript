@@ -11,6 +11,10 @@ export const breathingLogInitialState: BreathingLogState = {
   pagination: null,
   isLoading: false,
   error: null,
+  // Navigation state
+  viewMode: 'month',
+  selectedYear: new Date().getFullYear(),
+  selectedMonth: new Date().getMonth(),
 };
 
 export const LOG_ACTIONS = {
@@ -20,6 +24,10 @@ export const LOG_ACTIONS = {
   DELETE_LOG: "DELETE_LOG",
   SET_LOADING: "SET_LOADING",
   SET_ERROR: "SET_ERROR",
+  // Navigation actions
+  SET_VIEW_MODE: "SET_VIEW_MODE",
+  SET_SELECTED_YEAR: "SET_SELECTED_YEAR",
+  SET_SELECTED_MONTH: "SET_SELECTED_MONTH",
 } as const;
 
 export type BreathingLogAction =
@@ -46,7 +54,11 @@ export type BreathingLogAction =
       payload: { data: { deletedBreathingLogId: string } };
     }
   | { type: typeof LOG_ACTIONS.SET_LOADING; payload: boolean }
-  | { type: typeof LOG_ACTIONS.SET_ERROR; payload: string | null };
+  | { type: typeof LOG_ACTIONS.SET_ERROR; payload: string | null }
+  // Navigation actions
+  | { type: typeof LOG_ACTIONS.SET_VIEW_MODE; payload: 'month' | 'year' }
+  | { type: typeof LOG_ACTIONS.SET_SELECTED_YEAR; payload: number }
+  | { type: typeof LOG_ACTIONS.SET_SELECTED_MONTH; payload: number };
 
 export const BreathingLogReducer = (
   state: BreathingLogState,
@@ -98,6 +110,25 @@ export const BreathingLogReducer = (
       return {
         ...state,
         error: action.payload,
+      };
+
+    // Navigation cases
+    case LOG_ACTIONS.SET_VIEW_MODE:
+      return {
+        ...state,
+        viewMode: action.payload,
+      };
+
+    case LOG_ACTIONS.SET_SELECTED_YEAR:
+      return {
+        ...state,
+        selectedYear: action.payload,
+      };
+
+    case LOG_ACTIONS.SET_SELECTED_MONTH:
+      return {
+        ...state,
+        selectedMonth: action.payload,
       };
 
     default:

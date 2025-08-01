@@ -28,6 +28,10 @@ export interface BreathingLogState {
   } | null;
   isLoading: boolean;
   error: string | null;
+  // Navigation state
+  viewMode: 'month' | 'year';
+  selectedYear: number;
+  selectedMonth: number;
 }
 
 export interface AddBreathingLogData {
