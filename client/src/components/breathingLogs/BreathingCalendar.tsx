@@ -5,6 +5,8 @@ import {
   MdChevronRight,
   MdCalendarViewMonth,
   MdCalendarViewWeek,
+  MdExpandMore,
+  MdExpandLess,
 } from "react-icons/md";
 import { FaRegCalendar } from "react-icons/fa";
 import { TbLungsFilled } from "react-icons/tb";
@@ -20,6 +22,7 @@ import { BreathingLog } from "@/types/BreathingLogTypes";
 import { useAppContext } from "@/context/Context";
 import { LOG_ACTIONS } from "@/reducers/breathingLogReducer";
 import Button from "../Button";
+import { useState } from "react";
 
 type Props = {
   logs: BreathingLog[]; // Raw breathing logs
@@ -29,6 +32,9 @@ export default function BreathingCalendar({ logs }: Props) {
   // Get navigation state from context
   const { logState, logDispatch } = useAppContext();
   const { viewMode, selectedYear, selectedMonth } = logState;
+
+  // State to track which days are expanded
+  const [expandedDays, setExpandedDays] = useState<Set<string>>(new Set());
 
   // Process and group logs using shared utilities
   const processedData = processLogsForCalendar(logs);
@@ -43,18 +49,18 @@ export default function BreathingCalendar({ logs }: Props) {
     return dateGroups[date];
   };
 
-  // Get available years and months
-  const availableYears = Array.from(
-    new Set(Object.keys(dateGroups).map((date) => new Date(date).getFullYear()))
-  ).sort((a, b) => a - b);
-
-  const availableMonths = Array.from(
-    new Set(
-      Object.keys(dateGroups)
-        .filter((date) => new Date(date).getFullYear() === selectedYear)
-        .map((date) => new Date(date).getMonth())
-    )
-  ).sort((a, b) => a - b);
+  // Toggle function for expanding/collapsing days
+  const toggleDayExpansion = (date: string) => {
+    setExpandedDays((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(date)) {
+        newSet.delete(date);
+      } else {
+        newSet.add(date);
+      }
+      return newSet;
+    });
+  };
 
   // Navigation handlers
   const handleViewModeChange = (mode: "month" | "year") => {
@@ -243,7 +249,7 @@ export default function BreathingCalendar({ logs }: Props) {
 
   return (
     <div>
-      {/* View Toggle */}
+      {/* View Toggle Year/Month */}
       <div className="flex flex-col justify-between mb-4">
         <div className="flex gap-2">
           <Button
@@ -272,7 +278,6 @@ export default function BreathingCalendar({ logs }: Props) {
         <>
           {/* Month Navigation */}
           <div className="flex items-center justify-between mb-6 p-3 bg-primary/5 rounded-lg">
-            {/* Button Previous Month */}
             <Button
               onClick={handlePreviousMonth}
               icon={<MdChevronLeft />}
@@ -291,7 +296,6 @@ export default function BreathingCalendar({ logs }: Props) {
               {formatMonthYear(selectedYear, selectedMonth)}
             </h2>
 
-            {/* Button Next Month */}
             <Button
               onClick={handleNextMonth}
               icon={<MdChevronRight />}
@@ -305,7 +309,7 @@ export default function BreathingCalendar({ logs }: Props) {
             </Button>
           </div>
 
-          {/* Date Groups */}
+          {/* Date Groups with logs in Month View */}
           <div>
             {Object.keys(getFilteredDateGroups()).map((date) => {
               const dayLogs = getDayLogs(date);
@@ -313,40 +317,65 @@ export default function BreathingCalendar({ logs }: Props) {
 
               return (
                 <div key={date} className="mb-4">
-                  <div className="flex items-center gap-2 mb-2 p-2 bg-primary/5 rounded">
-                    <FaRegCalendar className="text-primary text-sm" />
-                    <span className="font-medium text-foreground">{date}</span>
-                    <span className="text-xs text-foreground/60">
-                      ({dayLogs.length})
-                    </span>
-                    <span className="text-xs text-foreground/60">
-                      Lowest: {lowestBpm} BPM
-                    </span>
+                  {/* The whole div is a button that toggles the expansion of the day */}
+                  <div
+                    className="flex items-center justify-between mb-2 p-2 bg-primary/5 rounded cursor-pointer hover:bg-primary/10 transition-colors"
+                    onClick={() => toggleDayExpansion(date)}
+                  >
+                    <div className="flex items-center gap-2">
+                      <FaRegCalendar className="text-primary text-sm" />
+                      <span className="font-medium text-foreground">
+                        {date}
+                      </span>
+                      <span className="text-xs text-foreground/60">
+                        ({dayLogs.length})
+                      </span>
+                      <div
+                        className="flex items-center gap-1 ml-4 px-2 py-1 bg-primary/10 hover:bg-primary/20 rounded-full relative group transition-colors duration-200"
+                        // Tooltip
+                        title="Lowest BPM"
+                      >
+                        <TbLungsFilled className="text-primary text-sm" />
+                        <span className="text-sm font-semibold text-primary">
+                          {lowestBpm} BPM
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      {expandedDays.has(date) ? (
+                        <MdExpandLess />
+                      ) : (
+                        <MdExpandMore />
+                      )}
+                    </div>
                   </div>
 
-                  <div className="ml-4 space-y-1">
-                    {dayLogs.map((log) => (
-                      <div
-                        key={log.id}
-                        className="flex items-center gap-3 py-1"
-                      >
-                        <span className="text-sm text-foreground/60 min-w-[50px]">
-                          {log.time}
-                        </span>
-                        <div className="flex items-center gap-1">
-                          <TbLungsFilled className="text-primary text-sm" />
-                          <span className="font-medium text-foreground">
-                            {log.bpm} BPM
+                  {/* If the day is expanded, show the logs */}
+                  {expandedDays.has(date) && (
+                    <div className="ml-4 space-y-1">
+                      {dayLogs.map((log) => (
+                        <div
+                          key={log.id}
+                          className="flex items-center gap-3 py-1"
+                        >
+                          <span className="text-sm text-foreground/60 min-w-[50px]">
+                            {log.time}
                           </span>
+                          <div className="flex items-center gap-1">
+                            <TbLungsFilled className="text-primary text-sm" />
+                            <span className="text-foreground font-medium">
+                              {log.bpm} BPM
+                            </span>
+                          </div>
+                          {log.comment && (
+                            <span className="text-xs text-foreground/60 truncate max-w-[200px]">
+                              {log.comment}
+                            </span>
+                          )}
                         </div>
-                        {log.comment && (
-                          <span className="text-xs text-foreground/60 truncate max-w-[200px]">
-                            {log.comment}
-                          </span>
-                        )}
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               );
             })}
