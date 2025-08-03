@@ -431,7 +431,6 @@ export default function DogProfilePage() {
             <>
               <BreathingLogNavigation
                 logs={breathingLogs}
-                selectedDog={selectedDog}
               />
               {logState.viewType === "chart" ? (
                 <BreathingLogChart

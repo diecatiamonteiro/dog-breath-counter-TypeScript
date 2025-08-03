@@ -1,7 +1,6 @@
 import { useAppContext } from "@/context/Context";
 import { LOG_ACTIONS } from "@/reducers/breathingLogReducer";
 import { BreathingLog } from "@/types/BreathingLogTypes";
-import { Dog } from "@/types/DogTypes";
 import {
   navigateToNextMonth,
   navigateToNextYear,
@@ -25,10 +24,9 @@ import {
 
 type Props = {
   logs: BreathingLog[];
-  selectedDog: Dog | null;
 };
 
-export default function BreathingNavigation({ logs, selectedDog }: Props) {
+export default function BreathingNavigation({ logs }: Props) {
   // Get navigation state from context (shared with calendar)
   const { logState, logDispatch } = useAppContext();
   const { viewMode, selectedYear, selectedMonth, viewType } = logState;
@@ -36,11 +34,6 @@ export default function BreathingNavigation({ logs, selectedDog }: Props) {
   // Process logs for chart using shared utility
   const processedData = processLogsForChart(logs);
   const dateGroups = groupLogsByDate(processedData);
-
-  // Make Y-axis adaptable to any BPM value
-  const allBpmValues = processedData.map((log) => log.bpm);
-  const maxBpm = Math.max(...allBpmValues, selectedDog?.maxBreathingRate || 0);
-  const yAxisMax = maxBpm + 10;
 
   // Navigation handlers (shared with calendar)
   const onViewModeChange = (mode: "month" | "year") => {

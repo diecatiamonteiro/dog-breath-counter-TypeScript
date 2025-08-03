@@ -9,6 +9,7 @@ import {
   hasDataInMonth,
   hasDataInYear,
 } from "./breathingLogUtils";
+import { BreathingLogAction } from "@/reducers/breathingLogReducer";
 
 // ============================================================================
 // NAVIGATION HANDLERS
@@ -22,7 +23,7 @@ export const navigateToPreviousMonth = (
   selectedYear: number,
   selectedMonth: number,
   dateGroups: Record<string, ProcessedLogForCalendar[]>,
-  dispatch: (action: any) => void // generic dispatch function (any action can be handled)
+  dispatch: (action: BreathingLogAction) => void
 ) => {
   // Check if previous month in current year has data
   if (
@@ -68,7 +69,7 @@ export const navigateToNextMonth = (
   selectedYear: number,
   selectedMonth: number,
   dateGroups: Record<string, ProcessedLogForCalendar[]>,
-  dispatch: (action: any) => void
+  dispatch: (action: BreathingLogAction) => void
 ) => {
   // Check if next month in current year has data
   if (
@@ -113,7 +114,7 @@ export const navigateToNextMonth = (
 export const navigateToPreviousYear = (
   selectedYear: number,
   dateGroups: Record<string, ProcessedLogForCalendar[]>,
-  dispatch: (action: any) => void
+  dispatch: (action: BreathingLogAction) => void
 ) => {
   const prevYear = selectedYear - 1;
   if (hasDataInYear(prevYear, dateGroups)) {
@@ -143,7 +144,7 @@ export const navigateToPreviousYear = (
 export const navigateToNextYear = (
   selectedYear: number,
   dateGroups: Record<string, ProcessedLogForCalendar[]>,
-  dispatch: (action: any) => void
+  dispatch: (action: BreathingLogAction) => void
 ) => {
   const nextYear = selectedYear + 1;
   if (hasDataInYear(nextYear, dateGroups)) {

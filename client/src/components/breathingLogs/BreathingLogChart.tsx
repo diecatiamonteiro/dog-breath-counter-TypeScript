@@ -5,7 +5,6 @@ import { BreathingLog } from "@/types/BreathingLogTypes";
 import { Dog } from "@/types/DogTypes";
 import {
   formatDateChartLabel,
-  groupLogsByDate,
   processLogsForChart,
   getFilteredDataForChart,
 } from "@/utils/breathingLogUtils";
@@ -31,7 +30,6 @@ export default function BreathingChart({ logs, selectedDog }: Props) {
 
   // Process logs for chart using shared utility
   const processedData = processLogsForChart(logs);
-  const dateGroups = groupLogsByDate(processedData);
 
   // Filter data for chart display using shared utility
   const filteredData = getFilteredDataForChart(

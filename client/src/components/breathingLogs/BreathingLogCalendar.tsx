@@ -1,10 +1,6 @@
 "use client";
 
 import {
-  MdChevronLeft,
-  MdChevronRight,
-  MdCalendarViewMonth,
-  MdCalendarViewWeek,
   MdExpandMore,
   MdExpandLess,
 } from "react-icons/md";
@@ -13,19 +9,13 @@ import { TbLungsFilled } from "react-icons/tb";
 import {
   processLogsForCalendar,
   groupLogsByDate,
-  formatMonthYear,
   formatMonthName,
-  hasDataInYear,
-  hasDataInMonth,
+  ProcessedLogForCalendar,
 } from "@/utils/breathingLogUtils";
 import {
   filterLogsByMonth,
   filterLogsByYear,
   calculateYearlySummary,
-  navigateToPreviousMonth,
-  navigateToNextMonth,
-  navigateToPreviousYear,
-  navigateToNextYear,
 } from "@/utils/breathingLogNavigationUtils";
 import { BreathingLog } from "@/types/BreathingLogTypes";
 import { useAppContext } from "@/context/Context";
@@ -54,7 +44,7 @@ export default function BreathingCalendar({ logs }: Props) {
   const dateGroups = groupLogsByDate(processedData);
 
   // Helper functions
-  const getLowestBpm = (dayLogs: any[]) => {
+  const getLowestBpm = (dayLogs: ProcessedLogForCalendar[]) => {
     return Math.min(...dayLogs.map((log) => log.bpm));
   };
 
