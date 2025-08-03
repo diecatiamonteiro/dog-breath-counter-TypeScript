@@ -130,7 +130,7 @@ export default function DogProfilePage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* Dog Info Section */}
-          <div className="bg-main-text-bg rounded-lg shadow-md p-6 border border-primary-light/20">
+          <div className="bg-main-text-bg rounded-lg shadow-md p-3 md:p-6 border border-primary-light/20">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-semibold text-foreground">
                 Dog Info
@@ -251,7 +251,7 @@ export default function DogProfilePage() {
           </div>
 
           {/* Resting Respiratory Rate Section */}
-          <div className="bg-main-text-bg rounded-lg shadow-md p-6 border border-primary-light/20">
+          <div className="bg-main-text-bg rounded-lg shadow-md p-3 md:p-6 border border-primary-light/20">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-semibold text-foreground">
                 Resting Respiratory Rate
@@ -307,7 +307,7 @@ export default function DogProfilePage() {
         </div>
 
         {/* Veterinarian Section */}
-        <div className="bg-main-text-bg rounded-lg shadow-md p-6 mb-8 border border-primary-light/20">
+        <div className="bg-main-text-bg rounded-lg shadow-md p-3 md:p-6 mb-8 border border-primary-light/20">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold text-foreground">
               Veterinarian
@@ -384,7 +384,7 @@ export default function DogProfilePage() {
         </div>
 
         {/* Share Data Section - Placeholder */}
-        <div className="bg-main-text-bg rounded-lg shadow-md p-6 mb-8 border border-primary-light/20">
+        <div className="bg-main-text-bg rounded-lg shadow-md p-3 md:p-6 mb-8 border border-primary-light/20">
           <h2 className="text-xl font-semibold text-foreground mb-4">
             Share Data
           </h2>
@@ -408,7 +408,7 @@ export default function DogProfilePage() {
         </div>
 
         {/* Breathing Logs Section */}
-        <div className="bg-main-text-bg rounded-lg shadow-md p-6 mb-8 border border-primary-light/20">
+        <div className="bg-main-text-bg rounded-lg shadow-md p-3 md:p-6 mb-8 border border-primary-light/20">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold text-foreground">
               Breathing Logs
@@ -416,7 +416,7 @@ export default function DogProfilePage() {
           </div>
 
           {breathingLogs.length === 0 ? (
-            <div className="bg-main-text-bg rounded-lg shadow-md p-6 border border-primary-light/20">
+            <div className="bg-main-text-bg rounded-lg shadow-md p-3 md:p-6 border border-primary-light/20">
               <div className="text-center py-8">
                 <div className="text-primary/60 text-4xl mb-4">📊</div>
                 <p className="text-foreground/70 mb-4">
@@ -447,7 +447,7 @@ export default function DogProfilePage() {
       </div>
 
       {/* Sticky Monitor Breathing Button */}
-      <div className="fixed bottom-8 max-w-5xl mt-12 w-full">
+      <div className="fixed bottom-8 lg:max-w-5xl mb-16 lg:mb-0 mt-12 w-full">
         <Button
           href={`/my-dogs/${dogId}/monitor-breathing`}
           variant="primary"

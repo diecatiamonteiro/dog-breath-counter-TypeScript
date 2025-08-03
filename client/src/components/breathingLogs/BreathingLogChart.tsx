@@ -4,8 +4,10 @@ import { useAppContext } from "@/context/Context";
 import { BreathingLog } from "@/types/BreathingLogTypes";
 import { Dog } from "@/types/DogTypes";
 import {
+  formatDateChartLabel,
   groupLogsByDate,
   processLogsForChart,
+  getFilteredDataForChart,
 } from "@/utils/breathingLogUtils";
 import {
   BarChart,
@@ -16,7 +18,6 @@ import {
   ReferenceLine,
   Cell,
 } from "recharts";
-import BreathingNavigation from "./BreathingLogNavigation";
 
 type Props = {
   logs: BreathingLog[];
@@ -32,31 +33,13 @@ export default function BreathingChart({ logs, selectedDog }: Props) {
   const processedData = processLogsForChart(logs);
   const dateGroups = groupLogsByDate(processedData);
 
-  // Filter data based on selected period and limit for chart display
-  const getFilteredData = () => {
-    if (viewMode === "month") {
-      // For month view, show all data for the selected month
-      const monthData = processedData.filter((log) => {
-        const logDate = new Date(log.log.createdAt);
-        return (
-          logDate.getFullYear() === selectedYear &&
-          logDate.getMonth() === selectedMonth
-        );
-      });
-      // Limit to last 30 entries to prevent overcrowding
-      return monthData.slice(-30);
-    } else {
-      // For year view, show all data for the selected year
-      const yearData = processedData.filter((log) => {
-        const logDate = new Date(log.log.createdAt);
-        return logDate.getFullYear() === selectedYear;
-      });
-      // Limit to last 50 entries for year view
-      return yearData.slice(-50);
-    }
-  };
-
-  const filteredData = getFilteredData();
+  // Filter data for chart display using shared utility
+  const filteredData = getFilteredDataForChart(
+    processedData,
+    viewMode,
+    selectedYear,
+    selectedMonth
+  );
 
   // Make Y-axis adaptable to any BPM value
   const allBpmValues = filteredData.map((log) => log.bpm);
@@ -76,46 +59,71 @@ export default function BreathingChart({ logs, selectedDog }: Props) {
     }
   };
 
+  // Format date labels to show only day number
+  const formatDateLabel = formatDateChartLabel;
+
   return (
     <div className="bg-main-text-bg rounded-lg shadow-md border border-primary-light/20">
       {/* Chart */}
-      <div className="h-80">
+      <div className="h-70 md:h-96">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={filteredData}
-            margin={{ top: 20, right: 10, left: 10, bottom: 5 }}
             barGap={0}
             barCategoryGap={0}
           >
             <XAxis
               dataKey="index"
               stroke="#6b7280"
-              fontSize={12}
+              fontSize={10}
               tick={{ fill: "#6b7280" }}
               tickFormatter={(value, index) =>
-                filteredData[index]?.dateLong || ""
+                formatDateLabel(filteredData[index]?.dateLong || "")
               }
+              height={40}
+              interval={0}
+              label={{
+                value: "Days",
+                position: "insideBottom",
+                fill: "#6b7280",
+                fontSize: 10,
+              }}
             />
             <YAxis
               domain={[0, yAxisMax]}
               stroke="#6b7280"
-              fontSize={12}
+              fontSize={10}
               tick={{ fill: "#6b7280" }}
+              allowDataOverflow={false}
+              width={25}
               label={{
                 value: "BPM",
-                angle: -90,
-                position: "insideLeft",
+                position: "top",
+                offset: 10,
                 fill: "#6b7280",
+                fontSize: 10,
               }}
-              allowDataOverflow={false}
             />
 
-            {/* Reference line for max breathing rate */}
+            {/* Bars - one for each reading */}
+            <Bar
+              dataKey="bpm"
+              radius={[2, 2, 0, 0]}
+              barSize={12}
+              fill="#8884d8"
+            >
+              {filteredData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={getBarColor(entry.bpm)} />
+              ))}
+            </Bar>
+
+            {/* Reference line for max breathing rate - placed after bars to appear on top */}
             {selectedDog && (
               <ReferenceLine
                 y={selectedDog.maxBreathingRate}
                 stroke="#f59e0b"
                 strokeDasharray="1 1"
+                fontSize={10}
                 label={{
                   value: `Max: ${selectedDog.maxBreathingRate} BPM`,
                   position: "top",
@@ -123,51 +131,30 @@ export default function BreathingChart({ logs, selectedDog }: Props) {
                 }}
               />
             )}
-
-            {/* Bars - one for each reading */}
-            <Bar
-              dataKey="bpm"
-              radius={[4, 4, 0, 0]}
-              barSize={30}
-              fill="#8884d8"
-              label={({ value, x, y, width, height }) => {
-                if (value === null || value === undefined) return <></>;
-                return (
-                  <text
-                    x={x + width / 2}
-                    y={y - 3}
-                    fill="#8884d8"
-                    textAnchor="middle"
-                    fontSize={12}
-                    fontWeight="500"
-                  >
-                    {value}
-                  </text>
-                );
-              }}
-            >
-              {filteredData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={getBarColor(entry.bpm)} />
-              ))}
-            </Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>
 
       {/* Legend (below, at or above max BPM) */}
       {selectedDog && (
-        <div className="mt-4 flex items-center justify-center gap-4 text-sm">
+        <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-center gap-2 sm:gap-4 text-sm p-4">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 bg-green-500 rounded"></div>
-            <span>Below {selectedDog.maxBreathingRate} BPM</span>
+            <span className="text-xs sm:text-sm">
+              Below {selectedDog.maxBreathingRate} BPM
+            </span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 bg-yellow-500 rounded"></div>
-            <span>At {selectedDog.maxBreathingRate} BPM</span>
+            <span className="text-xs sm:text-sm">
+              At {selectedDog.maxBreathingRate} BPM
+            </span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 bg-red-500 rounded"></div>
-            <span>Above {selectedDog.maxBreathingRate} BPM</span>
+            <span className="text-xs sm:text-sm">
+              Above {selectedDog.maxBreathingRate} BPM
+            </span>
           </div>
         </div>
       )}

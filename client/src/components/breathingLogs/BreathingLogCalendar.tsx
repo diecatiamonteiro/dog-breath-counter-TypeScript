@@ -103,7 +103,7 @@ export default function BreathingCalendar({ logs }: Props) {
                 <div key={date} className="mb-4">
                   {/* The whole div is a button that toggles the expansion of the day */}
                   <div
-                    className="flex items-center justify-between mb-2 p-2 border border-primary/30 rounded cursor-pointer hover:bg-primary/10 transition-colors"
+                    className="flex items-center justify-between mb-2 p-2  bg-primary/5 border border-primary/20 rounded cursor-pointer hover:bg-primary/10 transition-colors"
                     onClick={() => toggleDayExpansion(date)}
                   >
                     <div className="flex items-center gap-2">
@@ -205,7 +205,7 @@ export default function BreathingCalendar({ logs }: Props) {
                         {monthData.count !== 1 ? "s" : ""}
                       </p>
                       <p className="text-sm text-foreground/70">
-                        Avg: {monthData.avgBpm} BPM
+                        Average: {monthData.avgBpm} BPM
                       </p>
                     </div>
                   ) : (

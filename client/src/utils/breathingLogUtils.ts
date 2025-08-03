@@ -51,6 +51,13 @@ export const formatMonthName = (year: number, monthIndex: number) => {
   });
 };
 
+  // Format date labels to show only day number
+export const formatDateChartLabel = (dateString: string) => {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  return date.getDate().toString(); // Just the day number
+}
+
 // Format time as "HH:MM" (e.g., "14:30")
 export const formatTime = (date: string) => {
   return new Date(date).toLocaleTimeString("en-UK", {
@@ -138,4 +145,40 @@ export const hasDataInMonth = (year: number, month: number, dateGroups: Record<s
     const dateObj = new Date(date);
     return dateObj.getFullYear() === year && dateObj.getMonth() === month;
   });
+};
+
+// ============================================================================
+// CHART DATA FILTERING UTILITIES
+// ============================================================================
+
+/**
+ * Filter data for chart display based on view mode and selected period
+ * Returns filtered data with appropriate limits for chart visualization
+ */
+export const getFilteredDataForChart = (
+  processedData: ReturnType<typeof processLogsForChart>,
+  viewMode: "month" | "year",
+  selectedYear: number,
+  selectedMonth: number
+) => {
+  if (viewMode === "month") {
+    // For month view, show all data for the selected month
+    const monthData = processedData.filter((log) => {
+      const logDate = new Date(log.log.createdAt);
+      return (
+        logDate.getFullYear() === selectedYear &&
+        logDate.getMonth() === selectedMonth
+      );
+    });
+    // Limit to last 30 entries to prevent overcrowding
+    return monthData.slice(-30);
+  } else {
+    // For year view, show all data for the selected year
+    const yearData = processedData.filter((log) => {
+      const logDate = new Date(log.log.createdAt);
+      return logDate.getFullYear() === selectedYear;
+    });
+    // Limit to last 50 entries for year view
+    return yearData.slice(-50);
+  }
 };
