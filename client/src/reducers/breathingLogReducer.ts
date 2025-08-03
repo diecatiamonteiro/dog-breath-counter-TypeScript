@@ -13,8 +13,10 @@ export const breathingLogInitialState: BreathingLogState = {
   error: null,
   // Navigation state
   viewMode: 'month',
+  viewType: 'chart',
   selectedYear: new Date().getFullYear(),
   selectedMonth: new Date().getMonth(),
+  selectedWeek: new Date().getDay()
 };
 
 export const LOG_ACTIONS = {
@@ -26,6 +28,7 @@ export const LOG_ACTIONS = {
   SET_ERROR: "SET_ERROR",
   // Navigation actions
   SET_VIEW_MODE: "SET_VIEW_MODE",
+  SET_VIEW_TYPE: "SET_VIEW_TYPE",
   SET_SELECTED_YEAR: "SET_SELECTED_YEAR",
   SET_SELECTED_MONTH: "SET_SELECTED_MONTH",
 } as const;
@@ -57,6 +60,7 @@ export type BreathingLogAction =
   | { type: typeof LOG_ACTIONS.SET_ERROR; payload: string | null }
   // Navigation actions
   | { type: typeof LOG_ACTIONS.SET_VIEW_MODE; payload: 'month' | 'year' }
+  | { type: typeof LOG_ACTIONS.SET_VIEW_TYPE; payload: 'chart' | 'calendar' }
   | { type: typeof LOG_ACTIONS.SET_SELECTED_YEAR; payload: number }
   | { type: typeof LOG_ACTIONS.SET_SELECTED_MONTH; payload: number };
 
@@ -117,6 +121,12 @@ export const BreathingLogReducer = (
       return {
         ...state,
         viewMode: action.payload,
+      };
+
+    case LOG_ACTIONS.SET_VIEW_TYPE:
+      return {
+        ...state,
+        viewType: action.payload,
       };
 
     case LOG_ACTIONS.SET_SELECTED_YEAR:

@@ -1,8 +1,12 @@
 "use client";
 
+import { useAppContext } from "@/context/Context";
 import { BreathingLog } from "@/types/BreathingLogTypes";
 import { Dog } from "@/types/DogTypes";
-import { processLogsForChart } from "@/utils/breathingLogUtils";
+import {
+  groupLogsByDate,
+  processLogsForChart,
+} from "@/utils/breathingLogUtils";
 import {
   BarChart,
   Bar,
@@ -12,6 +16,7 @@ import {
   ReferenceLine,
   Cell,
 } from "recharts";
+import BreathingNavigation from "./BreathingLogNavigation";
 
 type Props = {
   logs: BreathingLog[];
@@ -19,21 +24,44 @@ type Props = {
 };
 
 export default function BreathingChart({ logs, selectedDog }: Props) {
+  // Get navigation state from context (shared with calendar)
+  const { logState } = useAppContext();
+  const { viewMode, selectedYear, selectedMonth } = logState;
+
   // Process logs for chart using shared utility
-  const data = processLogsForChart(logs);
+  const processedData = processLogsForChart(logs);
+  const dateGroups = groupLogsByDate(processedData);
+
+  // Filter data based on selected period and limit for chart display
+  const getFilteredData = () => {
+    if (viewMode === "month") {
+      // For month view, show all data for the selected month
+      const monthData = processedData.filter((log) => {
+        const logDate = new Date(log.log.createdAt);
+        return (
+          logDate.getFullYear() === selectedYear &&
+          logDate.getMonth() === selectedMonth
+        );
+      });
+      // Limit to last 30 entries to prevent overcrowding
+      return monthData.slice(-30);
+    } else {
+      // For year view, show all data for the selected year
+      const yearData = processedData.filter((log) => {
+        const logDate = new Date(log.log.createdAt);
+        return logDate.getFullYear() === selectedYear;
+      });
+      // Limit to last 50 entries for year view
+      return yearData.slice(-50);
+    }
+  };
+
+  const filteredData = getFilteredData();
 
   // Make Y-axis adaptable to any BPM value
-  const allBpmValues = logs.map((log) => log.bpm); // create new array of all BPM values
-  const maxBpm = Math.max(...allBpmValues, selectedDog?.maxBreathingRate || 0); // find the highest BPM value
-  const yAxisMax = maxBpm + 10; // add padding of 10 to the highest BPM value to ensure bars don't go off the chart
-
-  // Group logs by date (reduce returns an object with the date as the key and the logs as the value)
-  const dateGroups = data.reduce((grouped, log) => {
-    const date = log.dateLong; // get the date from the log
-    grouped[date] = grouped[date] || []; // initialize the date as an empty array if it doesn't exist
-    grouped[date].push(log); // add the log to the date
-    return grouped;
-  }, {} as Record<string, typeof data>);
+  const allBpmValues = filteredData.map((log) => log.bpm);
+  const maxBpm = Math.max(...allBpmValues, selectedDog?.maxBreathingRate || 0);
+  const yAxisMax = maxBpm + 10;
 
   // Color bars based on BPM vs max breathing rate
   const getBarColor = (bpm: number) => {
@@ -49,12 +77,12 @@ export default function BreathingChart({ logs, selectedDog }: Props) {
   };
 
   return (
-    <div className="bg-main-text-bg rounded-lg shadow-md p-6 border border-primary-light/20">
+    <div className="bg-main-text-bg rounded-lg shadow-md border border-primary-light/20">
       {/* Chart */}
       <div className="h-80">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
-            data={data}
+            data={filteredData}
             margin={{ top: 20, right: 10, left: 10, bottom: 5 }}
             barGap={0}
             barCategoryGap={0}
@@ -64,7 +92,9 @@ export default function BreathingChart({ logs, selectedDog }: Props) {
               stroke="#6b7280"
               fontSize={12}
               tick={{ fill: "#6b7280" }}
-              tickFormatter={(value, index) => data[index]?.dateShort || ""}
+              tickFormatter={(value, index) =>
+                filteredData[index]?.dateLong || ""
+              }
             />
             <YAxis
               domain={[0, yAxisMax]}
@@ -80,7 +110,7 @@ export default function BreathingChart({ logs, selectedDog }: Props) {
               allowDataOverflow={false}
             />
 
-            {/* 3. Reference line for max breathing rate */}
+            {/* Reference line for max breathing rate */}
             {selectedDog && (
               <ReferenceLine
                 y={selectedDog.maxBreathingRate}
@@ -116,7 +146,7 @@ export default function BreathingChart({ logs, selectedDog }: Props) {
                 );
               }}
             >
-              {data.map((entry, index) => (
+              {filteredData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={getBarColor(entry.bpm)} />
               ))}
             </Bar>

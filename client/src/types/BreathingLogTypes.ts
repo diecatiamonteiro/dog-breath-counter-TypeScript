@@ -29,9 +29,11 @@ export interface BreathingLogState {
   isLoading: boolean;
   error: string | null;
   // Navigation state
-  viewMode: 'month' | 'year';
+  viewMode: "month" | "year";
+  viewType: "chart" | "calendar";
   selectedYear: number;
   selectedMonth: number;
+  selectedWeek: number;
 }
 
 export interface AddBreathingLogData {

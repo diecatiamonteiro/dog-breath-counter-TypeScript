@@ -16,8 +16,9 @@ import { RiArrowLeftSLine, RiAddLine, RiEditLine } from "react-icons/ri";
 import { FaDog } from "react-icons/fa";
 import { TbLungsFilled } from "react-icons/tb";
 import Image from "next/image";
-import BreathingChart from "@/components/breathingLogs/BreathingChart";
-import BreathingCalendar from "@/components/breathingLogs/BreathingCalendar";
+import BreathingLogChart from "@/components/breathingLogs/BreathingLogChart";
+import BreathingLogCalendar from "@/components/breathingLogs/BreathingLogCalendar";
+import BreathingLogNavigation from "@/components/breathingLogs/BreathingLogNavigation";
 
 export default function DogProfilePage() {
   const params = useParams();
@@ -408,9 +409,11 @@ export default function DogProfilePage() {
 
         {/* Breathing Logs Section */}
         <div className="bg-main-text-bg rounded-lg shadow-md p-6 mb-8 border border-primary-light/20">
-          <h2 className="text-xl font-semibold text-foreground mb-4">
-            Breathing Logs
-          </h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold text-foreground">
+              Breathing Logs
+            </h2>
+          </div>
 
           {breathingLogs.length === 0 ? (
             <div className="bg-main-text-bg rounded-lg shadow-md p-6 border border-primary-light/20">
@@ -426,8 +429,18 @@ export default function DogProfilePage() {
             </div>
           ) : (
             <>
-              <BreathingChart logs={breathingLogs} selectedDog={selectedDog} />
-              <BreathingCalendar logs={breathingLogs} />
+              <BreathingLogNavigation
+                logs={breathingLogs}
+                selectedDog={selectedDog}
+              />
+              {logState.viewType === "chart" ? (
+                <BreathingLogChart
+                  logs={breathingLogs}
+                  selectedDog={selectedDog}
+                />
+              ) : (
+                <BreathingLogCalendar logs={breathingLogs} />
+              )}
             </>
           )}
         </div>
