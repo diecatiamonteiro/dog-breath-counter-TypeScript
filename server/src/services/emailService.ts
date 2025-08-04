@@ -3,7 +3,6 @@
  * @description Service for sending email reports with PDF attachments
  */
 
-// @ts-ignore - nodemailer doesn't have TypeScript declarations
 import nodemailer from 'nodemailer';
 import { ReportData } from './pdfService';
 
@@ -20,14 +19,24 @@ export interface EmailOptions {
 
 export const sendEmail = async (options: EmailOptions): Promise<void> => {
   try {
+    console.log('Email service: Starting email send...', {
+      to: options.to,
+      subject: options.subject,
+      hasAttachments: !!options.attachments?.length,
+      gmailUser: process.env.GOOGLE_EMAIL ? 'SET' : 'NOT SET',
+      appPassword: process.env.GOOGLE_APP_PASSWORD ? 'SET' : 'NOT SET'
+    });
+
     // Create transporter using App Password
-    const transporter = nodemailer.createTransporter({
+    const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
         user: process.env.GOOGLE_EMAIL,
         pass: process.env.GOOGLE_APP_PASSWORD,
       },
     });
+
+    console.log('Email service: Transporter created successfully');
 
     // Send email
     await transporter.sendMail({
@@ -37,7 +46,13 @@ export const sendEmail = async (options: EmailOptions): Promise<void> => {
       html: options.html,
       attachments: options.attachments,
     });
+
+    console.log('Email service: Email sent successfully');
   } catch (error) {
+    console.error('Email service error:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined
+    });
     throw new Error(`Failed to send email: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 };

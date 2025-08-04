@@ -430,6 +430,14 @@ export const sendBreathingLogEmail: Controller<
       }
     });
   } catch (error) {
+    console.error('Email sending error details:', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+      recipientEmail: req.body.recipientEmail,
+      dogId: req.params.id,
+      userId: req.user?._id
+    });
+    
     if (error instanceof createError.HttpError) {
       return next(error);
     }

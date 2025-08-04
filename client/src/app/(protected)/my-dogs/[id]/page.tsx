@@ -1,48 +1,120 @@
 /**
  * @file app/(protected)/my-dogs/[id]/page.tsx
  * @description Dog profile page
+ *              Includes: dog info, veterinarian info, resting respiratory rate, breathing logs, and share data
  */
 
 "use client";
 
-import { getSelectedDog } from "@/api/dogApi";
-import { getAllBreathingLogs } from "@/api/breathingLogApi";
-import LoadingSpinner from "@/app/loading";
-import Button from "@/components/Button";
 import { useAppContext } from "@/context/Context";
 import { useParams } from "next/navigation";
-import { useEffect } from "react";
-import { RiArrowLeftSLine, RiAddLine, RiEditLine } from "react-icons/ri";
-import { FaDog } from "react-icons/fa";
-import { TbLungsFilled } from "react-icons/tb";
-import { LuTriangleAlert } from "react-icons/lu";
-import { PiHeartbeatBold } from "react-icons/pi";
-
-
-import Image from "next/image";
+import { useEffect, useState } from "react";
+import Button from "@/components/Button";
 import BreathingLogChart from "@/components/breathingLogs/BreathingLogChart";
 import BreathingLogCalendar from "@/components/breathingLogs/BreathingLogCalendar";
 import BreathingLogNavigation from "@/components/breathingLogs/BreathingLogNavigation";
+import { getAllBreathingLogs } from "@/api/breathingLogApi";
+import { getSelectedDog } from "@/api/dogApi";
+import Image from "next/image";
+import DateRangePicker from "@/components/shareData/DateRangePicker";
+import {
+  generateBreathingLogPdf,
+  sendBreathingLogEmail,
+} from "@/api/breathingLogApi";
+import LoadingSpinner from "@/app/loading";
+import { RiArrowLeftSLine, RiAddLine, RiEditLine } from "react-icons/ri";
+import EmailReportFormModal from "@/components/shareData/EmailReportFormModal";
+import { FaDog } from "react-icons/fa";
+import { TbLungsFilled } from "react-icons/tb";
+import { PiHeartbeatBold } from "react-icons/pi";
+import { GrDocumentDownload } from "react-icons/gr";
+import { LuTriangleAlert } from "react-icons/lu";
+import { TfiEmail } from "react-icons/tfi";
+import { FaLightbulb } from "react-icons/fa";
 
 export default function DogProfilePage() {
   const params = useParams();
   const dogId = params.id as string;
-  const { dogState, dogDispatch, logState, logDispatch, userState } =
-    useAppContext();
-  const { selectedDog, isLoading, error } = dogState;
+  const { dogState, dogDispatch, logState, logDispatch } = useAppContext();
+  const { selectedDog } = dogState;
   const { breathingLogs } = logState;
+
+  // State for Share Data functionality
+  const [startDate, setStartDate] = useState<string | null>(null);
+  const [endDate, setEndDate] = useState<string | null>(null);
+  const [showEmailForm, setShowEmailForm] = useState(false);
+  const [isLoadingPdf, setIsLoadingPdf] = useState(false);
+  const [isLoadingEmail, setIsLoadingEmail] = useState(false);
+
+  // Load breathing logs on mount and when dogId changes
+  useEffect(() => {
+    getAllBreathingLogs(logDispatch, dogId);
+  }, [dogId, logDispatch]);
 
   // Load dog data on mount and when dogId changes (force refresh)
   useEffect(() => {
     getSelectedDog(dogDispatch, dogId);
   }, [dogId, dogDispatch]);
 
-  // Load breathing logs for this specific dog
-  useEffect(() => {
-    if (dogId) {
-      getAllBreathingLogs(logDispatch, dogId);
+  // Handle date range changes
+  const handleDateRangeChange = (start: string | null, end: string | null) => {
+    setStartDate(start);
+    setEndDate(end);
+  };
+
+  // Handle PDF download
+  const handleDownloadPdf = async () => {
+    if (!selectedDog) return;
+
+    setIsLoadingPdf(true);
+    try {
+      const pdfUrl = await generateBreathingLogPdf(
+        logDispatch,
+        dogId,
+        startDate || undefined,
+        endDate || undefined
+      );
+
+      // Create download link
+      const link = document.createElement("a");
+      link.href = pdfUrl;
+      link.download = `breathing-report_${selectedDog.name}_${
+        new Date().toISOString().split("T")[0]
+      }.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      // Clean up the blob URL because it's no longer needed until the next time the user downloads a PDF
+      window.URL.revokeObjectURL(pdfUrl);
+    } catch (error) {
+      console.error("Failed to download PDF:", error);
+    } finally {
+      setIsLoadingPdf(false);
     }
-  }, [dogId, logDispatch]);
+  };
+
+  // Handle email sending
+  const handleSendEmail = async (recipientEmail: string) => {
+    if (!selectedDog) return;
+
+    setIsLoadingEmail(true);
+    try {
+      await sendBreathingLogEmail(
+        logDispatch,
+        dogId,
+        recipientEmail,
+        startDate || undefined,
+        endDate || undefined
+      );
+      setShowEmailForm(false);
+    } catch (error) {
+      console.error("Failed to send email:", error);
+      throw error; // Re-throw to let the form handle the error
+    } finally {
+      setIsLoadingEmail(false);
+    }
+  };
 
   const dogName =
     selectedDog?.name &&
@@ -53,20 +125,10 @@ export default function DogProfilePage() {
 
   // Calculate average BPM from breathing logs for this dog
   const calculateAverageBPM = () => {
-    // Use both logState.breathingLogs (from specific dog loading) and userState.breathingLogs (from profile loading)
-    // Combine both arrays and filter for this specific dog
-    const allLogs = [...breathingLogs, ...(userState.breathingLogs || [])];
-    const dogLogs = allLogs.filter((log) => log && log.dogId === dogId);
+    if (breathingLogs.length === 0) return null;
 
-    // Remove duplicates based on log id
-    const uniqueLogs = dogLogs.filter(
-      (log, index, self) => index === self.findIndex((l) => l.id === log.id)
-    );
-
-    if (uniqueLogs.length === 0) return null;
-
-    const totalBPM = uniqueLogs.reduce((sum, log) => sum + log.bpm, 0);
-    return Math.round(totalBPM / uniqueLogs.length);
+    const totalBPM = breathingLogs.reduce((sum, log) => sum + log.bpm, 0);
+    return Math.round(totalBPM / breathingLogs.length);
   };
 
   const averageBPM = calculateAverageBPM();
@@ -87,28 +149,17 @@ export default function DogProfilePage() {
     return !!hasData;
   };
 
-  if (isLoading) {
+  if (!selectedDog) {
     return (
       <div className="max-w-5xl p-4">
         <div className="text-left">
-          <h2 className="text-xl font-semibold mb-4">
-            Loading your dog&apos;s profile...
+          <h2 className="text-xl font-semibold mb-2">
+            Loading your dog&apos;s profile
           </h2>
+          <p className="text-sm text-foreground/70 mb-4 text-left">
+            If this takes too long, try refreshing the page
+          </p>
           <LoadingSpinner />
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="mx-auto">
-        <div className="text-center">
-          <h2 className="text-xl font-semibold mb-4">
-            We cannot show your dog&apos;s profile at the moment. Try refreshing
-            the page.
-          </h2>
-          <p className="text-accent">{error}</p>
         </div>
       </div>
     );
@@ -164,7 +215,9 @@ export default function DogProfilePage() {
                   ) : (
                     <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5">
                       <FaDog className="w-16 h-16 text-primary/40 mb-3" />
-                      <p className="text-sm text-primary/60 mb-4 font-medium">No photo</p>
+                      <p className="text-sm text-primary/60 mb-4 font-medium">
+                        No photo
+                      </p>
                       <Button
                         href={`/my-dogs/add-dog?edit=${dogId}&section=info`}
                         variant="secondary"
@@ -200,7 +253,7 @@ export default function DogProfilePage() {
                     {dogName}
                   </h3>
 
-                                    {/* Dog Stats - Simple format like vet info */}
+                  {/* Dog Stats - Simple format like vet info */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* Age */}
                     {selectedDog?.age && (
@@ -235,17 +288,17 @@ export default function DogProfilePage() {
                     )}
 
                     {/* Show message if no info available */}
-                    {!selectedDog?.age && !selectedDog?.breed && !selectedDog?.gender && (
-                      <div className="md:col-span-2 text-left py-4">
-                        <p className="text-foreground/70">
-                          No dog information added yet.
-                        </p>
-                      </div>
-                    )}
+                    {!selectedDog?.age &&
+                      !selectedDog?.breed &&
+                      !selectedDog?.gender && (
+                        <div className="md:col-span-2 text-left py-4">
+                          <p className="text-foreground/70">
+                            No dog information added yet.
+                          </p>
+                        </div>
+                      )}
                   </div>
                 </div>
-
-
               </div>
             </div>
           </div>
@@ -355,10 +408,12 @@ export default function DogProfilePage() {
                   <p className="text-2xl font-bold text-primary">
                     {selectedDog?.maxBreathingRate} BPM
                   </p>
-                  <p className="text-xs text-primary-dark">Set when adding dog</p>
+                  <p className="text-xs text-primary-dark">
+                    Set when adding dog
+                  </p>
                 </div>
-                <div className="text-primary text-3xl"><LuTriangleAlert />
-
+                <div className="text-primary text-3xl">
+                  <LuTriangleAlert />
                 </div>
               </div>
             </div>
@@ -379,7 +434,8 @@ export default function DogProfilePage() {
                       : "Start monitoring to see average"}
                   </p>
                 </div>
-                <div className="text-primary text-3xl"><PiHeartbeatBold />
+                <div className="text-primary text-3xl">
+                  <PiHeartbeatBold />
                 </div>
               </div>
             </div>
@@ -426,23 +482,77 @@ export default function DogProfilePage() {
           <h2 className="text-xl font-semibold text-foreground mb-4">
             Share Data
           </h2>
-          <div className="text-center py-8">
-            <div className="text-primary/60 text-4xl mb-4">📊</div>
-            <p className="text-foreground/70 mb-4">
-              Coming soon: Share breathing data with your vet
-            </p>
-            <div className="flex flex-wrap gap-2 justify-center">
-              <Button variant="ghost" disabled>
-                Select Date Range
-              </Button>
-              <Button variant="ghost" disabled>
-                Email Report
-              </Button>
-              <Button variant="ghost" disabled>
-                Download PDF
-              </Button>
+
+          {breathingLogs.length === 0 ? (
+            <div className="text-center py-8">
+              <div className="text-primary/60 text-4xl mb-4">📊</div>
+              <p className="text-foreground/70 mb-4">
+                No breathing logs available to share
+              </p>
+              <p className="text-sm text-foreground/50">
+                Start monitoring breathing to generate reports
+              </p>
             </div>
-          </div>
+          ) : (
+            <div className="space-y-6">
+              {/* Date Range Picker */}
+              <DateRangePicker
+                onDateRangeChange={handleDateRangeChange}
+                className="mb-4"
+              />
+
+              {/* Action Buttons */}
+              <div className="flex flex-wrap gap-3">
+                <Button
+                  onClick={handleDownloadPdf}
+                  variant="primary"
+                  disabled={isLoadingPdf}
+                  className="flex items-center gap-2"
+                  icon={<GrDocumentDownload className="w-5 h-5" />}
+                >
+                  {isLoadingPdf ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      Generating PDF...
+                    </>
+                  ) : (
+                    <> Download PDF Report</>
+                  )}
+                </Button>
+
+                <Button
+                  onClick={() => setShowEmailForm(true)}
+                  variant="primary"
+                  disabled={isLoadingEmail}
+                  className="flex items-center gap-2"
+                  icon={<TfiEmail className="w-5 h-5" />}
+                >
+                  Email Report
+                </Button>
+              </div>
+
+              {/* Info Text */}
+              <div className="text-sm text-foreground/60 bg-primary/5 p-3 rounded-md">
+                <p className="mb-1">
+                  <strong>PDF Report includes:</strong>
+                </p>
+                <ul className="list-disc list-inside space-y-1">
+                  <li>Dog information and breathing rate summary</li>
+                  <li>Detailed breathing logs for the selected date range</li>
+                  <li>Average, lowest, and highest BPM values</li>
+                </ul>
+                {!startDate && !endDate && (
+                  <div className="flex items-center mt-4">
+                    <FaLightbulb className="w-4 h-4 inline-block mr-2 text-primary" />
+                    <p className="text-primary font-semibold">
+                      Select a date range to customize your report, or leave
+                      empty for the last 30 days.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -460,6 +570,14 @@ export default function DogProfilePage() {
           </div>
         </Button>
       </div>
+
+      {/* Email Report Form Modal */}
+      <EmailReportFormModal
+        onSendEmail={handleSendEmail}
+        onCancel={() => setShowEmailForm(false)}
+        isVisible={showEmailForm}
+        isLoading={isLoadingEmail}
+      />
     </div>
   );
 }
