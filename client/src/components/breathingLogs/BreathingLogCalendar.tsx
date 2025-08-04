@@ -84,7 +84,7 @@ export default function BreathingCalendar({ logs }: Props) {
       {viewMode === "month" ? (
         <>
           {/* Date Groups with logs in Month View */}
-          <div>
+          <div  className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-3">
             {Object.keys(getLogsForCurrentPeriod()).map((date) => {
               const dayLogs = getDayLogs(date);
               const lowestBpm = getLowestBpm(dayLogs);
