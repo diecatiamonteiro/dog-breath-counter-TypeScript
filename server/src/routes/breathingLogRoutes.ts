@@ -3,8 +3,10 @@ import checkToken from "../middleware/checkToken";
 import {
   createBreathingLog,
   deleteBreathingLogById,
+  generateBreathingLogPdf,
   getAllBreathingLogs,
   getBreathingLogById,
+  sendBreathingLogEmail,
 } from "../controllers/breathingLogController";
 
 // Create a new router with mergeParams to access parent route params (dogId)
@@ -16,6 +18,8 @@ breathingLogRouter
   .post("/", checkToken, createBreathingLog)
   .get("/", checkToken, getAllBreathingLogs)
   .get("/:logId", checkToken, getBreathingLogById)
-  .delete("/:logId", checkToken, deleteBreathingLogById);
+  .delete("/:logId", checkToken, deleteBreathingLogById)
+  .post("/generate-pdf", checkToken, generateBreathingLogPdf)
+  .post("/send-email", checkToken, sendBreathingLogEmail);
 
 export default breathingLogRouter;

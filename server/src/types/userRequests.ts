@@ -66,3 +66,17 @@ export interface CreateBreathingLogRequestBody {
   duration: 15 | 30 | 60; // Fixed: match backend enum values
   comment?: string;
 }
+
+export interface GenerateReportRequestBody {
+  startDate?: string; // ISO date string
+  endDate?: string; // ISO date string
+  includeCharts?: boolean;
+}
+
+export interface SendEmailReportRequestBody {
+  recipientEmail: string;
+  startDate?: string; // ISO date string
+  endDate?: string; // ISO date string
+  includeCharts?: boolean;
+  message?: string; // Optional custom message
+}

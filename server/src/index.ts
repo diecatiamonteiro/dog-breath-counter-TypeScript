@@ -91,6 +91,8 @@ declare global {
       NEXT_PUBLIC_CLOUDINARY_API_KEY: string;
       CLOUDINARY_API_SECRET: string;
       NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET: string;
+      GOOGLE_EMAIL?: string;
+      GOOGLE_APP_PASSWORD?: string;
       // Add other env variables used in the project
     }
   }
