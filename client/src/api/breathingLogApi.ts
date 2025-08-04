@@ -50,14 +50,14 @@ export const getAllBreathingLogs = async (
         };
       };
     }>(`/api/dogs/${dogId}/breathing-logs?page=${page}&limit=${limit}`);
-    
+
     dispatch({
       type: LOG_ACTIONS.GET_ALL_LOGS,
-      payload: { 
-        data: { 
+      payload: {
+        data: {
           breathingLogs: res.data.data.breathingLogs,
           pagination: res.data.data.pagination,
-        } 
+        },
       },
     });
     return res.data.data.breathingLogs;
@@ -91,10 +91,10 @@ export const createBreathingLog = async (
   dispatch({ type: LOG_ACTIONS.SET_ERROR, payload: null });
 
   try {
-    const res = await axios.post<{ message: string; data: { breathingLog: BreathingLog } }>(
-      `/api/dogs/${dogId}/breathing-logs`,
-      logData
-    );
+    const res = await axios.post<{
+      message: string;
+      data: { breathingLog: BreathingLog };
+    }>(`/api/dogs/${dogId}/breathing-logs`, logData);
     dispatch({
       type: LOG_ACTIONS.ADD_LOG,
       payload: { data: { breathingLog: res.data.data.breathingLog } },
@@ -130,9 +130,10 @@ export const getSelectedBreathingLog = async (
   dispatch({ type: LOG_ACTIONS.SET_ERROR, payload: null });
 
   try {
-    const res = await axios.get<{ message: string; data: { breathingLog: BreathingLog } }>(
-      `/api/dogs/${dogId}/breathing-logs/${logId}`
-    );
+    const res = await axios.get<{
+      message: string;
+      data: { breathingLog: BreathingLog };
+    }>(`/api/dogs/${dogId}/breathing-logs/${logId}`);
     dispatch({
       type: LOG_ACTIONS.GET_SELECTED_LOG,
       payload: { data: { breathingLog: res.data.data.breathingLog } },
@@ -168,14 +169,86 @@ export const deleteBreathingLog = async (
   dispatch({ type: LOG_ACTIONS.SET_ERROR, payload: null });
 
   try {
-    const res = await axios.delete<{ message: string; data: { deletedBreathingLogId: string } }>(
-      `/api/dogs/${dogId}/breathing-logs/${logId}`
-    );
+    const res = await axios.delete<{
+      message: string;
+      data: { deletedBreathingLogId: string };
+    }>(`/api/dogs/${dogId}/breathing-logs/${logId}`);
     dispatch({
       type: LOG_ACTIONS.DELETE_LOG,
-      payload: { data: { deletedBreathingLogId: res.data.data.deletedBreathingLogId } },
+      payload: {
+        data: { deletedBreathingLogId: res.data.data.deletedBreathingLogId },
+      },
     });
     return res.data.data.deletedBreathingLogId;
+  } catch (error) {
+    const errorMessage = isAxiosError(error)
+      ? getErrorMessage(error)
+      : "An unexpected error occurred";
+    dispatch({ type: LOG_ACTIONS.SET_ERROR, payload: errorMessage });
+    throw error;
+  } finally {
+    dispatch({ type: LOG_ACTIONS.SET_LOADING, payload: false });
+  }
+};
+
+export const generateBreathingLogPdf = async (
+  dispatch: LogDispatch,
+  dogId: string,
+  startDate?: string,
+  endDate?: string
+): Promise<string> => {
+  dispatch({ type: LOG_ACTIONS.SET_LOADING, payload: true });
+  dispatch({ type: LOG_ACTIONS.SET_ERROR, payload: null });
+  try {
+    const res = await axios.post(
+      `/api/dogs/${dogId}/breathing-logs/generate-pdf`,
+      { startDate, endDate },
+      { responseType: "blob" }
+    );
+    const url = window.URL.createObjectURL(new Blob([res.data]));
+    return url;
+     // Note 1: Blob means Binary Large Object, which is a JS object that represents a file-like object in the browser (ie, a file-like object that the browser can understand and manipulate)
+    // Note 2: window.URL.createObjectURL() is a browser API that creates a URL that points to the Blob object, which can be used to download the file
+  } catch (error) {
+    const errorMessage = isAxiosError(error)
+      ? getErrorMessage(error)
+      : "An unexpected error occurred";
+    dispatch({ type: LOG_ACTIONS.SET_ERROR, payload: errorMessage });
+    throw error;
+  } finally {
+    dispatch({ type: LOG_ACTIONS.SET_LOADING, payload: false });
+  }
+};
+
+export const sendBreathingLogEmail = async (
+  dispatch: LogDispatch,
+  dogId: string,
+  recipientEmail: string,
+  startDate?: string,
+  endDate?: string
+): Promise<{
+  recipientEmail: string;
+  dogName: string;
+  dateRange: string;
+  totalLogs: number;
+}> => {
+  dispatch({ type: LOG_ACTIONS.SET_LOADING, payload: true });
+  dispatch({ type: LOG_ACTIONS.SET_ERROR, payload: null });
+  try {
+    const res = await axios.post<{
+      message: string;
+      data: {
+        recipientEmail: string;
+        dogName: string;
+        dateRange: string;
+        totalLogs: number;
+      };
+    }>(`/api/dogs/${dogId}/breathing-logs/send-email`, { 
+      recipientEmail, 
+      startDate, 
+      endDate 
+    });
+    return res.data.data;
   } catch (error) {
     const errorMessage = isAxiosError(error)
       ? getErrorMessage(error)

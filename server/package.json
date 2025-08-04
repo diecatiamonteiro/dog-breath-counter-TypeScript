@@ -42,7 +42,6 @@
     "next-cloudinary": "^6.16.0",
     "nodemailer": "^7.0.5",
     "nodemon": "^3.1.10",
-    "puppeteer": "^24.15.0",
     "ts-node": "^10.9.2",
     "tsx": "^4.19.4",
     "typescript": "^5.8.3",
