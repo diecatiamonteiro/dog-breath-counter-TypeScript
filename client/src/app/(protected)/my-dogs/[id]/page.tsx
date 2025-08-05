@@ -22,15 +22,14 @@ import {
   sendBreathingLogEmail,
 } from "@/api/breathingLogApi";
 import LoadingSpinner from "@/app/loading";
-import { RiArrowLeftSLine, RiAddLine, RiEditLine } from "react-icons/ri";
 import EmailReportFormModal from "@/components/shareData/EmailReportFormModal";
-import { FaDog } from "react-icons/fa";
+import { RiArrowLeftSLine, RiAddLine, RiEditLine } from "react-icons/ri";
+import { FaDog, FaLightbulb } from "react-icons/fa";
 import { TbLungsFilled } from "react-icons/tb";
 import { PiHeartbeatBold } from "react-icons/pi";
 import { GrDocumentDownload } from "react-icons/gr";
 import { LuTriangleAlert } from "react-icons/lu";
 import { TfiEmail } from "react-icons/tfi";
-import { FaLightbulb } from "react-icons/fa";
 
 export default function DogProfilePage() {
   const params = useParams();
@@ -45,6 +44,8 @@ export default function DogProfilePage() {
   const [showEmailForm, setShowEmailForm] = useState(false);
   const [isLoadingPdf, setIsLoadingPdf] = useState(false);
   const [isLoadingEmail, setIsLoadingEmail] = useState(false);
+  const [isEmailSent, setIsEmailSent] = useState(false);
+  const [recipientEmail, setRecipientEmail] = useState<string>("");
 
   // Load breathing logs on mount and when dogId changes
   useEffect(() => {
@@ -94,6 +95,15 @@ export default function DogProfilePage() {
     }
   };
 
+  // Show email sent message for 5 seconds
+  const handleShowEmailSentMessage = () => {
+    setIsEmailSent(true);
+    setTimeout(() => {
+      setIsEmailSent(false);
+      setRecipientEmail("");
+    }, 5000);
+  };
+
   // Handle email sending
   const handleSendEmail = async (recipientEmail: string) => {
     if (!selectedDog) return;
@@ -108,6 +118,8 @@ export default function DogProfilePage() {
         endDate || undefined
       );
       setShowEmailForm(false);
+      setRecipientEmail(recipientEmail);
+      handleShowEmailSentMessage();
     } catch (error) {
       console.error("Failed to send email:", error);
       throw error; // Re-throw to let the form handle the error
@@ -453,7 +465,6 @@ export default function DogProfilePage() {
           {breathingLogs.length === 0 ? (
             <div className="bg-main-text-bg rounded-lg shadow-md p-3 md:p-6 border border-primary-light/20">
               <div className="text-center py-8">
-                <div className="text-primary/60 text-4xl mb-4">📊</div>
                 <p className="text-foreground/70 mb-4">
                   No breathing logs available
                 </p>
@@ -485,7 +496,6 @@ export default function DogProfilePage() {
 
           {breathingLogs.length === 0 ? (
             <div className="text-center py-8">
-              <div className="text-primary/60 text-4xl mb-4">📊</div>
               <p className="text-foreground/70 mb-4">
                 No breathing logs available to share
               </p>
@@ -511,10 +521,7 @@ export default function DogProfilePage() {
                   icon={<GrDocumentDownload className="w-5 h-5" />}
                 >
                   {isLoadingPdf ? (
-                    <>
-                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                      Generating PDF...
-                    </>
+                    <>Generating PDF...</>
                   ) : (
                     <> Download PDF Report</>
                   )}
@@ -529,6 +536,14 @@ export default function DogProfilePage() {
                 >
                   Email Report
                 </Button>
+
+                {isEmailSent && (
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm text-primary">
+                      Email sent to {recipientEmail}
+                    </p>
+                  </div>
+                )}
               </div>
 
               {/* Info Text */}

@@ -46,7 +46,7 @@ export const generateHTML = (reportData: ReportData): string => {
           text-align: center;
           border-bottom: 3px solid #5c3680;
           padding-bottom: 20px;
-          margin-bottom: 30px;
+          margin-bottom: 15px;
         }
         
         .header h1 {
@@ -198,7 +198,7 @@ export const generateHTML = (reportData: ReportData): string => {
             minute: "2-digit",
           })}</p>
         </div>
-        
+        <p style="margin-left: 1px; margin-bottom: 20px;">BPM = Breaths Per Minute</p>
         <div class="dog-info">
           <h2>Dog Information</h2>
           <div class="info-grid">
