@@ -339,10 +339,11 @@ pet-breath-counter-typescript/
 - [x] Implement /my-dogs/id/monitor-breathing page
 - [x] Implement edit dog data
 - [x] Implement basic /my-dogs/id profile page (with no data yet)
-- [ ] Implement /my-dogs/id page with monitoring data, graphs and share options
-- [ ] Implement add dog photo via Cloudinary
+- [X] Implement /my-dogs/id page with monitoring data, graphs and share options
+- [X] Implement add dog photo via Cloudinary
 - [ ] Implement user dashboard
 - [ ] Create homepage
+- [ ] Improve responsiveness of all page
 - [ ] Integration tests (Cypress)
 
 ## Author
