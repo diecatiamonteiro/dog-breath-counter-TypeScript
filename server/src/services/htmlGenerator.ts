@@ -3,17 +3,18 @@
  * @description Service for generating HTML template for PDF reports
  */
 
-import { ReportData } from './pdfService';
+import { ReportData } from "./pdfService";
 
 export const generateHTML = (reportData: ReportData): string => {
   const { dog, logs, summary, user } = reportData;
-  
+
   return `
     <!DOCTYPE html>
     <html lang="en">
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link href="https://fonts.googleapis.com/css2?family=Nunito&display=swap" rel="stylesheet">
       <title>Breathing Report - ${dog.name}</title>
       <style>
         * {
@@ -23,7 +24,7 @@ export const generateHTML = (reportData: ReportData): string => {
         }
         
         body {
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          font-family: 'Nunito', sans-serif;
           line-height: 1.6;
           color: #333;
           background-color: #f8f9fa;
@@ -33,37 +34,41 @@ export const generateHTML = (reportData: ReportData): string => {
           max-width: 800px;
           margin: 0 auto;
           background: white;
-          padding: 40px;
-          box-shadow: 0 0 20px rgba(0,0,0,0.1);
+          padding: 10px;
+        }
+
+        .logo {
+          align-self: center;
+          width:120px;
         }
         
         .header {
           text-align: center;
-          border-bottom: 3px solid #4f46e5;
+          border-bottom: 3px solid #5c3680;
           padding-bottom: 20px;
           margin-bottom: 30px;
         }
         
         .header h1 {
-          color: #4f46e5;
+          color: #5c3680;
           font-size: 28px;
-          margin-bottom: 10px;
+          margin-bottom: 6px;
         }
         
         .header p {
           color: #666;
-          font-size: 16px;
+          font-size: 14px;
         }
         
         .dog-info {
-          background: #f8f9fa;
+          background:#d8c7e9;
           padding: 20px;
           border-radius: 8px;
           margin-bottom: 30px;
         }
         
         .dog-info h2 {
-          color: #4f46e5;
+          color: #5c3680;
           margin-bottom: 15px;
           font-size: 20px;
         }
@@ -78,7 +83,7 @@ export const generateHTML = (reportData: ReportData): string => {
           background: white;
           padding: 15px;
           border-radius: 6px;
-          border-left: 4px solid #4f46e5;
+          border-left: 4px solid #5c3680;
         }
         
         .info-label {
@@ -94,35 +99,35 @@ export const generateHTML = (reportData: ReportData): string => {
         }
         
         .summary {
-          background: #e0e7ff;
+          background: #d8c7e9;
           padding: 20px;
           border-radius: 8px;
           margin-bottom: 30px;
         }
         
         .summary h2 {
-          color: #4f46e5;
-          margin-bottom: 15px;
+          color: #5c3680;
+          margin-bottom: 5px;
           font-size: 20px;
         }
         
         .summary-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+          grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
           gap: 15px;
         }
         
         .summary-item {
           text-align: center;
           background: white;
-          padding: 15px;
+          padding: 10px;
           border-radius: 6px;
         }
         
         .summary-value {
-          font-size: 24px;
+          font-size: 23px;
           font-weight: bold;
-          color: #4f46e5;
+          color: #5c3680;
           margin-bottom: 5px;
         }
         
@@ -132,7 +137,7 @@ export const generateHTML = (reportData: ReportData): string => {
         }
         
         .logs-section h2 {
-          color: #4f46e5;
+          color: #5c3680;
           margin-bottom: 20px;
           font-size: 20px;
         }
@@ -144,7 +149,7 @@ export const generateHTML = (reportData: ReportData): string => {
         }
         
         .logs-table th {
-          background: #4f46e5;
+          background: #5c3680;
           color: white;
           padding: 12px;
           text-align: left;
@@ -162,7 +167,7 @@ export const generateHTML = (reportData: ReportData): string => {
         
         .bpm-cell {
           font-weight: 600;
-          color: #4f46e5;
+          color: #5c3680;
         }
         
         .footer {
@@ -183,13 +188,14 @@ export const generateHTML = (reportData: ReportData): string => {
     <body>
       <div class="container">
         <div class="header">
-          <h1>🐕 Breathing Report</h1>
-          <p>Generated on ${new Date().toLocaleDateString('en-US', { 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
+          <img src="${process.env.EMAIL_LOGO_URL}" alt="Paw Pulse Logo" class="logo">
+          <h1>Breathing Report</h1>
+          <p>Generated on ${new Date().toLocaleDateString("en-UK", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
           })}</p>
         </div>
         
@@ -200,18 +206,26 @@ export const generateHTML = (reportData: ReportData): string => {
               <div class="info-label">Name</div>
               <div class="info-value">${dog.name}</div>
             </div>
-            ${dog.breed ? `
+            ${
+              dog.breed
+                ? `
               <div class="info-item">
                 <div class="info-label">Breed</div>
                 <div class="info-value">${dog.breed}</div>
               </div>
-            ` : ''}
-            ${dog.age ? `
+            `
+                : ""
+            }
+            ${
+              dog.age
+                ? `
               <div class="info-item">
                 <div class="info-label">Age</div>
                 <div class="info-value">${dog.age} years</div>
               </div>
-            ` : ''}
+            `
+                : ""
+            }
             <div class="info-item">
               <div class="info-label">Max Breathing Rate</div>
               <div class="info-value">${dog.maxBreathingRate} BPM</div>
@@ -221,6 +235,9 @@ export const generateHTML = (reportData: ReportData): string => {
         
         <div class="summary">
           <h2>Report Summary</h2>
+           <div style="margin-bottom: 15px; text-align: left; color: #666;">
+            <strong>Date Range:</strong> ${summary.dateRange}
+          </div>
           <div class="summary-grid">
             <div class="summary-item">
               <div class="summary-value">${summary.totalLogs}</div>
@@ -239,9 +256,7 @@ export const generateHTML = (reportData: ReportData): string => {
               <div class="summary-label">Highest BPM</div>
             </div>
           </div>
-          <div style="margin-top: 15px; text-align: center; color: #666;">
-            <strong>Date Range:</strong> ${summary.dateRange}
-          </div>
+         
         </div>
         
         <div class="logs-section">
@@ -252,32 +267,34 @@ export const generateHTML = (reportData: ReportData): string => {
                 <th>Date</th>
                 <th>Time</th>
                 <th>BPM</th>
-                <th>Breath Count</th>
-                <th>Duration</th>
                 <th>Comment</th>
               </tr>
             </thead>
             <tbody>
-              ${logs.map(log => `
+              ${logs
+                .map(
+                  (log) => `
                 <tr>
                   <td>${log.date}</td>
                   <td>${log.time}</td>
                   <td class="bpm-cell">${log.bpm}</td>
-                  <td>${log.breathCount}</td>
-                  <td>${log.duration}s</td>
-                  <td>${log.comment || '-'}</td>
+                  <td>${log.comment || "-"}</td>
                 </tr>
-              `).join('')}
+              `
+                )
+                .join("")}
             </tbody>
           </table>
         </div>
         
         <div class="footer">
-          <div>This report was generated by PawPulse Breathing Monitor</div>
-          <div class="generated-by">Generated for ${user.firstName} ${user.lastName} (${user.email})</div>
+          <div>This report was generated by PawPulse Breathing Monitor.</div>
+          <div class="generated-by">Generated for ${user.firstName} ${
+    user.lastName
+  } (${user.email})</div>
         </div>
       </div>
     </body>
     </html>
   `;
-}; 
+};

@@ -6,6 +6,26 @@
 import cloudinary from "../config/cloudinary";
 import { CloudinaryError } from "../types/cloudinary";
 import createError from "http-errors";
+import path from "path";
+
+const uploadLogo = async () => {
+  try {
+    // Path to logo in public folder
+    const logoPath = path.join(__dirname, '../../../client/public/logos/logo-light.png');
+
+    // Upload logo to Cloudinary
+    const result = await cloudinary.uploader.upload(logoPath, {
+      folder: 'paw-pulse-logos',
+      public_id: 'logo-light',
+      overwrite: true,
+      resource_type: 'image',
+    });
+  } catch (error) {
+    console.error('Error uploading logo to Cloudinary:', error);
+  }
+}
+
+uploadLogo();
 
 class CloudinaryService {
   /**

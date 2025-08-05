@@ -244,22 +244,30 @@ export const generateBreathingLogPdf: Controller<
       throw createError(404, "No breathing logs found for the specified date range");
     }
 
+    // Filter out logs with BPM 0
+    const validLogs = logs.filter(log => log.bpm > 0);
+
+    if (validLogs.length === 0) {
+      throw createError(404, "No valid breathing logs found for the specified date range (all logs have BPM 0)");
+    }
+
     // Calculate summary statistics
-    const bpmValues = logs.map(log => log.bpm);
+    const bpmValues = validLogs.map(log => log.bpm);
     const averageBPM = bpmValues.reduce((sum, bpm) => sum + bpm, 0) / bpmValues.length;
     const lowestBPM = Math.min(...bpmValues);
     const highestBPM = Math.max(...bpmValues);
 
     // Format logs for report
-    const formattedLogs = logs.map(log => ({
-      date: log.createdAt.toLocaleDateString('en-US', { 
+    const formattedLogs = validLogs.map(log => ({
+      date: log.createdAt.toLocaleDateString('en-GB', { 
         year: 'numeric', 
         month: 'short', 
         day: 'numeric' 
       }),
-      time: log.createdAt.toLocaleTimeString('en-US', { 
+      time: log.createdAt.toLocaleTimeString('en-GB', { 
         hour: '2-digit', 
-        minute: '2-digit' 
+        minute: '2-digit',
+        hour12: false
       }),
       bpm: log.bpm,
       breathCount: log.breathCount,
@@ -277,7 +285,7 @@ export const generateBreathingLogPdf: Controller<
       },
       logs: formattedLogs,
       summary: {
-        totalLogs: logs.length,
+        totalLogs: validLogs.length,
         averageBPM,
         lowestBPM,
         highestBPM,
@@ -356,22 +364,30 @@ export const sendBreathingLogEmail: Controller<
       throw createError(404, "No breathing logs found for the specified date range");
     }
 
+    // Filter out logs with BPM 0
+    const validLogs = logs.filter(log => log.bpm > 0);
+
+    if (validLogs.length === 0) {
+      throw createError(404, "No valid breathing logs found for the specified date range (all logs have BPM 0)");
+    }
+
     // Calculate summary statistics
-    const bpmValues = logs.map(log => log.bpm);
+    const bpmValues = validLogs.map(log => log.bpm);
     const averageBPM = bpmValues.reduce((sum, bpm) => sum + bpm, 0) / bpmValues.length;
     const lowestBPM = Math.min(...bpmValues);
     const highestBPM = Math.max(...bpmValues);
 
     // Format logs for report
-    const formattedLogs = logs.map(log => ({
-      date: log.createdAt.toLocaleDateString('en-US', { 
+    const formattedLogs = validLogs.map(log => ({
+      date: log.createdAt.toLocaleDateString('en-GB', { 
         year: 'numeric', 
         month: 'short', 
         day: 'numeric' 
       }),
-      time: log.createdAt.toLocaleTimeString('en-US', { 
+      time: log.createdAt.toLocaleTimeString('en-GB', { 
         hour: '2-digit', 
-        minute: '2-digit' 
+        minute: '2-digit',
+        hour12: false
       }),
       bpm: log.bpm,
       breathCount: log.breathCount,
@@ -389,7 +405,7 @@ export const sendBreathingLogEmail: Controller<
       },
       logs: formattedLogs,
       summary: {
-        totalLogs: logs.length,
+        totalLogs: validLogs.length,
         averageBPM,
         lowestBPM,
         highestBPM,
@@ -426,7 +442,7 @@ export const sendBreathingLogEmail: Controller<
         recipientEmail,
         dogName: dog.name,
         dateRange: `${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`,
-        totalLogs: logs.length
+        totalLogs: validLogs.length
       }
     });
   } catch (error) {

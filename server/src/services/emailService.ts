@@ -1,10 +1,12 @@
 /**
  * @file emailService.ts
  * @description Service for sending email reports with PDF attachments
+ *              It styles the email content
+ *              It contains the logo that was previously uploaded to Cloudinary in server/src/services/cloudinaryService.ts
  */
 
-import nodemailer from 'nodemailer';
-import { ReportData } from './pdfService';
+import nodemailer from "nodemailer";
+import { ReportData } from "./pdfService";
 
 export interface EmailOptions {
   to: string;
@@ -19,14 +21,6 @@ export interface EmailOptions {
 
 export const sendEmail = async (options: EmailOptions): Promise<void> => {
   try {
-    console.log('Email service: Starting email send...', {
-      to: options.to,
-      subject: options.subject,
-      hasAttachments: !!options.attachments?.length,
-      gmailUser: process.env.GOOGLE_EMAIL ? 'SET' : 'NOT SET',
-      appPassword: process.env.GOOGLE_APP_PASSWORD ? 'SET' : 'NOT SET'
-    });
-
     // Create transporter using App Password
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -36,8 +30,6 @@ export const sendEmail = async (options: EmailOptions): Promise<void> => {
       },
     });
 
-    console.log('Email service: Transporter created successfully');
-
     // Send email
     await transporter.sendMail({
       from: process.env.GOOGLE_EMAIL,
@@ -46,30 +38,36 @@ export const sendEmail = async (options: EmailOptions): Promise<void> => {
       html: options.html,
       attachments: options.attachments,
     });
-
-    console.log('Email service: Email sent successfully');
   } catch (error) {
-    console.error('Email service error:', {
-      message: error instanceof Error ? error.message : 'Unknown error',
-      stack: error instanceof Error ? error.stack : undefined
+    console.error("Email service error:", {
+      message: error instanceof Error ? error.message : "Unknown error",
+      stack: error instanceof Error ? error.stack : undefined,
     });
-    throw new Error(`Failed to send email: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to send email: ${
+        error instanceof Error ? error.message : "Unknown error"
+      }`
+    );
   }
 };
 
-export const generateEmailHTML = (reportData: ReportData, recipientEmail: string): string => {
+export const generateEmailHTML = (
+  reportData: ReportData,
+  recipientEmail: string
+): string => {
   const { dog, summary } = reportData;
-  
+
   return `
     <!DOCTYPE html>
     <html lang="en">
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link href="https://fonts.googleapis.com/css2?family=Nunito&display=swap" rel="stylesheet">
       <title>Breathing Report - ${dog.name}</title>
       <style>
         body {
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          font-family: 'Nunito', sans-serif;
           line-height: 1.6;
           color: #333;
           max-width: 600px;
@@ -77,39 +75,28 @@ export const generateEmailHTML = (reportData: ReportData, recipientEmail: string
           padding: 20px;
         }
         .header {
-          background: #4f46e5;
-          color: white;
+          background: #2d1a44;
+          color: #f6f4f9;
           padding: 20px;
           text-align: center;
           border-radius: 8px 8px 0 0;
         }
+        .logo {
+          align-self: center;
+          width:120px;
+        }
         .content {
           background: #f8f9fa;
+          font-size: 16px;
           padding: 20px;
           border-radius: 0 0 8px 8px;
         }
         .summary-grid {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
+          display: flex;
           gap: 15px;
-          margin: 20px 0;
-        }
-        .summary-item {
-          background: white;
-          padding: 15px;
-          border-radius: 6px;
-          text-align: center;
-          border-left: 4px solid #4f46e5;
-        }
-        .summary-value {
-          font-size: 24px;
-          font-weight: bold;
-          color: #4f46e5;
-        }
-        .summary-label {
-          font-size: 14px;
-          color: #666;
-          margin-top: 5px;
+          flex-direction: row;
+          flex-wrap: wrap;
+          justify-content: space-between;
         }
         .footer {
           margin-top: 20px;
@@ -117,50 +104,29 @@ export const generateEmailHTML = (reportData: ReportData, recipientEmail: string
           border-top: 1px solid #e5e7eb;
           text-align: center;
           color: #666;
-          font-size: 14px;
+          font-size: 13px;
         }
       </style>
     </head>
     <body>
       <div class="header">
-        <h1>Breathing Report</h1>
-        <p>${dog.name}'s breathing data report</p>
+        <img src="${process.env.EMAIL_LOGO_URL}" alt="Paw Pulse Logo" class="logo">
+        <h1>${dog.name}'s Breathing Report</h1>
       </div>
       
       <div class="content">
-        <h2>Hello!</h2>
-        <p>Please find attached the breathing report for <strong>${dog.name}</strong>.</p>
+        <h2>Hello from Paw Pulse!</h2>
         
-        <h3>Report Summary:</h3>
-        <div class="summary-grid">
-          <div class="summary-item">
-            <div class="summary-value">${summary.totalLogs}</div>
-            <div class="summary-label">Total Logs</div>
-          </div>
-          <div class="summary-item">
-            <div class="summary-value">${summary.averageBPM.toFixed(1)}</div>
-            <div class="summary-label">Average BPM</div>
-          </div>
-          <div class="summary-item">
-            <div class="summary-value">${summary.lowestBPM}</div>
-            <div class="summary-label">Lowest BPM</div>
-          </div>
-          <div class="summary-item">
-            <div class="summary-value">${summary.highestBPM}</div>
-            <div class="summary-label">Highest BPM</div>
-          </div>
-        </div>
-        
+        <p><strong>${dog.name}</strong>’s breathing report is ready and attached to this email.</p>
+      
         <p><strong>Date Range:</strong> ${summary.dateRange}</p>
-        
-        <p>The detailed report is attached as a PDF file.</p>
-        
+                
         <div class="footer">
-          <p>This report was generated by PawPulse Breathing Monitor</p>
+          <p>This report was generated by PawPulse Breathing Monitor.</p>
           <p>If you have any questions, please contact the pet owner.</p>
         </div>
       </div>
     </body>
     </html>
   `;
-}; 
+};

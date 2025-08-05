@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: rgb(246, 244, 249); /* offwhite */
+  --background: #f6f4f9; /* offwhite */
   --foreground: rgb(46, 46, 58); /* dark grey */
   --main-text-bg: rgb(255, 255, 255); /* white */
 
@@ -9,7 +9,7 @@
   --navbar-icons: rgb(140, 107, 177); /* dark lavender */
 
   --primary-light: rgb(216, 199, 233); /* light lavender */
-  --primary: rgb(140, 107, 177); /* medium lavender */
+  --primary: #8c6bb1; /* medium lavender */
   --primary-dark: rgb(45, 33, 61); /* dark lavender */
 
   --accent: rgb(240, 92, 82); /* pink */
@@ -38,7 +38,7 @@
     --main-text-bg: rgb(37, 18, 59);
 
     --navbar-bg: rgb(45, 26, 68);
-    --navbar-icons: rgb(92, 54, 128);
+    --navbar-icons: #5c3680;
 
     --primary-light: rgb(35, 25, 48);
     --primary: rgb(144, 102, 196);
