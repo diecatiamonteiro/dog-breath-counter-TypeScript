@@ -13,7 +13,7 @@ import Button from "@/components/Button";
 import BreathingLogChart from "@/components/breathingLogs/BreathingLogChart";
 import BreathingLogCalendar from "@/components/breathingLogs/BreathingLogCalendar";
 import BreathingLogNavigation from "@/components/breathingLogs/BreathingLogNavigation";
-import { getAllBreathingLogs } from "@/api/breathingLogApi";
+import { deleteBreathingLog, getAllBreathingLogs } from "@/api/breathingLogApi";
 import { getSelectedDog } from "@/api/dogApi";
 import Image from "next/image";
 import DateRangePicker from "@/components/shareData/DateRangePicker";
@@ -159,6 +159,23 @@ export default function DogProfilePage() {
       (vetData.address && vetData.address.trim());
 
     return !!hasData;
+  };
+
+  const handleDeleteBreathingLog = async (logId: string) => {
+    // Confirm deletion
+    const confirmed = window.confirm(
+      `Are you sure you want to delete this log? This action cannot be undone.`
+    );
+
+    if (!confirmed) return;
+
+    try {
+      await deleteBreathingLog(logDispatch, dogId, logId);
+      // Breathing log will be automatically removed from state by the reducer
+    } catch (error) {
+      console.error("Failed to delete breathing log:", error);
+      // Error is already handled by the API function and displayed in state
+    }
   };
 
   if (!selectedDog) {
@@ -482,7 +499,10 @@ export default function DogProfilePage() {
                   selectedDog={selectedDog}
                 />
               ) : (
-                <BreathingLogCalendar logs={breathingLogs} />
+                <BreathingLogCalendar 
+                  logs={breathingLogs} 
+                  onDeleteLog={handleDeleteBreathingLog}
+                />
               )}
             </>
           )}

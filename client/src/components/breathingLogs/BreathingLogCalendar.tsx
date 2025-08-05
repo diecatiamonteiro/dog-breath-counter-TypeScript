@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  MdExpandMore,
-  MdExpandLess,
-} from "react-icons/md";
+import { MdExpandMore, MdExpandLess } from "react-icons/md";
 import { FaRegCalendar } from "react-icons/fa";
 import { TbLungsFilled } from "react-icons/tb";
 import {
@@ -21,12 +18,14 @@ import { BreathingLog } from "@/types/BreathingLogTypes";
 import { useAppContext } from "@/context/Context";
 import { LOG_ACTIONS } from "@/reducers/breathingLogReducer";
 import { useState, useEffect } from "react";
+import { RiDeleteBin7Line } from "react-icons/ri";
 
 type Props = {
   logs: BreathingLog[]; // Raw breathing logs
+  onDeleteLog?: (logId: string) => void;
 };
 
-export default function BreathingCalendar({ logs }: Props) {
+export default function BreathingCalendar({ logs, onDeleteLog }: Props) {
   // Get navigation state from context (shared with chart)
   const { logState, logDispatch } = useAppContext();
   const { viewMode, selectedYear, selectedMonth } = logState;
@@ -84,7 +83,7 @@ export default function BreathingCalendar({ logs }: Props) {
       {viewMode === "month" ? (
         <>
           {/* Date Groups with logs in Month View */}
-          <div  className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {Object.keys(getLogsForCurrentPeriod()).map((date) => {
               const dayLogs = getDayLogs(date);
               const lowestBpm = getLowestBpm(dayLogs);
@@ -130,21 +129,36 @@ export default function BreathingCalendar({ logs }: Props) {
                       {dayLogs.map((log) => (
                         <div
                           key={log.id}
-                          className="flex items-center gap-3 py-1"
-                        >
-                          <span className="text-sm text-foreground/60 min-w-[50px]">
-                            {log.time}
-                          </span>
-                          <div className="flex items-center gap-1">
-                            <TbLungsFilled className="text-primary text-sm" />
-                            <span className="text-foreground font-medium">
-                              {log.bpm} BPM
+                          className="flex items-center p-1.5 justify-between group rounded transition-all duration-200 has-[button:hover]:bg-accent/5"
+                          >
+                          <div className="flex items-center">
+                            <span className="text-sm text-foreground/60 min-w-[50px]">
+                              {log.time}
                             </span>
+                            <div className="flex items-center mr-2">
+                              <span className="text-foreground font-medium">
+                                {log.bpm} BPM
+                              </span>
+                            </div>
+                            {log.comment && (
+                              <span className="text-xs text-foreground/60 truncate max-w-[200px]">
+                                {log.comment}
+                              </span>
+                            )}
                           </div>
-                          {log.comment && (
-                            <span className="text-xs text-foreground/60 truncate max-w-[200px]">
-                              {log.comment}
-                            </span>
+
+                          {onDeleteLog && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onDeleteLog(log.id);
+                              }}
+                              className="p-1 text-accent/50 hover:text-accent hover:bg-accent/10 rounded-lg transition-all duration-200 border border-transparent hover:border-accent/20 cursor-pointer flex-shrink-0 group-hover:bg-accent/20 group-hover:text-accent"
+
+                              title="Delete log"
+                            >
+                              <RiDeleteBin7Line className="w-4 h-4" />
+                            </button>
                           )}
                         </div>
                       ))}
