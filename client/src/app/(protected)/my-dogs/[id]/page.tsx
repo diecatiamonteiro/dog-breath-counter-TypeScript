@@ -24,12 +24,13 @@ import {
 import LoadingSpinner from "@/app/loading";
 import EmailReportFormModal from "@/components/shareData/EmailReportFormModal";
 import { RiArrowLeftSLine, RiAddLine, RiEditLine } from "react-icons/ri";
-import { FaDog, FaLightbulb } from "react-icons/fa";
+import { FaDog, FaHospital, FaLightbulb, FaLungs, FaPaw } from "react-icons/fa";
 import { TbLungsFilled } from "react-icons/tb";
 import { PiHeartbeatBold } from "react-icons/pi";
 import { GrDocumentDownload } from "react-icons/gr";
-import { LuTriangleAlert } from "react-icons/lu";
+import { LuTriangleAlert, LuShare2 } from "react-icons/lu";
 import { TfiEmail } from "react-icons/tfi";
+import { BsClipboardData } from "react-icons/bs";
 
 export default function DogProfilePage() {
   const params = useParams();
@@ -216,9 +217,13 @@ export default function DogProfilePage() {
           {/* Dog Info Section */}
           <div className="bg-main-text-bg rounded-lg shadow-md p-3 md:p-6 border border-primary-light/20">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold text-foreground">
-                Dog Info
-              </h2>
+              <div className="flex items-center">
+                <FaPaw className="w-6 h-6 inline-block mr-4 text-foreground" />
+                <h2 className="text-xl font-semibold text-foreground">
+                  Dog Info
+                </h2>
+              </div>
+
               <Button
                 href={`/my-dogs/add-dog?edit=${dogId}&section=info`}
                 variant="ghost"
@@ -229,6 +234,7 @@ export default function DogProfilePage() {
               </Button>
             </div>
 
+            {/* ***************** DOG INFO SECTION ***************** */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Dog Photo */}
               <div className="flex-shrink-0">
@@ -335,9 +341,12 @@ export default function DogProfilePage() {
           {/* ***************** VETERINARIAN SECTION ***************** */}
           <div className="bg-main-text-bg rounded-lg shadow-md p-3 md:p-6 border border-primary-light/20">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold text-foreground">
-                Veterinarian
-              </h2>
+              <div className="flex items-center">
+                <FaHospital className="w-6 h-6 inline-block mr-4 text-foreground" />
+                <h2 className="text-xl font-semibold text-foreground">
+                  Veterinarian
+                </h2>
+              </div>
               <Button
                 href={`/my-dogs/add-dog?edit=${dogId}&section=vet`}
                 variant="ghost"
@@ -413,9 +422,12 @@ export default function DogProfilePage() {
         {/* ***************** RESTING RESPIRATORY RATE SECTION ***************** */}
         <div className="bg-main-text-bg rounded-lg shadow-md p-3 md:p-6 mb-8 border border-primary-light/20">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold text-foreground">
-              Resting Respiratory Rate
-            </h2>
+            <div className="flex items-center">
+              <FaLungs className="w-6 h-6 inline-block mr-4 text-foreground" />
+              <h2 className="text-xl font-semibold text-foreground">
+                Resting Respiratory Rate
+              </h2>
+            </div>
             <Button
               href={`/my-dogs/add-dog?edit=${dogId}&section=breathing`}
               variant="ghost"
@@ -474,9 +486,12 @@ export default function DogProfilePage() {
         {/* ***************** BREATHING LOGS SECTION ***************** */}
         <div className="bg-main-text-bg rounded-lg shadow-md p-3 md:p-6 mb-8 border border-primary-light/20">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold text-foreground">
-              Breathing Logs
-            </h2>
+            <div className="flex items-center">
+              <BsClipboardData className="w-6 h-6 inline-block mr-4 text-foreground" />
+              <h2 className="text-xl font-semibold text-foreground">
+                Breathing Logs
+              </h2>
+            </div>
           </div>
 
           {breathingLogs.length === 0 ? (
@@ -499,8 +514,8 @@ export default function DogProfilePage() {
                   selectedDog={selectedDog}
                 />
               ) : (
-                <BreathingLogCalendar 
-                  logs={breathingLogs} 
+                <BreathingLogCalendar
+                  logs={breathingLogs}
                   onDeleteLog={handleDeleteBreathingLog}
                 />
               )}
@@ -510,9 +525,14 @@ export default function DogProfilePage() {
 
         {/* ***************** SHARE DATA SECTION ***************** */}
         <div className="bg-main-text-bg rounded-lg shadow-md p-3 md:p-6 mb-8 border border-primary-light/20">
-          <h2 className="text-xl font-semibold text-foreground mb-4">
-            Share Data
-          </h2>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center">
+              <LuShare2 className="w-6 h-6 inline-block mr-4 text-foreground" />
+              <h2 className="text-xl font-semibold text-foreground">
+                Share Data
+              </h2>
+            </div>
+          </div>
 
           {breathingLogs.length === 0 ? (
             <div className="text-center py-8">

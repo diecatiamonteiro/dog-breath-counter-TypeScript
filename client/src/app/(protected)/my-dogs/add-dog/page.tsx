@@ -349,7 +349,7 @@ export default function AddDogPage() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Dog Info Section (includes photo) */}
+          {/* ***************** DOG INFO SECTION ***************** */}
           <div
             ref={dogInfoRef}
             className={`transition-all duration-300 rounded-lg p-1 ${
@@ -497,7 +497,7 @@ export default function AddDogPage() {
             </div>
           </div>
 
-          {/* Breathing Rate Section */}
+          {/* ***************** BREATHING RATE SECTION ***************** */}
           <div
             ref={breathingRef}
             className={`transition-all duration-300 rounded-lg p-1 ${
@@ -508,7 +508,7 @@ export default function AddDogPage() {
               <div className="flex items-center mb-4">
                 <TbLungsFilled className="w-7 h-7 inline-block mr-4 text-foreground" />
                 <h3 className="text-lg font-bold text-foreground">
-                  Breathing Information
+                  Resting Respiratory Rate Information
                 </h3>
               </div>
 
@@ -547,7 +547,7 @@ export default function AddDogPage() {
             </div>
           </div>
 
-          {/* Veterinarian Section */}
+          {/* ***************** VETERINARIAN SECTION ***************** */}
           <div
             ref={vetRef}
             className={`transition-all duration-300 rounded-lg p-1 mb-24 ${
@@ -670,7 +670,7 @@ export default function AddDogPage() {
             </div>
           </div>
 
-          {/* Save Button */}
+          {/* ***************** SAVE BUTTON ***************** */}
           <Button
             type="submit"
             variant="primary"
