@@ -11,6 +11,8 @@ import {
   groupLogsByDate,
   processLogsForChart,
   formatMonthYear,
+  hasDataInMonth,
+  hasDataInYear,
 } from "@/utils/breathingLogUtils";
 import Button from "../Button";
 import {
@@ -65,6 +67,25 @@ export default function BreathingNavigation({ logs }: Props) {
     }
   };
 
+  // Simple helper functions using existing logic
+  const hasPreviousData = () => {
+    if (viewMode === "month") {
+      return (selectedMonth > 0 && hasDataInMonth(selectedYear, selectedMonth - 1, dateGroups)) ||
+             hasDataInYear(selectedYear - 1, dateGroups);
+    } else {
+      return hasDataInYear(selectedYear - 1, dateGroups);
+    }
+  };
+
+  const hasNextData = () => {
+    if (viewMode === "month") {
+      return (selectedMonth < 11 && hasDataInMonth(selectedYear, selectedMonth + 1, dateGroups)) ||
+             hasDataInYear(selectedYear + 1, dateGroups);
+    } else {
+      return hasDataInYear(selectedYear + 1, dateGroups);
+    }
+  };
+
   return (
     <div className="mb-6">
       {/* Navigation Controls */}
@@ -115,15 +136,14 @@ export default function BreathingNavigation({ logs }: Props) {
       </div>
 
       {/* Period Navigation */}
-      <div className="flex items-center justify-between p-4 bg-primary/5 rounded-lg border border-primary/10">
+      <div className="flex items-center justify-between bg-primary/5 rounded-lg border border-primary/10">
         <Button
           onClick={onPreviousPeriod}
-          icon={<MdChevronLeft />}
+          disabled={!hasPreviousData()}
           iconPosition="left"
           variant="ghost"
           className="text-primary !bg-transparent !border-none hover:!bg-primary/10"
-        >
-          Previous
+        ><MdChevronLeft className="w-6 h-6"/>
         </Button>
 
         <h3 className="font-semibold text-foreground text-lg">
@@ -134,11 +154,10 @@ export default function BreathingNavigation({ logs }: Props) {
 
         <Button
           onClick={onNextPeriod}
-          icon={<MdChevronRight />}
+          disabled={!hasNextData()}
           variant="ghost"
           className="text-primary !bg-transparent !border-none hover:!bg-primary/10"
-        >
-          Next
+        ><MdChevronRight className="w-6 h-6"/>
         </Button>
       </div>
     </div>

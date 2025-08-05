@@ -61,7 +61,7 @@ export default function BreathingChart({ logs, selectedDog }: Props) {
   const formatDateLabel = formatDateChartLabel;
 
   return (
-    <div className="bg-main-text-bg rounded-lg shadow-md border border-primary-light/20">
+    <div className="bg-main-text-bg rounded-lg border border-primary-light/20">
       {/* Chart */}
       <div className="h-70 md:h-96">
         <ResponsiveContainer width="100%" height="100%">
