@@ -21,19 +21,6 @@ export interface EmailOptions {
 
 export const sendEmail = async (options: EmailOptions): Promise<void> => {
   try {
-    // Debug: Check if environment variables are available
-    console.log("Email service - Environment check:", {
-      hasEmail: !!process.env.GOOGLE_EMAIL,
-      hasPassword: !!process.env.GOOGLE_APP_PASSWORD,
-      emailLength: process.env.GOOGLE_EMAIL?.length || 0,
-      passwordLength: process.env.GOOGLE_APP_PASSWORD?.length || 0
-    });
-
-    // Validate environment variables
-    if (!process.env.GOOGLE_EMAIL || !process.env.GOOGLE_APP_PASSWORD) {
-      throw new Error("Missing email configuration: GOOGLE_EMAIL or GOOGLE_APP_PASSWORD not set");
-    }
-
     // Create transporter using App Password
     const transporter = nodemailer.createTransport({
       service: "gmail",
