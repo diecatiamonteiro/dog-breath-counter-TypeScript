@@ -220,16 +220,19 @@ export const updateUserProfile = async (
   dispatch({ type: USER_ACTIONS.SET_ERROR, payload: null }); // clears prev errors
 
   try {
-    const res = await axios.patch<{ user: User }>("/api/user/me", userData);
+    const res = await axios.patch<{ message: string; data: { user: User } }>(
+      "/api/user/me",
+      userData
+    );
     dispatch({
       type: USER_ACTIONS.UPDATE_USER,
       payload: {
         data: {
-          user: res.data.user,
+          user: res.data.data.user,
         },
       },
     });
-    return res.data.user;
+    return res.data.data.user;
   } catch (error) {
     const errorMessage = isAxiosError(error)
       ? getErrorMessage(error)
