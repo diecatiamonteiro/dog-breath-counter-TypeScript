@@ -133,29 +133,37 @@ export const loginGoogle: Controller<{ body: GoogleLoginRequestBody }> = async (
     // Destructure user info from Google
     const { email, given_name, family_name, id: googleId } = userInfo;
 
-    if (!email) {
-      throw createError(400, "Invalid Google token - no email found");
-    }
-
     // Check if user exists in database
-    let user = await User.findOne({ email });
+    let user = await User.findOne({ googleId });
 
-    if (!user) {
-      // Create new user if they don't exist
-      user = await User.create({
-        email,
-        firstName: given_name || "Unknown",
-        lastName: family_name || "Unknown",
-        googleId,
-        // Generate a random password for Google users
-        password:
-          Math.random().toString(36).slice(-12) +
-          Math.random().toString(36).slice(-12),
-      });
-    } else if (!user.googleId) {
-      // If user exists but doesn't have googleId, add googleId to user and link accounts
-      user.googleId = googleId;
-      await user.save();
+    if (user) {
+      // Google-linked user already exists: sync email if changed
+      if (user.email !== email) {
+        const emailInUse = await User.findOne({ email, _id: { $ne: user._id } });
+        if (emailInUse) {
+          throw createError(400, "Email already in use by another account");
+        }
+        user.email = email;
+        await user.save();
+      }
+    } else {
+      // No googleId match: try by email to link accounts
+      user = await User.findOne({ email });
+    
+      if (!user) {
+        user = await User.create({
+          email,
+          firstName: given_name || "Unknown",
+          lastName: family_name || "Unknown",
+          googleId,
+          password:
+            Math.random().toString(36).slice(-12) +
+            Math.random().toString(36).slice(-12),
+        });
+      } else if (!user.googleId) {
+        user.googleId = googleId;
+        await user.save();
+      }
     }
 
     // Set JWT token in HTTP-only cookie

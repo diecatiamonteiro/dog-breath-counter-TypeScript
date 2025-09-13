@@ -5,13 +5,14 @@ import LoadingSpinner from "@/app/loading";
 import Button from "@/components/Button";
 import { useAppContext } from "@/context/Context";
 import { useEffect, useRef, useState } from "react";
+import { useGoogleLogin } from "@react-oauth/google";
+import { googleLoginUser } from "@/api/userApi";
+import { getErrorMessage, isAxiosError } from "@/lib/apiUtils";
 
 export default function DashboardPage() {
   const { userState, userDispatch } = useAppContext();
   const { user, isLoading } = userState;
-
   const [editData, setEditData] = useState(false);
-
   // Form state
   const [formData, setFormData] = useState({
     firstName: user?.firstName,
@@ -54,6 +55,31 @@ export default function DashboardPage() {
     }
   }, [editData]);
 
+  // Google sync hook must be called before any early returns to preserve hook order
+  const handleGoogleSync = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      setIsSubmitting(true);
+      try {
+        await googleLoginUser(userDispatch, {
+          token: tokenResponse.access_token,
+        });
+        setServerErrors("");
+        setSuccessMessage("Email synced from Google.");
+        // userState.user updates via reducer; useEffect([user]) refreshes formData
+      } catch (error) {
+        const msg = isAxiosError(error)
+          ? getErrorMessage(error)
+          : "Failed to sync from Google. Please try again.";
+        setServerErrors(msg);
+      } finally {
+        setIsSubmitting(false);
+      }
+    },
+    onError: () => {
+      setServerErrors("Google sync failed. Please try again.");
+    },
+  });
+
   if (isLoading) {
     return <LoadingSpinner />;
   }
@@ -93,7 +119,6 @@ export default function DashboardPage() {
     setSuccessMessage("");
   };
 
-
   const validateForm = () => {
     const formErrors: Record<string, string> = {};
 
@@ -128,28 +153,32 @@ export default function DashboardPage() {
     setSuccessMessage("");
 
     try {
-      const payload: { firstName?: string; lastName?: string; email?: string } = {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-      };
+      const payload: { firstName?: string; lastName?: string; email?: string } =
+        {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+        };
       if (!isGoogleAccount) {
         payload.email = formData.email;
       }
       const response = await updateUserProfile(userDispatch, payload);
-      
+
       // Update formData with the new user data from response
       setFormData({
         firstName: response.firstName,
         lastName: response.lastName,
         email: response.email,
       });
-      
+
       // Exit edit mode
       setEditData(false);
       setServerErrors("");
       setSuccessMessage("Profile updated successfully.");
     } catch (error) {
-      setServerErrors("Failed to update profile. Please try again.");
+      const msg = isAxiosError(error)
+        ? getErrorMessage(error)
+        : "Failed to update profile. Please try again.";
+      setServerErrors(msg);
     } finally {
       setIsSubmitting(false);
     }
@@ -157,7 +186,10 @@ export default function DashboardPage() {
 
   if (editData) {
     return (
-      <div ref={formWrapperRef} className="transition-all duration-300 rounded-lg p-1">
+      <div
+        ref={formWrapperRef}
+        className="transition-all duration-300 rounded-lg p-1"
+      >
         <div className="bg-main-text-bg rounded-lg p-6 border border-primary-light/20">
           {serverErrors && (
             <div className="mb-4 p-3 bg-accent/20 border border-accent rounded-lg">
@@ -167,48 +199,81 @@ export default function DashboardPage() {
           <form onSubmit={handleInputChange} className="space-y-4 max-w-2xl">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label htmlFor="firstName" className="block text-sm font-medium mb-1 text-foreground">First Name</label>
+                <label
+                  htmlFor="firstName"
+                  className="block text-sm font-medium mb-1 text-foreground"
+                >
+                  First Name
+                </label>
                 <input
                   type="text"
                   id="firstName"
                   value={formData.firstName}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, firstName: e.target.value }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      firstName: e.target.value,
+                    }))
+                  }
                   placeholder="e.g., Alex"
                   className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-main-text-bg placeholder-foreground/50 transition-colors text-foreground ${
-                    formErrors.firstName ? "border-accent" : "border-primary/30 focus:border-primary"
+                    formErrors.firstName
+                      ? "border-accent"
+                      : "border-primary/30 focus:border-primary"
                   }`}
                 />
                 {formErrors.firstName && (
-                  <p className="mt-1 text-sm text-accent">{formErrors.firstName}</p>
+                  <p className="mt-1 text-sm text-accent">
+                    {formErrors.firstName}
+                  </p>
                 )}
               </div>
 
               <div>
-                <label htmlFor="lastName" className="block text-sm font-medium mb-1 text-foreground">Last Name</label>
+                <label
+                  htmlFor="lastName"
+                  className="block text-sm font-medium mb-1 text-foreground"
+                >
+                  Last Name
+                </label>
                 <input
                   type="text"
                   id="lastName"
                   value={formData.lastName}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, lastName: e.target.value }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      lastName: e.target.value,
+                    }))
+                  }
                   placeholder="e.g., Taylor"
                   className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-main-text-bg placeholder-foreground/50 transition-colors text-foreground ${
-                    formErrors.lastName ? "border-accent" : "border-primary/30 focus:border-primary"
+                    formErrors.lastName
+                      ? "border-accent"
+                      : "border-primary/30 focus:border-primary"
                   }`}
                 />
                 {formErrors.lastName && (
-                  <p className="mt-1 text-sm text-accent">{formErrors.lastName}</p>
+                  <p className="mt-1 text-sm text-accent">
+                    {formErrors.lastName}
+                  </p>
                 )}
               </div>
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium mb-1 text-foreground">{`Email${isGoogleAccount ? " (managed by Google)" : ""}`}</label>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium mb-1 text-foreground"
+              >{`Email${isGoogleAccount ? " (managed by Google)" : ""}`}</label>
               <input
                 type="email"
                 id="email"
                 name="email"
                 value={formData.email}
-                onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, email: e.target.value }))
+                }
                 placeholder="e.g., alex@example.com"
                 disabled={isGoogleAccount}
                 className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-main-text-bg placeholder-foreground/50 transition-colors text-foreground ${
@@ -219,11 +284,25 @@ export default function DashboardPage() {
                     : "border-primary/30 focus:border-primary"
                 }`}
               />
-              {formErrors.email && <p className="mt-1 text-sm text-accent">{formErrors.email}</p>}
+              {formErrors.email && (
+                <p className="mt-1 text-sm text-accent">{formErrors.email}</p>
+              )}
               {isGoogleAccount && (
                 <p className="mt-1 text-xs text-foreground/60">
                   To change your email, update it in your Google Account.
                 </p>
+              )}
+              {isGoogleAccount && (
+                <div className="mt-2">
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={() => handleGoogleSync()}
+                    disabled={isSubmitting}
+                  >
+                    Sync from Google
+                  </Button>
+                </div>
               )}
             </div>
 
@@ -231,7 +310,11 @@ export default function DashboardPage() {
               <Button type="submit" disabled={isSubmitting}>
                 Save
               </Button>
-              <Button variant="secondary" onClick={handleCancel} disabled={isSubmitting}>
+              <Button
+                variant="secondary"
+                onClick={handleCancel}
+                disabled={isSubmitting}
+              >
                 Cancel
               </Button>
             </div>
@@ -256,11 +339,15 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <p className="text-sm text-foreground/80">First Name</p>
-              <p className="mt-1 font-medium text-foreground">{user.firstName}</p>
+              <p className="mt-1 font-medium text-foreground">
+                {user.firstName}
+              </p>
             </div>
             <div>
               <p className="text-sm text-foreground/80">Last Name</p>
-              <p className="mt-1 font-medium text-foreground">{user.lastName}</p>
+              <p className="mt-1 font-medium text-foreground">
+                {user.lastName}
+              </p>
             </div>
             <div className="md:col-span-2">
               <p className="text-sm text-foreground/80">Email</p>
