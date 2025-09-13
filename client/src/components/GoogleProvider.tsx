@@ -15,11 +15,11 @@ interface GoogleProviderProps {
 }
 
 export default function GoogleProvider({ children }: GoogleProviderProps) {
-  const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-
-  if (!googleClientId) {
+  // Use a safe fallback so hooks don't throw during build/prerender in CI
+  const googleClientId =
+    process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "DUMMY_GOOGLE_CLIENT_ID";
+  if (googleClientId === "DUMMY_GOOGLE_CLIENT_ID") {
     console.warn("Google Client ID not found. Google login will not work.");
-    return <>{children}</>;
   }
 
   return (
