@@ -360,12 +360,13 @@ describe("Auth Controller - Google Login", () => {
       }
     );
 
-    // Check if user was created
-    const user = await User.findOne({ email: mockGoogleUserInfo.email });
+    // Check if user was created (lookup by googleId first, then email)
+    const user = await User.findOne({ googleId: mockGoogleUserInfo.id });
     expect(user).toBeDefined();
     expect(user?.firstName).toBe("John");
     expect(user?.lastName).toBe("Doe");
     expect(user?.googleId).toBe(mockGoogleUserInfo.id);
+    expect(user?.email).toBe(mockGoogleUserInfo.email);
 
     // Check response
     expect(mockRes.json).toHaveBeenCalledWith({
@@ -431,6 +432,64 @@ describe("Auth Controller - Google Login", () => {
     // Check if Google ID was linked
     const updatedUser = await User.findById(existingUser._id);
     expect(updatedUser?.googleId).toBe(mockGoogleUserInfo.id);
+  });
+
+  it("should sync email when Google user's email changes", async () => {
+    // Create existing Google user with different email
+    const existingUser = await User.create({
+      email: "old@example.com",
+      firstName: "John",
+      lastName: "Doe",
+      googleId: mockGoogleUserInfo.id,
+      password: "Password123!",
+    });
+
+    // Mock Google response with new email
+    const newEmail = "new@example.com";
+    (fetch as Mock).mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({
+        ...mockGoogleUserInfo,
+        email: newEmail,
+      }),
+    });
+
+    await loginGoogle(mockReq as any, mockRes as Response, mockNext);
+
+    // Check if email was synced
+    const updatedUser = await User.findById(existingUser._id);
+    expect(updatedUser?.email).toBe(newEmail);
+    expect(updatedUser?.googleId).toBe(mockGoogleUserInfo.id);
+  });
+
+  it("should reject when Google email is already in use by another account", async () => {
+    // Create existing user with different googleId
+    await User.create({
+      email: mockGoogleUserInfo.email,
+      firstName: "Jane",
+      lastName: "Smith",
+      googleId: "different-google-id",
+      password: "Password123!",
+    });
+
+    // Create another user with the googleId we're trying to sync
+    const currentUser = await User.create({
+      email: "current@example.com",
+      firstName: "John",
+      lastName: "Doe",
+      googleId: mockGoogleUserInfo.id,
+      password: "Password123!",
+    });
+
+    await loginGoogle(mockReq as any, mockRes as Response, mockNext);
+
+    // Should call next with error
+    expect(mockNext).toHaveBeenCalledWith(
+      expect.objectContaining({
+        status: 400,
+        message: "Email already in use by another account",
+      })
+    );
   });
 });
 

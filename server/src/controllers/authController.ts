@@ -133,6 +133,11 @@ export const loginGoogle: Controller<{ body: GoogleLoginRequestBody }> = async (
     // Destructure user info from Google
     const { email, given_name, family_name, id: googleId } = userInfo;
 
+    // Ensure required fields are present
+    if (!email) {
+      throw createError(400, "Invalid Google token");
+    }
+
     // Check if user exists in database
     let user = await User.findOne({ googleId });
 
