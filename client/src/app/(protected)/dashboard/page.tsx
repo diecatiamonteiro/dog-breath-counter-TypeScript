@@ -4,7 +4,7 @@ import { deleteUserAccount, updateUserProfile } from "@/api/userApi";
 import LoadingSpinner from "@/app/loading";
 import Button from "@/components/Button";
 import { useAppContext } from "@/context/Context";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useGoogleLogin } from "@react-oauth/google";
 import { googleLoginUser } from "@/api/userApi";
 import { getErrorMessage, isAxiosError } from "@/lib/apiUtils";
@@ -26,7 +26,6 @@ export default function DashboardPage() {
   });
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [serverErrors, setServerErrors] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   // Delete account modal state
   const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
@@ -50,7 +49,6 @@ export default function DashboardPage() {
           token: tokenResponse.access_token,
         });
         setServerErrors("");
-        setSuccessMessage("Email synced from Google.");
         // userState.user updates via reducer; useEffect([user]) refreshes formData
       } catch (error) {
         const msg = isAxiosError(error)
@@ -89,7 +87,6 @@ export default function DashboardPage() {
     });
     setFormErrors({});
     setServerErrors("");
-    setSuccessMessage("");
     setEditData(true);
   };
 
@@ -102,7 +99,6 @@ export default function DashboardPage() {
     });
     setFormErrors({});
     setServerErrors("");
-    setSuccessMessage("");
   };
 
   const handleDeleteAccount = async () => {
@@ -147,7 +143,6 @@ export default function DashboardPage() {
     setIsSubmitting(true);
     setFormErrors({});
     setServerErrors("");
-    setSuccessMessage("");
 
     try {
       const payload: { firstName?: string; lastName?: string; email?: string } =
@@ -170,10 +165,6 @@ export default function DashboardPage() {
       // Exit edit mode
       setEditData(false);
       setServerErrors("");
-      setSuccessMessage("Profile updated successfully.");
-      setTimeout(() => {
-        setSuccessMessage("");
-      }, 2500);
     } catch (error) {
       const msg = isAxiosError(error)
         ? getErrorMessage(error)
@@ -272,7 +263,7 @@ export default function DashboardPage() {
         <div className="mt-12">
           <div className="bg-main-text-bg rounded-lg p-6 border border-primary-light/20">
             {serverErrors && (
-              <div className="mb-4 p-3 bg-accent/20 border border-accent rounded-lg">
+              <div className="mb-8 p-3 bg-accent/10 border border-accent rounded-lg">
                 <p className="text-accent">{serverErrors}</p>
               </div>
             )}
