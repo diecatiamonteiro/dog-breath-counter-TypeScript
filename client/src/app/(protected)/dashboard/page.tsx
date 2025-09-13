@@ -1,6 +1,6 @@
 "use client";
 
-import { updateUserProfile } from "@/api/userApi";
+import { deleteUserAccount, updateUserProfile } from "@/api/userApi";
 import LoadingSpinner from "@/app/loading";
 import Button from "@/components/Button";
 import { useAppContext } from "@/context/Context";
@@ -8,8 +8,11 @@ import { useEffect, useRef, useState } from "react";
 import { useGoogleLogin } from "@react-oauth/google";
 import { googleLoginUser } from "@/api/userApi";
 import { getErrorMessage, isAxiosError } from "@/lib/apiUtils";
+import { useRouter } from "next/navigation";
+import Modal from "@/components/Modal";
 
 export default function DashboardPage() {
+  const router = useRouter();
   const { userState, userDispatch } = useAppContext();
   const { user, isLoading } = userState;
   const [editData, setEditData] = useState(false);
@@ -24,6 +27,8 @@ export default function DashboardPage() {
   const [successMessage, setSuccessMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const formWrapperRef = useRef<HTMLDivElement>(null);
+  // Delete account modal state
+  const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -117,6 +122,17 @@ export default function DashboardPage() {
     setFormErrors({});
     setServerErrors("");
     setSuccessMessage("");
+  };
+
+  const handleDeleteAccount = async () => {
+    setIsSubmitting(true);
+    try {
+      await deleteUserAccount(userDispatch);
+      setShowDeleteAccountModal(false);
+      router.replace("/");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const validateForm = () => {
@@ -366,6 +382,31 @@ export default function DashboardPage() {
         >
           Edit
         </Button>
+
+        <Button
+          variant="danger"
+          className="mt-4"
+          onClick={() => setShowDeleteAccountModal(true)}
+          disabled={isSubmitting}
+        >
+          Delete Account
+        </Button>
+
+        {showDeleteAccountModal && (
+          <Modal
+            title="Delete Account"
+            onClose={() => setShowDeleteAccountModal(false)}
+          >
+            <div className="space-y-2 p-6">
+            <h3 className="text-lg font-medium">Are you sure you want to delete your account?</h3>
+            <p className="text-sm text-foreground/80">This action is irreversible and will remove all your data.</p>
+            <div className="flex gap-4 pt-6">
+              <Button variant="secondary" onClick={() => setShowDeleteAccountModal(false)}>Cancel</Button>
+              <Button variant="danger" onClick={handleDeleteAccount}>Delete Account</Button>
+            </div>
+            </div>
+          </Modal>
+        )}
       </div>
 
       {/* Footer Section - only visible until lg; from lg, info below is placed in the footer in NavigationDesktop.tsx */}
