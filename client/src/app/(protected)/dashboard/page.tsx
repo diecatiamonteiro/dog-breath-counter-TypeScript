@@ -10,6 +10,8 @@ import { googleLoginUser } from "@/api/userApi";
 import { getErrorMessage, isAxiosError } from "@/lib/apiUtils";
 import { useRouter } from "next/navigation";
 import Modal from "@/components/Modal";
+import { IoWarning } from "react-icons/io5";
+
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -26,7 +28,6 @@ export default function DashboardPage() {
   const [serverErrors, setServerErrors] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const formWrapperRef = useRef<HTMLDivElement>(null);
   // Delete account modal state
   const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
 
@@ -39,26 +40,6 @@ export default function DashboardPage() {
       });
     }
   }, [user]);
-
-  // When entering edit mode, scroll to top and briefly highlight the form wrapper
-  useEffect(() => {
-    if (editData) {
-      // Scroll page to top so form appears at the top
-      if (typeof window !== "undefined") {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
-
-      // Add highlight ring similar to dog page sections
-      const el = formWrapperRef.current;
-      if (el) {
-        el.classList.add("ring-2", "ring-primary", "ring-opacity-50");
-        const timer = setTimeout(() => {
-          el.classList.remove("ring-2", "ring-primary", "ring-opacity-50");
-        }, 2000);
-        return () => clearTimeout(timer);
-      }
-    }
-  }, [editData]);
 
   // Google sync hook must be called before any early returns to preserve hook order
   const handleGoogleSync = useGoogleLogin({
@@ -153,8 +134,8 @@ export default function DashboardPage() {
     return formErrors;
   };
 
-  const handleInputChange = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleInputChange = async (e?: React.SyntheticEvent) => {
+    e?.preventDefault();
 
     // Validate form
     const errors = validateForm();
@@ -190,6 +171,9 @@ export default function DashboardPage() {
       setEditData(false);
       setServerErrors("");
       setSuccessMessage("Profile updated successfully.");
+      setTimeout(() => {
+        setSuccessMessage("");
+      }, 2500);
     } catch (error) {
       const msg = isAxiosError(error)
         ? getErrorMessage(error)
@@ -200,214 +184,226 @@ export default function DashboardPage() {
     }
   };
 
-  if (editData) {
-    return (
-      <div
-        ref={formWrapperRef}
-        className="transition-all duration-300 rounded-lg p-1"
-      >
-        <div className="bg-main-text-bg rounded-lg p-6 border border-primary-light/20">
-          {serverErrors && (
-            <div className="mb-4 p-3 bg-accent/20 border border-accent rounded-lg">
-              <p className="text-accent">{serverErrors}</p>
-            </div>
-          )}
-          <form onSubmit={handleInputChange} className="space-y-4 max-w-2xl">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label
-                  htmlFor="firstName"
-                  className="block text-sm font-medium mb-1 text-foreground"
-                >
-                  First Name
-                </label>
-                <input
-                  type="text"
-                  id="firstName"
-                  value={formData.firstName}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      firstName: e.target.value,
-                    }))
-                  }
-                  placeholder="e.g., Alex"
-                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-main-text-bg placeholder-foreground/50 transition-colors text-foreground ${
-                    formErrors.firstName
-                      ? "border-accent"
-                      : "border-primary/30 focus:border-primary"
-                  }`}
-                />
-                {formErrors.firstName && (
-                  <p className="mt-1 text-sm text-accent">
-                    {formErrors.firstName}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <label
-                  htmlFor="lastName"
-                  className="block text-sm font-medium mb-1 text-foreground"
-                >
-                  Last Name
-                </label>
-                <input
-                  type="text"
-                  id="lastName"
-                  value={formData.lastName}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      lastName: e.target.value,
-                    }))
-                  }
-                  placeholder="e.g., Taylor"
-                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-main-text-bg placeholder-foreground/50 transition-colors text-foreground ${
-                    formErrors.lastName
-                      ? "border-accent"
-                      : "border-primary/30 focus:border-primary"
-                  }`}
-                />
-                {formErrors.lastName && (
-                  <p className="mt-1 text-sm text-accent">
-                    {formErrors.lastName}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium mb-1 text-foreground"
-              >{`Email${isGoogleAccount ? " (managed by Google)" : ""}`}</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, email: e.target.value }))
-                }
-                placeholder="e.g., alex@example.com"
-                disabled={isGoogleAccount}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-main-text-bg placeholder-foreground/50 transition-colors text-foreground ${
-                  isGoogleAccount
-                    ? "border-primary/30 bg-foreground/5 text-foreground/70"
-                    : formErrors.email
-                    ? "border-accent"
-                    : "border-primary/30 focus:border-primary"
-                }`}
-              />
-              {formErrors.email && (
-                <p className="mt-1 text-sm text-accent">{formErrors.email}</p>
-              )}
-              {isGoogleAccount && (
-                <p className="mt-1 text-xs text-foreground/60">
-                  To change your email, update it in your Google Account.
-                </p>
-              )}
-              {isGoogleAccount && (
-                <div className="mt-2">
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    onClick={() => handleGoogleSync()}
-                    disabled={isSubmitting}
-                  >
-                    Sync from Google
-                  </Button>
-                </div>
-              )}
-            </div>
-
-            <div className="flex gap-3 pt-2">
-              <Button type="submit" disabled={isSubmitting}>
-                Save
-              </Button>
-              <Button
-                variant="secondary"
-                onClick={handleCancel}
-                disabled={isSubmitting}
-              >
-                Cancel
-              </Button>
-            </div>
-          </form>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="max-w-5xl">
       <h1 className="text-2xl font-bold text-foreground">Settings</h1>
-      {user && <h2 className="mt-1 text-foreground/80">Hi, {userName}!</h2>}
-      {successMessage && (
-        <p className="mt-4 text-sm text-green-700 bg-green-50 border border-green-200 rounded px-3 py-2">
-          {successMessage}
-        </p>
+      {user && (
+        <h2 className="mt-3 text-foreground/80">Woof, woof, {userName}!</h2>
       )}
 
-      <div className="mt-8">
-        <div className="bg-main-text-bg rounded-lg p-6 border border-primary-light/20">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <p className="text-sm text-foreground/80">First Name</p>
-              <p className="mt-1 font-medium text-foreground">
-                {user.firstName}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm text-foreground/80">Last Name</p>
-              <p className="mt-1 font-medium text-foreground">
-                {user.lastName}
-              </p>
-            </div>
-            <div className="md:col-span-2">
-              <p className="text-sm text-foreground/80">Email</p>
-              <p className="mt-1 font-medium text-foreground">{user.email}</p>
+      {!editData ? (
+        <div>
+          <div className="mt-12">
+            <div className="bg-main-text-bg rounded-lg p-6 border border-primary-light/20">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                  <p className="text-sm text-foreground/80">First Name</p>
+                  <p className="mt-1 font-medium text-foreground">
+                    {user.firstName}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-foreground/80">Last Name</p>
+                  <p className="mt-1 font-medium text-foreground">
+                    {user.lastName}
+                  </p>
+                </div>
+                <div className="md:col-span-2">
+                  <p className="text-sm text-foreground/80">Email</p>
+                  <p className="mt-1 font-medium text-foreground">
+                    {user.email}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
+
+          <div className="flex gap-4 mt-4">
+            <Button
+              variant="secondary"
+              className="mt-4"
+              onClick={handleEditData}
+              disabled={isSubmitting}
+            >
+              Edit
+            </Button>
+
+            <Button
+              variant="danger"
+              className="mt-4"
+              onClick={() => setShowDeleteAccountModal(true)}
+              disabled={isSubmitting}
+            >
+              Delete Account
+            </Button>
+
+            {showDeleteAccountModal && (
+              <Modal
+                title="Delete Account"
+                onClose={() => setShowDeleteAccountModal(false)}
+              >
+                <div className="flex flex-col items-center justify-center space-y-2 p-6 text-center">
+                <IoWarning className="w-10 h-10 text-accent" />
+                  <h3 className="text-lg md:text-xl font-extrabold text-accent">
+                    Are you sure you want to delete your account?
+                    
+                  </h3>
+                  <p className="text-sm text-accent">
+                    This action is irreversible and will remove all your data.
+                  </p>
+                  <div className="flex justify-center gap-4 pt-6">
+                    <Button
+                      variant="secondary"
+                      onClick={() => setShowDeleteAccountModal(false)}
+                    >
+                      Cancel
+                    </Button>
+                    <Button variant="danger" onClick={handleDeleteAccount}>
+                      Delete Account
+                    </Button>
+                  </div>
+                </div>
+              </Modal>
+            )}
+          </div>
         </div>
-      </div>
+      ) : (
+        // Data form to edit profile
+        <div className="mt-12">
+          <div className="bg-main-text-bg rounded-lg p-6 border border-primary-light/20">
+            {serverErrors && (
+              <div className="mb-4 p-3 bg-accent/20 border border-accent rounded-lg">
+                <p className="text-accent">{serverErrors}</p>
+              </div>
+            )}
+            <form onSubmit={handleInputChange} className="space-y-8 max-w-5xl">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                  <label
+                    htmlFor="firstName"
+                    className="block text-sm font-medium mb-1 text-foreground/80"
+                  >
+                    First Name
+                  </label>
+                  <input
+                    type="text"
+                    id="firstName"
+                    value={formData.firstName}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        firstName: e.target.value,
+                      }))
+                    }
+                    placeholder="e.g., Alex"
+                    className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-main-text-bg placeholder-foreground/50 transition-colors text-foreground ${
+                      formErrors.firstName
+                        ? "border-accent"
+                        : "border-primary/30 focus:border-primary"
+                    }`}
+                  />
+                  {formErrors.firstName && (
+                    <p className="mt-1 text-sm text-accent">
+                      {formErrors.firstName}
+                    </p>
+                  )}
+                </div>
 
-      <div className="flex gap-4">
-        <Button
-          variant="secondary"
-          className="mt-4"
-          onClick={handleEditData}
-          disabled={isSubmitting}
-        >
-          Edit
-        </Button>
+                <div>
+                  <label
+                    htmlFor="lastName"
+                    className="block text-sm font-medium mb-1 text-foreground/80"
+                  >
+                    Last Name
+                  </label>
+                  <input
+                    type="text"
+                    id="lastName"
+                    value={formData.lastName}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        lastName: e.target.value,
+                      }))
+                    }
+                    placeholder="e.g., Taylor"
+                    className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-main-text-bg placeholder-foreground/50 transition-colors text-foreground ${
+                      formErrors.lastName
+                        ? "border-accent"
+                        : "border-primary/30 focus:border-primary"
+                    }`}
+                  />
+                  {formErrors.lastName && (
+                    <p className="mt-1 text-sm text-accent">
+                      {formErrors.lastName}
+                    </p>
+                  )}
+                </div>
+              </div>
 
-        <Button
-          variant="danger"
-          className="mt-4"
-          onClick={() => setShowDeleteAccountModal(true)}
-          disabled={isSubmitting}
-        >
-          Delete Account
-        </Button>
-
-        {showDeleteAccountModal && (
-          <Modal
-            title="Delete Account"
-            onClose={() => setShowDeleteAccountModal(false)}
-          >
-            <div className="space-y-2 p-6">
-            <h3 className="text-lg font-medium">Are you sure you want to delete your account?</h3>
-            <p className="text-sm text-foreground/80">This action is irreversible and will remove all your data.</p>
-            <div className="flex gap-4 pt-6">
-              <Button variant="secondary" onClick={() => setShowDeleteAccountModal(false)}>Cancel</Button>
-              <Button variant="danger" onClick={handleDeleteAccount}>Delete Account</Button>
+              <div>
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium mb-1 text-foreground/80"
+                >{`Email${isGoogleAccount ? " (Google account)" : ""}`}</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      email: e.target.value,
+                    }))
+                  }
+                  placeholder="e.g., alex@example.com"
+                  disabled={isGoogleAccount}
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-main-text-bg placeholder-foreground/50 transition-colors text-foreground ${
+                    isGoogleAccount
+                      ? "border-primary/30 bg-foreground/5 text-foreground/70"
+                      : formErrors.email
+                      ? "border-accent"
+                      : "border-primary/30 focus:border-primary"
+                  }`}
+                />
+                {formErrors.email && (
+                  <p className="mt-1 text-sm text-accent">{formErrors.email}</p>
+                )}
+                {isGoogleAccount && (
+                  <p className="mt-1 text-sm text-accent">
+                    You are logged in with Google. To change your email, switch to a different Google account by clicking the button below.
+                  </p>
+                )}
+                {isGoogleAccount && (
+                  <div className="mt-3">
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      onClick={() => handleGoogleSync()}
+                      disabled={isSubmitting}
+                    >
+                      Change Google Account
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </form>
             </div>
-            </div>
-          </Modal>
-        )}
-      </div>
+            <div className="mt-4 flex gap-3 pt-2">
+                <Button  type="button" onClick={handleInputChange} disabled={isSubmitting}>
+                  Save
+                </Button>
+                <Button
+                  variant="secondary"
+                  onClick={handleCancel}
+                  disabled={isSubmitting}
+                >
+                  Cancel
+                </Button>
+              </div>
+          </div>
+      )}
 
       {/* Footer Section - only visible until lg; from lg, info below is placed in the footer in NavigationDesktop.tsx */}
       <div className="mt-8 py-2 border-t border-primary/20 lg:hidden">

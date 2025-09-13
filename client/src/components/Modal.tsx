@@ -19,14 +19,14 @@ export default function Modal({ title, children, onClose}: { title: string, chil
 
     return (
         <div
-          className="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
+          className="fixed inset-0 bg-background/80 flex items-center justify-center z-50"
           onClick={onClose}
         >
           <div
-            className="bg-main-text-bg rounded-lg shadow-xl max-w-md w-full mx-4"
+            className="bg-main-text-bg rounded-lg shadow-xl max-w-lg w-full mx-4 border border-primary"
             onClick={handleContentClick}
           >
-            <div className="flex justify-between items-center border-b p-6">
+            <div className="flex justify-between items-center border-b border-primary p-6">
               <h2 className="text-xl font-semibold">{title}</h2>
               <Button
                 onClick={onClose}
