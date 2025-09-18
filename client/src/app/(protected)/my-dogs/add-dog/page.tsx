@@ -678,7 +678,7 @@ export default function AddDogPage() {
             fullWidth
             loading={isSubmitting || isLoading}
             loadingText={isEditMode ? "Updating..." : "Saving..."}
-            className="fixed bottom-8 max-w-5xl mt-8 mt-12 cursor-pointer"
+            className="fixed bottom-8 max-w-5xl mt-8 mt-12"
           >
             {isEditMode ? "Update Dog" : "Save Dog"}
           </Button>

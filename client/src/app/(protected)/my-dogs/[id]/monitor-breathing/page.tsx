@@ -151,7 +151,7 @@ export default function MonitorBreathingPage() {
               </h2>
               <div className="grid grid-cols-3 gap-3">
                 {[15, 30, 60].map((duration) => (
-                  <button
+                  <button 
                     key={duration}
                     onClick={() => handleSetDuration(duration)}
                     disabled={isMonitoring}
@@ -183,7 +183,7 @@ export default function MonitorBreathingPage() {
                     }}
                     variant="primary"
                     size="lg"
-                    className="w-full cursor-pointer"
+                    className="w-full"
                     disabled={!selectedDuration}
                   >
                     Start Monitoring
@@ -203,7 +203,7 @@ export default function MonitorBreathingPage() {
                     }}
                     variant="primary"
                     size="lg"
-                    className="w-full cursor-pointer"
+                    className="w-full"
                   >
                     Stop Monitoring
                   </Button>
@@ -337,7 +337,7 @@ export default function MonitorBreathingPage() {
                 href={`/my-dogs/${dogId}`}
                 variant="primary"
                 size="lg"
-                className="w-full cursor-pointer"
+                className="w-full"
               >
                 Save
               </Button>
@@ -345,7 +345,7 @@ export default function MonitorBreathingPage() {
                 onClick={handleReset}
                 variant="secondary"
                 size="lg"
-                className="w-full cursor-pointer"
+                className="w-full"
               >
                 Monitor Again
               </Button>

@@ -87,13 +87,24 @@ export default function BreathingCalendar({ logs, onDeleteLog }: Props) {
             {Object.keys(getLogsForCurrentPeriod()).map((date) => {
               const dayLogs = getDayLogs(date);
               const lowestBpm = getLowestBpm(dayLogs);
+              const isExpanded = expandedDays.has(date);
 
               return (
                 <div key={date} className="mb-4">
                   {/* The whole div is a button that toggles the expansion of the day */}
                   <div
-                    className="flex items-center justify-between mb-2 p-2  bg-primary/5 border border-primary/20 rounded cursor-pointer hover:bg-primary/10 transition-colors"
+                    className="flex items-center justify-between mb-2 p-2  bg-primary/5 border border-primary/20 rounded cursor-pointer hover:bg-primary/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-main-text-bg"
+                    role="button"
+                    tabIndex={0}
+                    aria-expanded={isExpanded}
+                    aria-controls={`day-panel-${date}`}
                     onClick={() => toggleDayExpansion(date)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        toggleDayExpansion(date);
+                      }
+                    }}
                   >
                     <div className="flex items-center gap-2">
                       <FaRegCalendar className="text-primary text-sm" />
@@ -125,7 +136,7 @@ export default function BreathingCalendar({ logs, onDeleteLog }: Props) {
 
                   {/* If the day is expanded, show the logs */}
                   {expandedDays.has(date) && (
-                    <div className="ml-4 space-y-1">
+                    <div id={`day-panel-${date}`} className="ml-4 space-y-1">
                       {dayLogs.map((log) => (
                         <div
                           key={log.id}
@@ -181,13 +192,30 @@ export default function BreathingCalendar({ logs, onDeleteLog }: Props) {
               return (
                 <div
                   key={monthIndex}
-                  className={`p-4 rounded-lg border transition-colors ${
+                  className={`p-4 rounded-lg border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-main-text-bg ${
                     monthData
                       ? "bg-primary/50 border-primary/20 hover:bg-primary/60 cursor-pointer"
                       : "bg-primary/5 border-primary/20"
                   }`}
+                  role={monthData ? "button" : undefined}
+                  tabIndex={monthData ? 0 : -1}
+                  aria-disabled={!monthData}
                   onClick={() => {
                     if (monthData) {
+                      logDispatch({
+                        type: LOG_ACTIONS.SET_SELECTED_MONTH,
+                        payload: monthIndex,
+                      });
+                      logDispatch({
+                        type: LOG_ACTIONS.SET_VIEW_MODE,
+                        payload: "month",
+                      });
+                    }
+                  }}
+                  onKeyDown={(e) => {
+                    if (!monthData) return;
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
                       logDispatch({
                         type: LOG_ACTIONS.SET_SELECTED_MONTH,
                         payload: monthIndex,
