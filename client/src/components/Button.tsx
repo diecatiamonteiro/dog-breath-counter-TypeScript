@@ -3,28 +3,28 @@ import { ReactNode } from "react";
 
 export interface ButtonProps {
   children: ReactNode;
-  
+
   // Navigation vs Action
   href?: string; // If provided, renders as Link; if not, renders as button
-  
+
   // Button-specific props
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
   onClick?: (e?: React.MouseEvent) => void;
-  
+
   // Styling variants
   variant?: "primary" | "secondary" | "ghost" | "danger";
   size?: "sm" | "md" | "lg";
   fullWidth?: boolean;
-  
+
   // Icon support
   icon?: ReactNode;
   iconPosition?: "left" | "right";
-  
+
   // Loading state
   loading?: boolean;
   loadingText?: string;
-  
+
   // Additional styling
   className?: string;
 }
@@ -44,25 +44,29 @@ const Button = ({
   loadingText,
   className = "",
 }: ButtonProps) => {
-  
   // Base styles that apply to both Link and button
-  const baseStyles = "inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer disabled:cursor-not-allowed";
-  
+  const baseStyles =
+    "inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer disabled:cursor-not-allowed";
+
   // Variant styles
   const variantStyles = {
-    primary: "bg-primary text-white hover:bg-primary/70 focus:ring-primary disabled:opacity-50 disabled:bg-primary/50",
-    secondary: "bg-primary/30 text-primary hover:bg-primary hover:text-white focus:ring-primary border border-primary/20 disabled:opacity-50",
-    ghost: "border border-primary/20 text-primary hover:bg-primary/10 focus:ring-primary disabled:opacity-50",
-    danger: "bg-accent text-white hover:bg-accent/80 focus:ring-accent disabled:opacity-50",
+    primary:
+      "bg-primary text-white hover:bg-primary/70 focus:ring-primary disabled:opacity-50 disabled:bg-primary/50",
+    secondary:
+      "bg-primary/30 text-primary hover:bg-primary hover:text-white focus:ring-primary border border-primary/20 disabled:opacity-50",
+    ghost:
+      "border border-primary/20 text-primary hover:bg-primary/10 focus:ring-primary disabled:opacity-50",
+    danger:
+      "bg-accent text-white hover:bg-accent/80 focus:ring-accent disabled:opacity-50",
   };
-  
+
   // Size styles
   const sizeStyles = {
     sm: "px-3 py-2 text-sm",
     md: "px-4 py-2.5 text-base",
     lg: "px-6 py-3 text-lg",
   };
-  
+
   // Combine all styles
   const combinedStyles = [
     baseStyles,
@@ -71,12 +75,12 @@ const Button = ({
     fullWidth ? "w-full" : "w-fit",
     className,
   ].join(" ");
-  
+
   // Loading spinner component
   const LoadingSpinner = () => (
     <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
   );
-  
+
   // Content with icon and loading state
   const content = (
     <>
@@ -86,16 +90,29 @@ const Button = ({
       {!loading && icon && iconPosition === "right" && icon}
     </>
   );
-  
+
   // Render as Link if href is provided
   if (href) {
+    if (href.startsWith("#")) {
+      // hash links --> plain <a>
+      return (
+        <a href={href} className={combinedStyles} onClick={(e) => onClick?.(e)}>
+          {content}
+        </a>
+      );
+    }
+    // normal links --> Next.js <Link>
     return (
-      <Link href={href} className={combinedStyles} onClick={(e) => onClick?.(e)}>
+      <Link
+        href={href}
+        className={combinedStyles}
+        onClick={(e) => onClick?.(e)}
+      >
         {content}
       </Link>
     );
   }
-  
+
   // Render as button for actions
   return (
     <button
@@ -109,4 +126,4 @@ const Button = ({
   );
 };
 
-export default Button; 
+export default Button;
