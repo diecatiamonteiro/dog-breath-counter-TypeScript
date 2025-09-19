@@ -96,7 +96,30 @@ const Button = ({
     if (href.startsWith("#")) {
       // hash links --> plain <a>
       return (
-        <a href={href} className={combinedStyles} onClick={(e) => onClick?.(e)}>
+        <a
+          href={href}
+          className={combinedStyles}
+          onClick={(e) => {
+            // Allow caller's onClick first
+            onClick?.(e);
+            // Default behavior sometimes fails inside custom scroll containers (mobile/desktop layouts)
+            // Prevent default and perform a robust programmatic scroll instead
+            if (href && href.startsWith("#")) {
+              e.preventDefault();
+              const targetId = href.slice(1);
+              const target = document.getElementById(targetId);
+              if (target) {
+                target.scrollIntoView({ behavior: "smooth", block: "start" });
+                // Update URL hash without jumping
+                if (history.replaceState) {
+                  history.replaceState(null, "", href);
+                } else {
+                  window.location.hash = href;
+                }
+              }
+            }
+          }}
+        >
           {content}
         </a>
       );

@@ -56,19 +56,21 @@ export default function RootLayout({
         <AxiosProvider>
           <GoogleProvider>
             <AppProvider>
-              {/* Desktop Layout with Sidebar */}
-              <div className="hidden lg:flex h-screen">
+            {/* Responsive Layout: render children once to avoid duplicate IDs */}
+            <div className="flex h-screen">
+              {/* Sidebar only on desktop */}
+              <div className="hidden lg:block">
                 <NavigationDesktop />
-                <div className="flex-1 overflow-auto">
-                  <Container>{children}</Container>
-                </div>
               </div>
-
-              {/* Mobile Layout with Top Bar and Bottom Navigation */}
-              <div className="block lg:hidden">
-                <NavigationMobile />
+              {/* Content area scroll container */}
+              <div className="flex-1 overflow-auto">
+                {/* Mobile nav only on small screens */}
+                <div className="block lg:hidden">
+                  <NavigationMobile />
+                </div>
                 <Container>{children}</Container>
               </div>
+            </div>
               
               {/* Toast Notifications */}
               <ToastContainer

@@ -19,9 +19,9 @@ export default function HomePage() {
   const { user, isAuthenticated } = userState;
 
   return (
-    <div className="min-h-screen bg-primary/10 max-w-5xl mb-22 lg:mb-0">
+    <div className="min-h-screen bg-primary/10 max-w-5xl mb-24 lg:mb-0">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-primary/20">
+      <section className="relative bg-primary/20">
         <Container>
           <div className="py-5 md:py-10 text-center max-w-4xl mx-auto relative z-10">
             <div className="flex justify-center">
@@ -125,7 +125,7 @@ export default function HomePage() {
       </section>
 
       {/* How It Works - Visual Process */}
-      <section id="how-it-works" className="py-5 md:py-10 bg-primary/20">
+      <section id="how-it-works" className="scroll-mt-6 py-5 md:py-10 bg-primary/20">
         <Container>
           <h2 className="text-3xl md:text-4xl font-bold text-primary mb-8 md:mb-14 text-center">
             How Paw Pulse Works
