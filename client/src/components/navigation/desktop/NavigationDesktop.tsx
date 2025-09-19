@@ -41,20 +41,20 @@ export default function NavigationDesktop() {
             {/* Dark logo - light mode */}
             <Image
               src="/logos/logo-dark.png"
-              width={110}
-              height={22}
+              width={128}
+              height={32}
               alt="Paw Pulse Dark Logo"
-              className="block dark:hidden transition-transform duration-300 hover:scale-105"
+              className="h-auto w-auto block dark:hidden transition-transform duration-300 hover:scale-105"
               priority
             />
 
             {/* Light logo - dark mode */}
             <Image
               src="/logos/logo-light.png"
-              width={110}
-              height={22}
+              width={128}
+              height={32}
               alt="Paw Pulse Light Logo"
-              className="hidden dark:block transition-transform duration-300 hover:scale-105 h-auto w-auto"
+              className="h-auto w-auto hidden dark:block transition-transform duration-300 hover:scale-105"
               priority
             />
           </Link>
