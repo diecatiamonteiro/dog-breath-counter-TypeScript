@@ -176,16 +176,16 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="max-w-5xl">
+    <div className="max-w-5xl mb-24 lg:mb-0">
       <h1 className="text-2xl font-bold text-foreground">Settings</h1>
       {user && (
-        <h2 className="mt-3 text-foreground/80">Woof, woof, {userName}!</h2>
+        <h2 className="mt-1 md:mt-3 text-foreground/80">Woof, woof, {userName}!</h2>
       )}
 
       {!editData ? (
         <div>
-          <div className="mt-12">
-            <div className="bg-main-text-bg rounded-lg p-6 border border-primary-light/20">
+          <div className="mt-6 md:mt-12">
+            <div className="bg-main-text-bg rounded-lg p-4 md:p-6 border border-primary-light/20">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
                   <p className="text-sm text-foreground/80">First Name</p>
@@ -260,8 +260,8 @@ export default function DashboardPage() {
         </div>
       ) : (
         // Data form to edit profile
-        <div className="mt-12">
-          <div className="bg-main-text-bg rounded-lg p-6 border border-primary-light/20">
+        <div className="mt-6 md:mt-12">
+          <div className="bg-main-text-bg rounded-lg p-4 md:p-6 border border-primary-light/20">
             {serverErrors && (
               <div className="mb-8 p-3 bg-accent/10 border border-accent rounded-lg">
                 <p className="text-accent">{serverErrors}</p>
@@ -370,6 +370,7 @@ export default function DashboardPage() {
                   <div className="mt-3">
                     <Button
                       type="button"
+                      size="sm"
                       variant="secondary"
                       onClick={() => handleGoogleSync()}
                       disabled={isSubmitting}
@@ -397,7 +398,7 @@ export default function DashboardPage() {
       )}
 
       {/* Footer Section - only visible until lg; from lg, info below is placed in the footer in NavigationDesktop.tsx */}
-      <div className="mt-8 py-2 border-t border-primary/20 lg:hidden">
+      <div className="mt-24 py-2 border-t border-primary/20 lg:hidden">
         <div className="text-xs text-foreground/70 text-left">
           <p>&copy; 2025 Paw Pulse. All rights reserved</p>
         </div>
