@@ -89,12 +89,12 @@ export default function BreathingNavigation({ logs }: Props) {
   return (
     <div className="mb-6">
       {/* Navigation Controls */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
+      <div className="flex flex-wrap justify-between gap-2 mb-6">
         {/* View Type Toggle (Chart/Calendar) */}
         <div className="flex gap-2">
           <Button
             onClick={() => onViewTypeChange("chart")}
-            size="md"
+            size="sm"
             variant={viewType === "chart" ? "primary" : "ghost"}
             icon={<MdBarChart />}
             iconPosition="left"
@@ -103,7 +103,7 @@ export default function BreathingNavigation({ logs }: Props) {
           </Button>
           <Button
             onClick={() => onViewTypeChange("calendar")}
-            size="md"
+            size="sm"
             variant={viewType === "calendar" ? "primary" : "ghost"}
             icon={<MdCalendarToday />}
             iconPosition="left"
@@ -116,7 +116,7 @@ export default function BreathingNavigation({ logs }: Props) {
         <div className="flex gap-2">
           <Button
             onClick={() => onViewModeChange("month")}
-            size="md"
+            size="sm"
             variant={viewMode === "month" ? "primary" : "ghost"}
             icon={<MdCalendarViewMonth />}
             iconPosition="left"
@@ -125,7 +125,7 @@ export default function BreathingNavigation({ logs }: Props) {
           </Button>
           <Button
             onClick={() => onViewModeChange("year")}
-            size="md"
+            size="sm"
             variant={viewMode === "year" ? "primary" : "ghost"}
             icon={<MdCalendarViewWeek />}
             iconPosition="left"
@@ -136,14 +136,14 @@ export default function BreathingNavigation({ logs }: Props) {
       </div>
 
       {/* Period Navigation */}
-      <div className="flex items-center justify-between bg-primary/5 rounded-lg border border-primary/10">
+      <div className="flex items-center justify-between bg-secondary rounded-lg border border-foreground border-thin">
         <Button
           onClick={onPreviousPeriod}
           disabled={!hasPreviousData()}
           iconPosition="left"
           variant="ghost"
           className="text-primary !bg-transparent !border-none hover:!bg-primary/10"
-        ><MdChevronLeft className="w-6 h-6"/>
+        ><MdChevronLeft className="w-6 h-6 text-foreground"/>
         </Button>
 
         <h3 className="font-semibold text-foreground text-lg">
@@ -157,7 +157,7 @@ export default function BreathingNavigation({ logs }: Props) {
           disabled={!hasNextData()}
           variant="ghost"
           className="text-primary !bg-transparent !border-none hover:!bg-primary/10"
-        ><MdChevronRight className="w-6 h-6"/>
+        ><MdChevronRight className="w-6 h-6 text-foreground"/>
         </Button>
       </div>
     </div>

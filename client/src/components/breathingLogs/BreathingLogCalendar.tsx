@@ -1,8 +1,6 @@
 "use client";
 
 import { MdExpandMore, MdExpandLess } from "react-icons/md";
-import { FaRegCalendar } from "react-icons/fa";
-import { TbLungsFilled } from "react-icons/tb";
 import {
   processLogsForCalendar,
   groupLogsByDate,
@@ -83,17 +81,17 @@ export default function BreathingCalendar({ logs, onDeleteLog }: Props) {
       {viewMode === "month" ? (
         <>
           {/* Date Groups with logs in Month View */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-1 md:gap-2 xl:gap-3">
             {Object.keys(getLogsForCurrentPeriod()).map((date) => {
               const dayLogs = getDayLogs(date);
               const lowestBpm = getLowestBpm(dayLogs);
               const isExpanded = expandedDays.has(date);
 
               return (
-                <div key={date} className="mb-4">
+                <div key={date} className="">
                   {/* The whole div is a button that toggles the expansion of the day */}
                   <div
-                    className="flex items-center justify-between mb-2 p-2  bg-primary/5 border border-primary/20 rounded cursor-pointer hover:bg-primary/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-main-text-bg"
+                    className="flex items-center justify-between p-2 bg-primary/5 border border-primary/20 rounded cursor-pointer hover:bg-primary/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-main-text-bg"
                     role="button"
                     tabIndex={0}
                     aria-expanded={isExpanded}
@@ -107,21 +105,23 @@ export default function BreathingCalendar({ logs, onDeleteLog }: Props) {
                     }}
                   >
                     <div className="flex items-center gap-2">
-                      <FaRegCalendar className="text-primary text-sm" />
-                      <span className="font-medium text-foreground">
+                      <span className="text-sm md:text-base font-medium text-foreground">
                         {date}
                       </span>
                       <span className="text-xs text-foreground/60">
-                        ({dayLogs.length})
+                        {dayLogs.length} log
+                        {dayLogs.length !== 1 ? "s " : ""}
                       </span>
                       <div
-                        className="flex items-center gap-1 ml-4 px-2 py-1 bg-primary/10 hover:bg-primary/20 rounded-full relative group transition-colors duration-200"
+                        className="flex items-center gap-1 ml-1 md:ml-2 px-2 py-1 bg-primary/10 hover:bg-primary/20 rounded-full relative group transition-colors duration-200"
                         // Tooltip
                         title="Lowest BPM"
                       >
-                        <TbLungsFilled className="text-primary text-sm" />
-                        <span className="text-sm font-semibold text-primary">
-                          {lowestBpm} BPM
+                        {/* <TbLungsFilled className="text-primary text-sm" /> */}
+                        {/* <FaCircleArrowDown className="text-primary text-sm" /> */}
+
+                        <span className="text-xs md:text-sm font-semibold text-primary">
+                          {lowestBpm} BPM (min)
                         </span>
                       </div>
                     </div>
@@ -136,14 +136,14 @@ export default function BreathingCalendar({ logs, onDeleteLog }: Props) {
 
                   {/* If the day is expanded, show the logs */}
                   {expandedDays.has(date) && (
-                    <div id={`day-panel-${date}`} className="ml-4 space-y-1">
+                    <div id={`day-panel-${date}`} className="ml-3 md:ml-4">
                       {dayLogs.map((log) => (
                         <div
                           key={log.id}
-                          className="flex items-center p-1.5 justify-between group rounded transition-all duration-200 has-[button:hover]:bg-accent/5"
-                          >
+                          className="flex items-center py-1 justify-between group rounded transition-all duration-200 has-[button:hover]:bg-accent/5"
+                        >
                           <div className="flex items-center">
-                            <span className="text-sm text-foreground/60 min-w-[50px]">
+                            <span className="text-xs text-foreground/60 min-w-[40px]">
                               {log.time}
                             </span>
                             <div className="flex items-center mr-2">
@@ -152,7 +152,7 @@ export default function BreathingCalendar({ logs, onDeleteLog }: Props) {
                               </span>
                             </div>
                             {log.comment && (
-                              <span className="text-xs text-foreground/60 truncate max-w-[200px]">
+                              <span className="text-xs text-foreground/60 truncate max-w-[120px]">
                                 {log.comment}
                               </span>
                             )}
@@ -165,7 +165,6 @@ export default function BreathingCalendar({ logs, onDeleteLog }: Props) {
                                 onDeleteLog(log.id);
                               }}
                               className="p-1 text-accent/50 hover:text-accent hover:bg-accent/10 rounded-lg transition-all duration-200 border border-transparent hover:border-accent/20 cursor-pointer flex-shrink-0 group-hover:bg-accent/20 group-hover:text-accent"
-
                               title="Delete log"
                             >
                               <RiDeleteBin7Line className="w-4 h-4" />
@@ -183,7 +182,7 @@ export default function BreathingCalendar({ logs, onDeleteLog }: Props) {
       ) : (
         <>
           {/* Year Overview */}
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2  xl:grid-cols-3 2xl:grid-cols-4 gap-2 lg:gap-3">
             {Array.from({ length: 12 }, (_, monthIndex) => {
               const yearData = getMonthlySummaryForYear();
               const monthData = yearData[monthIndex];
@@ -192,7 +191,7 @@ export default function BreathingCalendar({ logs, onDeleteLog }: Props) {
               return (
                 <div
                   key={monthIndex}
-                  className={`p-4 rounded-lg border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-main-text-bg ${
+                  className={`py-1.5 px-3 md:p-4 rounded-lg border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-main-text-bg ${
                     monthData
                       ? "bg-primary/50 border-primary/20 hover:bg-primary/60 cursor-pointer"
                       : "bg-primary/5 border-primary/20"
@@ -227,21 +226,30 @@ export default function BreathingCalendar({ logs, onDeleteLog }: Props) {
                     }
                   }}
                 >
-                  <h3 className="font-semibold text-foreground mb-2">
-                    {monthName}
-                  </h3>
                   {monthData ? (
-                    <div className="space-y-1">
-                      <p className="text-sm text-foreground/70">
-                        {monthData.count} reading
-                        {monthData.count !== 1 ? "s" : ""}
-                      </p>
-                      <p className="text-sm text-foreground/70">
-                        Average: {monthData.avgBpm} BPM
-                      </p>
+                    <div className="flex flex-row items-center justify-between">
+                      <h3 className="font-semibold text-foreground">
+                        {monthName}
+                      </h3>
+                      <div className="flex flex-wrap gap-1 items-center">
+                        <p className="text-sm text-foreground/70">
+                          {monthData.count} Log
+                          {monthData.count !== 1 ? "s " : ""}
+                        </p>
+                        <p className="text-sm text-foreground/70">|</p>
+                        <p className="text-sm text-foreground/70">
+                          {monthData.avgBpm}{" "}
+                          <span className="text-xs">BPM (avg)</span>
+                        </p>
+                      </div>
                     </div>
                   ) : (
-                    <p className="text-sm text-foreground/50">No data</p>
+                    <div className="flex flex-row items-center justify-between">
+                      <h3 className="font-semibold text-foreground">
+                        {monthName}
+                      </h3>
+                      <p className="text-sm text-foreground/50">No logs</p>
+                    </div>
                   )}
                 </div>
               );

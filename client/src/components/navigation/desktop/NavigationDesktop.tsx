@@ -12,7 +12,6 @@ import { getNavItems } from "../NavItems";
 import { useAppContext } from "@/context/Context";
 import { logoutUser } from "@/api/userApi";
 import { toast } from "react-toastify";
-import LoadingSpinner from "@/app/loading";
 
 export default function NavigationDesktop() {
   const pathname = usePathname();
@@ -33,7 +32,7 @@ export default function NavigationDesktop() {
   };
 
   return (
-    <div className="h-screen w-64 md:w-72 lg:w-76 bg-navbar-bg flex-shrink-0 border-r border-primary/20">
+    <div className="h-screen w-56 xl:w-64 2xl:w-76 bg-navbar-bg flex-shrink-0 border-r border-primary/20">
       <nav className="h-full flex flex-col py-6 px-4">
         {/* Logo Section */}
         <div className="mb-12 px-2">
@@ -44,7 +43,7 @@ export default function NavigationDesktop() {
               width={128}
               height={32}
               alt="Paw Pulse Dark Logo"
-              className="h-auto w-auto block dark:hidden transition-transform duration-300 hover:scale-105"
+              className="h-auto w-auto max-h-12 block dark:hidden transition-transform duration-300 hover:scale-105"
               priority
             />
 
@@ -90,14 +89,7 @@ export default function NavigationDesktop() {
 
                   {/* Label */}
                   <div className="flex items-center px-4 py-3 rounded-lg transition-all duration-200 font-medium w-full text-foreground bg-transparent group-hover:bg-primary/20 group-hover:text-foreground">
-                    {userState.isLoading ? (
-                      <div className="flex items-center gap-2">
-                        <LoadingSpinner size="sm" color="white" />
-                        Signing out...
-                      </div>
-                    ) : (
-                      item.label
-                    )}
+                    {item.label}
                   </div>
                 </button>
               );

@@ -321,8 +321,8 @@ export default function AddDogPage() {
         {isEditMode ? (
           <Button
             href={`/my-dogs/${editDogId}`}
-            variant="ghost"
-            icon={<RiArrowLeftSLine className="w-7 h-7" />}
+            variant="secondary"
+            icon={<RiArrowLeftSLine className="w-5 h-5" />}
             className="mb-4 lg:mb-16"
           >
             Back to {formattedDogName}&apos;s Profile
@@ -330,15 +330,15 @@ export default function AddDogPage() {
         ) : (
           <Button
             href="/my-dogs"
-            variant="ghost"
-            icon={<RiArrowLeftSLine className="w-7 h-7" />}
+            variant="secondary"
+            icon={<RiArrowLeftSLine className="w-5 h-5" />}
             className="mb-4 lg:mb-16"
           >
             Back to My Dogs
           </Button>
         )}
 
-        <h1 className="text-2xl font-bold mb-8 lg:mb-16 text-foreground">
+        <h1 className="text-lg md:text-2xl font-bold mb-8 lg:mb-16 text-foreground">
           {getSectionTitle()}
         </h1>
 
@@ -508,7 +508,7 @@ export default function AddDogPage() {
               <div className="flex items-center mb-4">
                 <TbLungsFilled className="w-7 h-7 inline-block mr-4 text-foreground" />
                 <h3 className="text-lg font-bold text-foreground">
-                  Resting Respiratory Rate Information
+                  Respiratory Rate Information
                 </h3>
               </div>
 

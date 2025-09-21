@@ -30,7 +30,7 @@ export default function HomePage() {
               </div>
             </div>
             <h1 className="text-2xl md:text-4xl font-bold text-primary my-4 md:my-8 leading-tight max-w-xl mx-auto">
-              Monitor Your Dog&apos;s Heart Health Through Breathing Rate
+              Track Your Dog&apos;s Heart Health Through Breathing Rate
             </h1>
             <p className="text-base md:text-xl text-foreground/80 max-w-xl mx-auto leading-relaxed">
               Your dog&apos;s breathing rate is one of the most important
@@ -44,15 +44,14 @@ export default function HomePage() {
                   size="md"
                   className="px-4 py-2 md:px-8 md:py-4 w-full sm:w-fit"
                 >
-                  Start Monitoring
-                </Button>
+Start Tracking Breathing                </Button>
               ) : (
                 <Button
                   href="/auth"
                   size="md"
                   className="px-4 py-2 md:px-8 md:py-4 w-full sm:w-fit"
                 >
-                  Start Monitoring
+                  Start Tracking Breathing
                 </Button>
               )}
 
@@ -187,11 +186,11 @@ export default function HomePage() {
           <div className="text-center">
             {user && isAuthenticated ? (
               <Button href="/my-dogs" size="lg" className="text-lg w-full">
-                Start Monitoring
+                Start Tracking Breathing
               </Button>
             ) : (
               <Button href="/auth" size="lg" className="text-lg w-full">
-                Start Monitoring
+                Start Tracking Breathing
               </Button>
             )}
           </div>
@@ -268,7 +267,7 @@ export default function HomePage() {
                   size="md"
                   className="text-lg bg-accent hover:bg-accent/80"
                 >
-                  Start Monitoring
+                  Start Tracking Breathing
                 </Button>
               ) : (
                 <Button
@@ -276,7 +275,7 @@ export default function HomePage() {
                   size="md"
                   className="text-lg bg-accent hover:bg-accent/80"
                 >
-                  Start Monitoring
+                  Start Tracking Breathing
                 </Button>
               )}
             </div>

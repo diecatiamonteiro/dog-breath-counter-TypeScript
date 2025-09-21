@@ -24,7 +24,7 @@ import {
 import LoadingSpinner from "@/app/loading";
 import EmailReportFormModal from "@/components/shareData/EmailReportFormModal";
 import { RiArrowLeftSLine, RiAddLine, RiEditLine } from "react-icons/ri";
-import { FaDog, FaHospital, FaLightbulb, FaLungs, FaPaw } from "react-icons/fa";
+import { FaDog, FaHospital, FaLungs, FaPaw } from "react-icons/fa";
 import { TbLungsFilled } from "react-icons/tb";
 import { PiHeartbeatBold } from "react-icons/pi";
 import { GrDocumentDownload } from "react-icons/gr";
@@ -183,13 +183,15 @@ export default function DogProfilePage() {
     return (
       <div className="max-w-5xl p-4">
         <div className="text-left">
-          <h2 className="text-xl font-semibold mb-2">
-            Loading your dog&apos;s profile
-          </h2>
-          <p className="text-sm text-foreground/70 mb-4 text-left">
+          <div className="flex flex-wrap gap-2">
+            <h2 className="text-lg md:text-xl text-primary font-semibold mb-2">
+              Loading your dog&apos;s profile
+            </h2>
+            <LoadingSpinner />
+          </div>
+          <p className="text-sm text-foreground/70 mb-4">
             If this takes too long, try refreshing the page
           </p>
-          <LoadingSpinner />
         </div>
       </div>
     );
@@ -197,35 +199,54 @@ export default function DogProfilePage() {
 
   return (
     <div className="max-w-5xl relative">
-      <div className="pb-20">
-        <Button
-          href="/my-dogs"
-          variant="ghost"
-          icon={<RiArrowLeftSLine className="w-7 h-7" />}
-          className="mb-4 lg:mb-8"
-        >
-          Back to My Dogs
-        </Button>
-
-        <div className="flex items-center justify-between mb-8 lg:mb-12">
-          <h1 className="text-2xl font-bold text-foreground">
-            {dogName || "Dog"}&apos;s Profile
-          </h1>
+      <div className="mb-36">
+        {/* Dog name & "Back to My Dogs" button */}
+        <div className="flex flex-wrap gap-2 justify-between align-center">
+          <div className="flex items-center justify-between">
+            <h1 className="text-lg md:text-2xl font-bold text-foreground">
+              {dogName || "Dog"}&apos;s Profile
+            </h1>
+          </div>
+          <Button
+            href="/my-dogs"
+            size="sm"
+            variant="secondary"
+            icon={<RiArrowLeftSLine className="w-5 h-5" />}
+            className=""
+          >
+            Back to My Dogs
+          </Button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        {/* "Monitor Breathing Now" button */}
+        <div className="w-full my-8">
+          <Button
+            href={`/my-dogs/${dogId}/monitor-breathing`}
+            variant="primary"
+            size="lg"
+            className="w-full"
+          >
+            <div className="flex items-center">
+              <TbLungsFilled className="w-7 h-7 inline-block mr-2 md:mr-4 text-foreground" />{" "}
+              Track Breathing
+            </div>
+          </Button>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 md:gap-8 mb-4 sm:mb-6 md:mb-8">
           {/* Dog Info Section */}
           <div className="bg-main-text-bg rounded-lg shadow-md p-3 md:p-6 border border-primary-light/20">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center">
-                <FaPaw className="w-6 h-6 inline-block mr-4 text-foreground" />
-                <h2 className="text-xl font-semibold text-foreground">
+                <FaPaw className="w-5 h-5 md:w-6 md:h-6 inline-block mr-2 md:mr-4 text-foreground" />
+                <h2 className="text-base md:text-xl font-semibold text-foreground">
                   Dog Info
                 </h2>
               </div>
 
               <Button
                 href={`/my-dogs/add-dog?edit=${dogId}&section=info`}
+                size="sm"
                 variant="ghost"
                 icon={<RiEditLine className="w-4 h-4" />}
                 className="text-sm text-primary hover:text-primary-dark"
@@ -235,16 +256,22 @@ export default function DogProfilePage() {
             </div>
 
             {/* ***************** DOG INFO SECTION ***************** */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-4">
               {/* Dog Photo */}
-              <div className="flex-shrink-0">
-                <div className="w-full lg:w-48 h-48 rounded-xl overflow-hidden flex items-center justify-center border-2 border-primary/20 relative group shadow-lg">
+              <div className="">
+                <div
+                  className="w-full h-48 rounded-xl overflow-hidden flex items-center justify-center border-2 border-primary/20 relative group shadow-lg"
+                  tabIndex={0}
+                  aria-label={`${
+                    selectedDog?.name ?? "Dog"
+                  } photo. Press Tab to change photo.`}
+                >
                   {selectedDog?.photo?.url ? (
                     <Image
                       src={selectedDog.photo.url}
                       alt={`${selectedDog.name}'s photo`}
-                      width={192}
-                      height={192}
+                      width={128}
+                      height={32}
                       className="w-full h-full object-cover"
                     />
                   ) : (
@@ -266,12 +293,15 @@ export default function DogProfilePage() {
 
                   {/* Edit Photo Overlay - only visible when photo exists */}
                   {selectedDog?.photo?.url && (
-                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-200 flex items-center justify-center">
+                    <div
+                      className="absolute inset-0 hidden items-center justify-center bg-black/60
+                group-hover:flex group-focus-within:flex"
+                    >
                       <Button
                         href={`/my-dogs/add-dog?edit=${dogId}&section=info`}
                         variant="secondary"
                         size="sm"
-                        className="text-xs bg-white/90 hover:bg-white text-gray-800 border-0"
+                        className="text-xs bg-white/80 hover:bg-background text-background border-0"
                       >
                         Change Photo
                       </Button>
@@ -283,30 +313,19 @@ export default function DogProfilePage() {
               {/* Dog Details */}
               <div className="flex-1 space-y-6">
                 {/* Dog Name and Stats */}
-                <div className="space-y-4">
-                  <h3 className="font-bold text-2xl text-foreground">
+                <div className="space-y-2">
+                  <h3 className="font-bold text-xl md:text-2xl text-foreground">
                     {dogName}
                   </h3>
 
                   {/* Dog Stats - Simple format like vet info */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-2 gap-4">
                     {/* Age */}
                     {selectedDog?.age && (
                       <div>
                         <p className="text-sm text-foreground/70">Age</p>
                         <p className="font-medium text-foreground">
-                          {selectedDog.age} years
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Breed */}
-                    {selectedDog?.breed && (
-                      <div>
-                        <p className="text-sm text-foreground/70">Breed</p>
-                        <p className="font-medium text-foreground">
-                          {selectedDog.breed.charAt(0).toUpperCase() +
-                            selectedDog.breed.slice(1)}
+                          {selectedDog.age}
                         </p>
                       </div>
                     )}
@@ -322,12 +341,22 @@ export default function DogProfilePage() {
                       </div>
                     )}
 
+                    {/* Breed */}
+                    {selectedDog?.breed && (
+                      <div className="leading-tight">
+                        <p className="text-sm text-foreground/70">Breed</p>
+                        <p className="font-medium text-foreground">
+                          {selectedDog.breed.charAt(0).toUpperCase() +
+                            selectedDog.breed.slice(1)}
+                        </p>
+                      </div>
+                    )}
                     {/* Show message if no info available */}
                     {!selectedDog?.age &&
                       !selectedDog?.breed &&
                       !selectedDog?.gender && (
                         <div className="md:col-span-2 text-left py-4">
-                          <p className="text-foreground/70">
+                          <p className="text-foreground/70 leading-tight">
                             No dog information added yet.
                           </p>
                         </div>
@@ -342,13 +371,14 @@ export default function DogProfilePage() {
           <div className="bg-main-text-bg rounded-lg shadow-md p-3 md:p-6 border border-primary-light/20">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center">
-                <FaHospital className="w-6 h-6 inline-block mr-4 text-foreground" />
-                <h2 className="text-xl font-semibold text-foreground">
+                <FaHospital className="w-5 h-5 md:w-6 md:h-6 inline-block mr-2 md:mr-4 text-foreground" />
+                <h2 className="text-base md:text-xl font-semibold text-foreground">
                   Veterinarian
                 </h2>
               </div>
               <Button
                 href={`/my-dogs/add-dog?edit=${dogId}&section=vet`}
+                size="sm"
                 variant="ghost"
                 icon={
                   hasVeterinarianData() ? (
@@ -364,7 +394,7 @@ export default function DogProfilePage() {
             </div>
 
             {hasVeterinarianData() ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-4">
                 {selectedDog?.veterinarian?.name && (
                   <div>
                     <p className="text-sm text-foreground/70">
@@ -410,8 +440,8 @@ export default function DogProfilePage() {
                 )}
               </div>
             ) : (
-              <div className="text-left py-8">
-                <p className="text-foreground/70 mb-4">
+              <div className="text-left">
+                <p className="text-foreground/70 leading-tight mb-4">
                   No veterinarian information added yet.
                 </p>
               </div>
@@ -420,17 +450,18 @@ export default function DogProfilePage() {
         </div>
 
         {/* ***************** RESTING RESPIRATORY RATE SECTION ***************** */}
-        <div className="bg-main-text-bg rounded-lg shadow-md p-3 md:p-6 mb-8 border border-primary-light/20">
+        <div className="bg-main-text-bg rounded-lg shadow-md p-3 md:p-6 mb-4 sm:mb-6 md:mb-8 border border-primary-light/20">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center">
-              <FaLungs className="w-6 h-6 inline-block mr-4 text-foreground" />
-              <h2 className="text-xl font-semibold text-foreground">
-                Resting Respiratory Rate
+              <FaLungs className="w-5 h-5 md:w-6 md:h-6 inline-block mr-2 md:md:mr-4 text-foreground" />
+              <h2 className="text-base md:text-xl font-semibold text-foreground">
+                Respiratory Rate
               </h2>
             </div>
             <Button
               href={`/my-dogs/add-dog?edit=${dogId}&section=breathing`}
               variant="ghost"
+              size="sm"
               icon={<RiEditLine className="w-4 h-4" />}
               className="text-sm text-primary hover:text-primary-dark"
             >
@@ -442,18 +473,18 @@ export default function DogProfilePage() {
             {/* Maximum Breath Rate */}
             <div className="rounded-lg p-4 border border-navbar-icons flex-1">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-primary/80">
+                <div className="flex flex-col gap-2">
+                  <p className="text-sm font-medium text-primary/80 leading-tight">
                     Maximum Breath Rate
                   </p>
-                  <p className="text-2xl font-bold text-primary">
+                  <p className="text-xl md:text-2xl font-bold text-primary leading-tight">
                     {selectedDog?.maxBreathingRate} BPM
                   </p>
-                  <p className="text-xs text-primary-dark">
+                  <p className="text-xs text-primary-dark leading-tight">
                     Set when adding dog
                   </p>
                 </div>
-                <div className="text-primary text-3xl">
+                <div className="text-primary text-2xl md:text-3xl xl:text-4xl">
                   <LuTriangleAlert />
                 </div>
               </div>
@@ -462,20 +493,20 @@ export default function DogProfilePage() {
             {/* Average Breath Rate */}
             <div className="rounded-lg p-4 border border-navbar-icons flex-1">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-primary/80">
+                <div className="flex flex-col gap-2">
+                  <p className="text-sm font-medium text-primary/80 leading-tight">
                     Average Breath Rate
                   </p>
-                  <p className="text-2xl font-bold text-primary">
-                    {averageBPM ? `${averageBPM} BPM` : "No data yet"}
+                  <p className="text-xl md:text-2xl font-bold text-primary leading-tight">
+                    {averageBPM ? `${averageBPM} BPM` : "No data"}
                   </p>
-                  <p className="text-xs text-primary-dark">
+                  <p className="text-xs text-primary-dark leading-tight">
                     {averageBPM
                       ? "Average of all logs"
-                      : "Start monitoring to see average"}
+                      : "Start tracking breathing to see average"}
                   </p>
                 </div>
-                <div className="text-primary text-3xl">
+                <div className="text-primary text-2xl md:text-3xl xl:text-4xl">
                   <PiHeartbeatBold />
                 </div>
               </div>
@@ -484,26 +515,31 @@ export default function DogProfilePage() {
         </div>
 
         {/* ***************** BREATHING LOGS SECTION ***************** */}
-        <div className="bg-main-text-bg rounded-lg shadow-md p-3 md:p-6 mb-8 border border-primary-light/20">
+        <div className="bg-main-text-bg rounded-lg shadow-md p-3 md:p-6 md:p-6 mb-4 sm:mb-6 md:mb-8 border border-primary-light/20">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center">
-              <BsClipboardData className="w-6 h-6 inline-block mr-4 text-foreground" />
-              <h2 className="text-xl font-semibold text-foreground">
+              <BsClipboardData className="w-5 h-5 md:w-6 md:h-6 inline-block mr-2 md:mr-4 text-foreground" />
+              <h2 className="text-base md:text-xl font-semibold text-foreground">
                 Breathing Logs
               </h2>
             </div>
           </div>
 
           {breathingLogs.length === 0 ? (
-            <div className="bg-main-text-bg rounded-lg shadow-md p-3 md:p-6 border border-primary-light/20">
-              <div className="text-center py-8">
-                <p className="text-foreground/70 mb-4">
-                  No breathing logs available
-                </p>
-                <p className="text-sm text-foreground/50">
-                  Start monitoring breathing to see data here
-                </p>
-              </div>
+            <div className="flex flex-col gap-4 bg-main-text-bg rounded-lg shadow-md p-3 md:p-6 border border-primary-light/20">
+              <p className="text-left text-foreground/70 leading-tight">
+                No breathing logs available yet.
+              </p>
+              <Button
+                href={`/my-dogs/${dogId}/monitor-breathing`}
+                variant="primary"
+                size="md"
+              >
+                <div className="flex items-center">
+                  <TbLungsFilled className="w-5 h-5 md:w-6 md:h-6 inline-block mr-2 md:mr-4 text-foreground" />{" "}
+                  Start Tracking Breathing
+                </div>
+              </Button>
             </div>
           ) : (
             <>
@@ -524,24 +560,31 @@ export default function DogProfilePage() {
         </div>
 
         {/* ***************** SHARE DATA SECTION ***************** */}
-        <div className="bg-main-text-bg rounded-lg shadow-md p-3 md:p-6 mb-8 border border-primary-light/20">
+        <div className="bg-main-text-bg rounded-lg shadow-md p-3 md:p-6 mb-4 sm:mb-6 md:mb-8 border border-primary-light/20">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center">
-              <LuShare2 className="w-6 h-6 inline-block mr-4 text-foreground" />
-              <h2 className="text-xl font-semibold text-foreground">
-                Share Data
+              <LuShare2 className="w-5 h-5 md:w-6 md:h-6 inline-block mr-2 md:mr-4 text-foreground" />
+              <h2 className="text-base md:text-xl font-semibold text-foreground">
+                Share Report
               </h2>
             </div>
           </div>
 
           {breathingLogs.length === 0 ? (
-            <div className="text-center py-8">
-              <p className="text-foreground/70 mb-4">
-                No breathing logs available to share
+            <div className="flex flex-col gap-4 bg-main-text-bg rounded-lg shadow-md p-3 md:p-6 border border-primary-light/20">
+              <p className="text-left text-foreground/70 leading-tight">
+                No breathing reports available to share yet.
               </p>
-              <p className="text-sm text-foreground/50">
-                Start monitoring breathing to generate reports
-              </p>
+              <Button
+                href={`/my-dogs/${dogId}/monitor-breathing`}
+                variant="primary"
+                size="md"
+              >
+                <div className="flex items-center">
+                  <TbLungsFilled className="w-5 h-5 md:w-6 md:h-6 inline-block mr-2 md:mr-4 text-foreground" />{" "}
+                  Start Tracking Breathing
+                </div>
+              </Button>
             </div>
           ) : (
             <div className="space-y-6">
@@ -555,23 +598,25 @@ export default function DogProfilePage() {
               <div className="flex flex-wrap gap-3">
                 <Button
                   onClick={handleDownloadPdf}
-                  variant="primary"
+                  variant="secondary"
+                  size="sm"
                   disabled={isLoadingPdf}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 w-full sm:w-fit"
                   icon={<GrDocumentDownload className="w-5 h-5" />}
                 >
                   {isLoadingPdf ? (
-                    <>Generating PDF...</>
+                    <>Generating Report...</>
                   ) : (
-                    <> Download PDF Report</>
+                    <> Download Report</>
                   )}
                 </Button>
 
                 <Button
                   onClick={() => setShowEmailForm(true)}
-                  variant="primary"
+                  variant="secondary"
+                  size="sm"
                   disabled={isLoadingEmail}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 w-full sm:w-fit"
                   icon={<TfiEmail className="w-5 h-5" />}
                 >
                   Email Report
@@ -585,48 +630,26 @@ export default function DogProfilePage() {
                   </div>
                 )}
               </div>
-
-              {/* Info Text */}
-              <div className="text-sm text-foreground/60 bg-primary/5 p-3 rounded-md">
-                <p className="mb-1">
-                  <strong>PDF Report includes:</strong>
-                </p>
-                <ul className="list-disc list-inside space-y-1">
-                  <li>Dog information and breathing rate summary</li>
-                  <li>Detailed breathing logs for the selected date range</li>
-                  <li>Average, lowest, and highest BPM values</li>
-                </ul>
-                {!startDate && !endDate && (
-                  <div className="flex items-center mt-4">
-                    <FaLightbulb className="w-4 h-4 inline-block mr-2 text-primary" />
-                    <p className="text-primary font-semibold">
-                      Select a date range to customize your report, or leave
-                      empty for the last 30 days.
-                    </p>
-                  </div>
-                )}
-              </div>
             </div>
           )}
         </div>
-      </div>
-
-      {/* ***************** STICKY MONITOR BREATHING BUTTON ***************** */}
-      <div className="fixed bottom-8 lg:max-w-5xl mb-16 lg:mb-0 mt-12 w-full">
-        <Button
-          href={`/my-dogs/${dogId}/monitor-breathing`}
-          variant="primary"
-          size="lg"
-          className="w-full cursor-pointer"
-        >
-          <div className="flex items-center">
-            <TbLungsFilled className="w-7 h-7 inline-block mr-4 text-foreground" />{" "}
-            Monitor Breathing Now
+        {breathingLogs.length != 0 && (
+          <div className="w-full mt-16">
+            <Button
+              href={`/my-dogs/${dogId}/monitor-breathing`}
+              variant="primary"
+              size="lg"
+              className="w-full"
+            >
+              <div className="flex items-center">
+                <TbLungsFilled className="w-7 h-7 inline-block mr-2 md:mr-4 text-foreground" />{" "}
+                Track Breathing
+              </div>
+            </Button>
           </div>
-        </Button>
+        )}
       </div>
 
-      {/* Email Report Form Modal */}
       <EmailReportFormModal
         onSendEmail={handleSendEmail}
         onCancel={() => setShowEmailForm(false)}

@@ -151,7 +151,7 @@ export default function AuthForm({
   };
 
   return (
-    <div className="max-w-lg">
+    <div className="max-w-lg mb-24 lg:mb-0">
       <div className="bg-navbar-bg rounded-lg shadow-lg border border-primary/20 p-8">
         {/* Header */}
         <div className="text-center mb-8">

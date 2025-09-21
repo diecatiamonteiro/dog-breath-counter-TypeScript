@@ -17,6 +17,7 @@ import {
   ReferenceLine,
   Cell,
 } from "recharts";
+import { GoDotFill } from "react-icons/go";
 
 type Props = {
   logs: BreathingLog[];
@@ -65,11 +66,7 @@ export default function BreathingChart({ logs, selectedDog }: Props) {
       {/* Chart */}
       <div className="h-70 md:h-96">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart
-            data={filteredData}
-            barGap={0}
-            barCategoryGap={0}
-          >
+          <BarChart data={filteredData} barGap={0} barCategoryGap={0}>
             <XAxis
               dataKey="index"
               stroke="#6b7280"
@@ -135,21 +132,21 @@ export default function BreathingChart({ logs, selectedDog }: Props) {
 
       {/* Legend (below, at or above max BPM) */}
       {selectedDog && (
-        <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-center gap-2 sm:gap-4 text-sm p-4">
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-green-500 rounded"></div>
+        <div className="flex flex-wrap items-center justify-center gap-1 sm:gap-4 md:gap-8">
+          <div className="flex items-center">
+            <GoDotFill className="w-5 h-5 text-green-500 " />
             <span className="text-xs sm:text-sm">
               Below {selectedDog.maxBreathingRate} BPM
             </span>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-yellow-500 rounded"></div>
+          <div className="flex items-center">
+            <GoDotFill className="w-5 h-5 text-yellow-500 " />
             <span className="text-xs sm:text-sm">
               At {selectedDog.maxBreathingRate} BPM
             </span>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-red-500 rounded"></div>
+          <div className="flex items-center">
+            <GoDotFill className="w-5 h-5 text-red-500 " />
             <span className="text-xs sm:text-sm">
               Above {selectedDog.maxBreathingRate} BPM
             </span>

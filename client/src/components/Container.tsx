@@ -13,7 +13,7 @@ export default function Container({
   className = "",
 }: ContainerProps) {
   return (
-    <div className={`p-6 sm:p-8 lg:px-18 lg:py-12 ${className}`}>
+    <div className={`py-6 px-4 sm:p-6 md:p-8 lg:px-16 lg:py-12 ${className}`}>
       {children}
     </div>
   );

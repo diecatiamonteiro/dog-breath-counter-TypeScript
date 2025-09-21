@@ -64,7 +64,7 @@ export default function NavigationMobile() {
       <div className="fixed bottom-0 left-0 right-0 bg-navbar-bg border-t border-primary/20 z-50 lg:hidden">
         {/* Navigation Tabs */}
         <div className="w-full max-w-md mx-auto">
-          <nav className="flex items-center justify-center px-2 max-w-lg">
+          <nav className="flex items-center justify-center gap-2 py-2">
             {navItems.map((item) => {
               const isActive = pathname === item.href;
 
@@ -75,7 +75,7 @@ export default function NavigationMobile() {
                     key={item.label}
                     onClick={handleLogout}
                     disabled={userState.isLoading}
-                    className="flex flex-col items-center justify-center px-1 py-2 rounded-lg transition-all duration-200 min-w-0 flex-1"
+                    className="flex flex-col items-center justify-centerrounded-lg transition-all duration-200 px-4"
                   >
                     {/* Icon */}
                     <div className="flex items-center justify-center w-7 h-7 rounded-lg transition-all duration-200 mb-1 text-foreground/60 bg-transparent">
@@ -83,15 +83,9 @@ export default function NavigationMobile() {
                     </div>
 
                     {/* Label */}
-                    <span className="text-xs text-center font-bold transition-all duration-200 text-foreground/60">
-                      {userState.isLoading ? (
-                        <div className="flex items-center gap-2">
-                          Signing out...
-                        </div>
-                      ) : (
-                        item.label
-                      )}
-                    </span>
+                    <div className="text-xs text-center font-bold transition-all duration-200 text-foreground/60">
+                      {item.label}
+                    </div>
                   </button>
                 );
               }
@@ -101,7 +95,7 @@ export default function NavigationMobile() {
                 <Link
                   key={item.label}
                   href={item.href}
-                  className="flex flex-col items-center justify-center px-3 py-2 rounded-lg transition-all duration-200 min-w-0 flex-1"
+                  className="flex flex-col items-center justify-center rounded-lg transition-all duration-200 px-4"
                 >
                   {/* Icon */}
                   <div

@@ -176,10 +176,10 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="max-w-5xl mb-24 lg:mb-0">
-      <h1 className="text-2xl font-bold text-foreground">Settings</h1>
+    <div className="max-w-5xl mb-19 lg:mb-0">
+      <h1 className="text-lg md:text-2xl font-bold text-foreground">Settings</h1>
       {user && (
-        <h2 className="mt-1 md:mt-3 text-foreground/80">Woof, woof, {userName}!</h2>
+        <h2 className="mt-1 md:mt-3 text-foreground/80">Hi, {userName}!</h2>
       )}
 
       {!editData ? (

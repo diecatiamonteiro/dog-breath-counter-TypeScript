@@ -21,12 +21,11 @@ export default function MyDogsPage() {
     }
   }, [dogDispatch, authLoading, userState.isAuthenticated]);
 
-  // Show loading while authentication is being checked
-  if (authLoading) {
+  if (authLoading && isLoading) {
     return (
       <div className="max-w-5xl p-4">
-        <div className="text-left">
-          <h2 className="text-xl font-semibold mb-4">Loading your dogs...</h2>
+        <div className="flex flex-wrap gap-2 text-left">
+          <h2 className="text-base text-primary mb-4">Loading your dogs</h2>
           <LoadingSpinner />
         </div>
       </div>
@@ -35,24 +34,11 @@ export default function MyDogsPage() {
 
   if (error) {
     return (
-      <div className="mx-auto">
-        <div className="text-center">
-          <h2 className="text-xl font-semibold mb-4">
-            We cannot show your dogs at the moment. Try refreshing the page.
-          </h2>
-          <p className="text-accent">{error}</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (isLoading) {
-    return (
-      <div className="mx-auto">
-        <div className="text-center">
-          <h2 className="text-xl font-semibold mb-4">Loading your dogs...</h2>
-          <LoadingSpinner />
-        </div>
+      <div className="text-left">
+        <h2 className="text-lg md:text-xl text-foreground font-semibold mb-4">
+          We cannot show your dogs at the moment. Try refreshing the page.
+        </h2>
+        <p className="text-accent">{error}</p>
       </div>
     );
   }
@@ -83,7 +69,7 @@ export default function MyDogsPage() {
       <div className="">
         {/* Header */}
         <div className="flex flex-wrap justify-between gap-4 mb-8 lg:mb-16">
-          <h1 className="text-2xl font-bold">My Dogs</h1>
+          <h1 className="text-lg md:text-2xl font-bold">My Dogs</h1>
           <Button
             href="/my-dogs/add-dog"
             variant="primary"
@@ -101,14 +87,14 @@ export default function MyDogsPage() {
               .map((dog) => (
                 <div
                   key={dog.id}
-                  className="bg-main-text-bg rounded-lg p-4 sm:p-6 border border-primary/20 hover:border-primary/40 transition-colors last:mb-28 lg:mb-0"
+                  className="bg-main-text-bg rounded-lg p-4 border border-primary/20 hover:border-primary/40 transition-colors last:mb-28 lg:mb-0"
                 >
-                  <div className="flex flex-col gap-4 md:grid md:grid-cols-2 md:gap-6 md:items-center">
+                  <div className="flex flex-col gap-2 md:grid md:grid-cols-2 md:gap-6 md:items-center">
                     {/*  Image and Info */}
                     <div className="flex items-center gap-3 sm:gap-4">
                       {/* Dog Image */}
                       <div className="flex-shrink-0">
-                        <div className="w-20 h-20 sm:w-18 sm:h-18 md:w-20 md:h-20 rounded-full border-2 border-primary/30 overflow-hidden bg-primary/10">
+                        <div className="w-20 h-20 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full border-2 border-primary/30 overflow-hidden bg-primary/10">
                           {dog.photo?.url ? (
                             <Image
                               src={dog.photo.url}
@@ -127,17 +113,20 @@ export default function MyDogsPage() {
 
                       {/* Dog Info */}
                       <div className="flex-1 text-left">
-                        <h3 className="text-lg sm:text-lg md:text-lg font-semibold text-foreground mb-1">
-                          {dog.name.split(" ").map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ") || "Unnamed Dog"}
+                        <h3 className="text-lg font-semibold text-foreground mb-1">
+                          {dog.name
+                            .split(" ")
+                            .map(
+                              (word) =>
+                                word.charAt(0).toUpperCase() + word.slice(1)
+                            )
+                            .join(" ") || "Unnamed Dog"}
                         </h3>
 
-                        <div className="space-y-0.5 text-sm sm:text-sm md:text-sm text-foreground/70">
+                        <div className="text-sm md:text-base text-foreground/70">
                           {dog.age && <p>Age: {dog.age}</p>}
                           {dog.breed && <p>Breed: {dog.breed}</p>}
-                          <p className="font-medium">
-                            Max Breaths/min: {dog.maxBreathingRate || "Not set"}{" "}
-                            bpm
-                          </p>
+                          <p>Max BPM: {dog.maxBreathingRate || "Not set"} </p>
                         </div>
                       </div>
                     </div>
@@ -173,9 +162,11 @@ export default function MyDogsPage() {
                 </div>
               ))
           ) : (
-            <div className="col-span-full text-left py-12">
-              <h2 className="text-xl font-semibold mb-4">No dogs found</h2>
-              <p className="text-foreground/70 mb-6">
+            <div className="col-span-full text-left py-6">
+              <h2 className="text-lg md:text-xl text-foreground font-semibold mb-4">
+                No dogs found
+              </h2>
+              <p className="text-foreground/70 leading-snug mb-6">
                 You haven`t added any dogs yet. Start by adding your first dog!
               </p>
             </div>

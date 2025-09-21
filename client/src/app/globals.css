@@ -12,7 +12,7 @@
   --primary: rgb(140, 107, 177); /* medium lavender */
   --primary-dark: rgb(45, 33, 61); /* dark lavender */
 
-  --accent: rgb(240, 92, 82); /* pink */
+  --accent: rgb(239, 124, 142); /* pink */
 
   font-family: var(--font-nunito), sans-serif;
 }
