@@ -21,7 +21,7 @@ export interface Dog {
   id: string;
   userId: string;
   name: string;
-  photo?: CloudinaryPhoto; // see above
+  photo?: CloudinaryPhoto | null; // see above
   breed?: string;
   birthYear?: number;
   gender?: string;
@@ -42,7 +42,7 @@ export interface DogState {
 
 export interface AddDogData {
   name: string;
-  photo?: CloudinaryPhoto; // see above
+  photo?: CloudinaryPhoto | null; // see above
   breed?: string;
   birthYear?: number;
   gender?: string;
@@ -53,7 +53,7 @@ export interface AddDogData {
 
 export interface UpdateDogData {
   name: string;
-  photo?: CloudinaryPhoto; // see above
+  photo?: CloudinaryPhoto | null; // see above
   breed?: string;
   birthYear?: number;
   gender?: string;

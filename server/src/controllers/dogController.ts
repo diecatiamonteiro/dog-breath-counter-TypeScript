@@ -148,22 +148,37 @@ export const updateDog: Controller<
     // Prepare update data with all possible fields
     const updateData: any = {
       name: req.body.name ?? existingDog.name,
-      photo: req.body.photo ?? existingDog.photo,
+      // If client sends null, we want to remove the photo. If undefined, keep existing.
+      photo:
+        req.body.photo === null
+          ? undefined // we'll $unset it via separate operator
+          : req.body.photo ?? existingDog.photo,
       breed: req.body.breed ?? existingDog.breed,
       birthYear: req.body.birthYear ?? existingDog.birthYear,
       gender: req.body.gender ?? existingDog.gender,
       maxBreathingRate: req.body.maxBreathingRate ?? existingDog.maxBreathingRate,
     };
 
+    // Build update operations to support unsetting photo
+    const updateOps: any = { $set: updateData };
+    if (req.body.photo === null) {
+      // Delete existing photo asset if present
+      if (existingDog.photo?.publicId) {
+        await cloudinaryService.deletePhoto(existingDog.photo.publicId);
+      }
+      updateOps.$unset = { ...(updateOps.$unset || {}), photo: "" };
+      // Also remove photo from $set to avoid re-setting it
+      delete updateOps.$set.photo;
+    }
+
     // Handle veterinarian data - allow null/undefined to clear the data
     if (req.body.hasOwnProperty('veterinarian')) {
-      // If veterinarian is undefined, explicitly set to null to clear it in MongoDB
-      updateData.veterinarian = req.body.veterinarian === undefined ? null : req.body.veterinarian;
+      updateOps.$set.veterinarian = req.body.veterinarian === undefined ? null : req.body.veterinarian;
     }
 
     const updatedDog = await Dog.findByIdAndUpdate(
       existingDog._id,
-      updateData,
+      updateOps,
       { new: true, runValidators: true }
     );
 

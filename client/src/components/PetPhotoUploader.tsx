@@ -54,6 +54,7 @@ export const PetPhotoUploader: React.FC<PetPhotoUploaderProps> = ({
   const handleRemove = () => {
     onRemove?.();
   };
+  
   return (
     <div className="flex flex-col items-center gap-2 w-full max-w-xs">
       {/* Photo Preview */}

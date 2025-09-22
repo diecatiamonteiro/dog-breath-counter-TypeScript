@@ -37,7 +37,8 @@ class CloudinaryService {
     try {
       const result = await cloudinary.uploader.destroy(publicId);
 
-      if (result.result !== "ok") {
+      // Treat "not found" as a non-fatal outcome since the resource might have already been deleted or never existed with that ID.
+      if (result.result !== "ok" && result.result !== "not found") {
         throw createError(500, `Failed to delete photo: ${result.result}`);
       }
     } catch (error) {

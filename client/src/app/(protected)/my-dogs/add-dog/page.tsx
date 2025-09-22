@@ -41,7 +41,7 @@ export default function AddDogPage() {
     birthYear: 0,
     gender: "",
     maxBreathingRate: 30,
-    photo: undefined as CloudinaryPhoto | undefined,
+    photo: undefined as CloudinaryPhoto | null | undefined,
     veterinarian: {
       vetName: "",
       vetClinicName: "",
@@ -238,7 +238,7 @@ export default function AddDogPage() {
 
   // Handle photo removal
   const handlePhotoRemove = () => {
-    setFormData((prev) => ({ ...prev, photo: undefined }));
+    setFormData((prev) => ({ ...prev, photo: null }));
     // Clear any photo-related errors
     if (formErrors.photo) {
       setFormErrors((prev) => ({ ...prev, photo: "" }));
@@ -277,13 +277,15 @@ export default function AddDogPage() {
         birthYear: formData.birthYear || undefined,
         gender: formData.gender || undefined,
         maxBreathingRate: formData.maxBreathingRate,
-        photo: formData.photo || undefined,
+        photo: formData.photo === null ? null : formData.photo || undefined,
         // Always include veterinarian property - null when empty to signal clearing
         veterinarian: hasAnyVetData ? vetData : null,
       };
 
       if (isEditMode && editDogId) {
+        console.log("before PUSH:", dogData);
         await updateDog(dogDispatch, editDogId, dogData);
+        console.log("after PUSH:", dogData);
         router.push(`/my-dogs/${editDogId}`);
       } else {
         await addDog(dogDispatch, dogData);
@@ -351,7 +353,10 @@ export default function AddDogPage() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6 md:space-y-8">
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-4 sm:space-y-6 md:space-y-8"
+      >
         {/* ***************** DOG INFO SECTION ***************** */}
         <div
           ref={dogInfoRef}
@@ -375,7 +380,7 @@ export default function AddDogPage() {
             >
               <div className="flex justify-center">
                 <PetPhotoUploader
-                  currentPhoto={formData.photo}
+                  currentPhoto={formData.photo ?? undefined}
                   onUpload={handlePhotoUpload}
                   onError={handlePhotoError}
                   onRemove={handlePhotoRemove}
@@ -445,7 +450,7 @@ export default function AddDogPage() {
                   </p>
                 )}
               </div>
-               <div>
+              <div>
                 <label
                   htmlFor="breed"
                   className="block text-sm font-medium mb-1 text-foreground"
@@ -484,9 +489,7 @@ export default function AddDogPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-             
-            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
           </div>
         </div>
 
@@ -672,7 +675,7 @@ export default function AddDogPage() {
           fullWidth
           loading={isSubmitting || isLoading}
           loadingText={isEditMode ? "Updating..." : "Saving..."}
-className="mt-10"
+          className="mt-10"
         >
           {isEditMode ? "Update Dog" : "Save Dog"}
         </Button>
