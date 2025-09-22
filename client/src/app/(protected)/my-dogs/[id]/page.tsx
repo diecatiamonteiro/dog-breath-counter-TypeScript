@@ -240,7 +240,7 @@ export default function DogProfilePage() {
               <div className="flex items-center">
                 <FaPaw className="w-5 h-5 md:w-6 md:h-6 inline-block mr-2 md:mr-4 text-foreground" />
                 <h2 className="text-base md:text-xl font-semibold text-foreground">
-                  Dog Info
+                  Dog
                 </h2>
               </div>
 
@@ -455,7 +455,7 @@ export default function DogProfilePage() {
             <div className="flex items-center">
               <FaLungs className="w-5 h-5 md:w-6 md:h-6 inline-block mr-2 md:md:mr-4 text-foreground" />
               <h2 className="text-base md:text-xl font-semibold text-foreground">
-                Respiratory Rate
+                Breathing Rate
               </h2>
             </div>
             <Button

@@ -138,7 +138,7 @@ export default function MonitorBreathingPage() {
         {/* Target */}
         <div className="flex flex-col mt-2">
           {!isMonitorOpen && (
-            <div className="my-4 border border-accent text-accent p-1 text-center rounded-xl">
+            <div className="my-6 md:my-12 border border-accent text-accent p-1 text-center rounded-xl">
               <p className="text-sm">
                 <span className="font-bold">Target:</span> Under{" "}
                 {selectedDog?.maxBreathingRate || 30} breaths per minute

@@ -10,6 +10,7 @@ import type { CloudinaryUploadWidgetResults } from "next-cloudinary";
 import { useState } from "react";
 import Image from "next/image";
 import { FaCamera, FaTrash } from "react-icons/fa";
+import Button from "./Button";
 
 interface PhotoData {
   url: string;
@@ -27,24 +28,24 @@ export const PetPhotoUploader: React.FC<PetPhotoUploaderProps> = ({
   currentPhoto,
   onUpload,
   onError,
-  onRemove
+  onRemove,
 }) => {
   const [isUploading, setIsUploading] = useState(false);
 
   const handleUpload = (results: CloudinaryUploadWidgetResults) => {
     try {
       setIsUploading(true);
-      
+
       if (results.info && typeof results.info !== "string") {
         const photoData: PhotoData = {
           url: results.info.secure_url,
-          publicId: results.info.public_id
+          publicId: results.info.public_id,
         };
-        
+
         onUpload?.(photoData);
       }
     } catch (error) {
-      onError?.(error instanceof Error ? error.message : 'Upload failed');
+      onError?.(error instanceof Error ? error.message : "Upload failed");
     } finally {
       setIsUploading(false);
     }
@@ -53,9 +54,8 @@ export const PetPhotoUploader: React.FC<PetPhotoUploaderProps> = ({
   const handleRemove = () => {
     onRemove?.();
   };
-
   return (
-    <div className="flex flex-col items-center gap-4 w-full max-w-xs">
+    <div className="flex flex-col items-center gap-2 w-full max-w-xs">
       {/* Photo Preview */}
       {currentPhoto && (
         <div className="relative">
@@ -67,19 +67,20 @@ export const PetPhotoUploader: React.FC<PetPhotoUploaderProps> = ({
               className="object-cover"
             />
           </div>
-          
+
           {/* Remove button */}
-          <button
+          <Button
             type="button"
+            size="sm"
             onClick={handleRemove}
-            className="absolute -top-2 -right-2 bg-accent text-white rounded-full p-1.5 hover:bg-accent/80 transition-colors shadow-md"
-            title="Remove photo"
+            variant="danger"
+            className="absolute -top-2 -right-2 !rounded-full !gap-0"
           >
-            <FaTrash className="w-3 h-3" />
-          </button>
+            {<FaTrash className="w-4 h-4" />}
+          </Button>
         </div>
       )}
-      
+
       {/* Upload Button */}
       <CldUploadWidget
         uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
@@ -92,32 +93,30 @@ export const PetPhotoUploader: React.FC<PetPhotoUploaderProps> = ({
         }}
       >
         {({ open }) => (
-          <button
+          <Button
             type="button"
             onClick={() => open()}
+            variant="secondary"
+            size="sm"
             disabled={isUploading}
-            className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 disabled:bg-primary/50 disabled:cursor-not-allowed transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30"
+            icon={<FaCamera className="w-4 h-4" />}
           >
-            <FaCamera className="w-4 h-4" />
-            {isUploading 
-              ? "Uploading..." 
-              : currentPhoto 
-                ? "Change Photo" 
-                : "Upload Photo"
-            }
-          </button>
+            {" "}
+            {isUploading
+              ? "Uploading..."
+              : currentPhoto
+              ? "Change Photo"
+              : "Upload Photo"}
+          </Button>
         )}
       </CldUploadWidget>
-      
-      {/* Upload Instructions */}
+
       {!currentPhoto && (
         <div className="text-center">
           <p className="text-sm text-foreground/70">
             Click to upload a photo of your dog
           </p>
-          <p className="text-xs text-foreground/50 mt-1">
-            JPG, PNG • Max 1.5MB
-          </p>
+          <p className="text-xs text-foreground/50">JPG, PNG • Max 1.5MB</p>
         </div>
       )}
     </div>
