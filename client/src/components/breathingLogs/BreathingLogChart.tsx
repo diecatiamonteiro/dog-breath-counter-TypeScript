@@ -61,92 +61,138 @@ export default function BreathingChart({ logs, selectedDog }: Props) {
   // Format date labels to show only day number
   const formatDateLabel = formatDateChartLabel;
 
+  const chartTitleId = "breathing-chart-title"; // [ARIA] id used by aria-labelledby
+  const chartDescId = "breathing-chart-desc"; // [ARIA] id used by aria-describedby
+  const dogName = selectedDog?.name ?? "your dog";
+
   return (
     <div className="bg-main-text-bg rounded-lg border border-primary-light/20">
-      {/* Chart */}
-      <div className="h-70 md:h-96">
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={filteredData} barGap={0} barCategoryGap={0}>
-            <XAxis
-              dataKey="index"
-              stroke="#6b7280"
-              fontSize={10}
-              tick={{ fill: "#6b7280" }}
-              tickFormatter={(value, index) =>
-                formatDateLabel(filteredData[index]?.dateLong || "")
-              }
-              height={40}
-              interval={0}
-              label={{
-                value: "Days",
-                position: "insideBottom",
-                fill: "#6b7280",
-                fontSize: 10,
-              }}
-            />
-            <YAxis
-              domain={[0, yAxisMax]}
-              stroke="#6b7280"
-              fontSize={10}
-              tick={{ fill: "#6b7280" }}
-              allowDataOverflow={false}
-              width={25}
-              label={{
-                value: "BPM",
-                position: "top",
-                offset: 10,
-                fill: "#6b7280",
-                fontSize: 10,
-              }}
-            />
+      {/* [ARIA] wrap chart in a figure and name/describe it */}
+      <figure aria-labelledby={chartTitleId} aria-describedby={chartDescId}>
+        {/* [ARIA] sr-only title provides an accessible name */}
+        <h2 id={chartTitleId} className="sr-only">
+          Breathing rate chart for {dogName}
+        </h2>
+        {/* [ARIA] sr-only description provides extra context */}
+        <p id={chartDescId} className="sr-only">
+          Bar chart of breaths per minute over time
+          {selectedDog
+            ? ` with a reference line at ${selectedDog.maxBreathingRate} BPM.`
+            : "."}
+        </p>
 
-            {/* Bars - one for each reading */}
-            <Bar
-              dataKey="bpm"
-              radius={[2, 2, 0, 0]}
-              barSize={12}
-              fill="#8884d8"
+        {/* Chart */}
+        <div className="h-70 md:h-96">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart
+              data={filteredData}
+              barGap={0}
+              barCategoryGap={0}
+              role="img"
+              aria-label={`Breathing rates for ${dogName}`}
             >
-              {filteredData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={getBarColor(entry.bpm)} />
-              ))}
-            </Bar>
-
-            {/* Reference line for max breathing rate - placed after bars to appear on top */}
-            {selectedDog && (
-              <ReferenceLine
-                y={selectedDog.maxBreathingRate}
-                stroke="#f59e0b"
-                strokeDasharray="1 1"
+              <XAxis
+                dataKey="index"
+                stroke="#6b7280"
                 fontSize={10}
+                tick={{ fill: "#6b7280" }}
+                tickFormatter={(value, index) =>
+                  formatDateLabel(filteredData[index]?.dateLong || "")
+                }
+                height={40}
+                interval={0}
                 label={{
-                  value: `Max: ${selectedDog.maxBreathingRate} BPM`,
-                  position: "top",
-                  fill: "#f59e0b",
+                  value: "Days",
+                  position: "insideBottom",
+                  fill: "#6b7280",
+                  fontSize: 10,
                 }}
               />
-            )}
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
+              <YAxis
+                domain={[0, yAxisMax]}
+                stroke="#6b7280"
+                fontSize={10}
+                tick={{ fill: "#6b7280" }}
+                allowDataOverflow={false}
+                width={25}
+                label={{
+                  value: "BPM",
+                  position: "top",
+                  offset: 10,
+                  fill: "#6b7280",
+                  fontSize: 10,
+                }}
+              />
+
+              {/* Bars - one for each reading */}
+              <Bar
+                dataKey="bpm"
+                radius={[2, 2, 0, 0]}
+                barSize={12}
+                fill="#8884d8"
+              >
+                {filteredData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={getBarColor(entry.bpm)} />
+                ))}
+              </Bar>
+
+              {/* Reference line for max breathing rate - placed after bars to appear on top */}
+              {selectedDog && (
+                <ReferenceLine
+                  y={selectedDog.maxBreathingRate}
+                  stroke="#f59e0b"
+                  strokeDasharray="1 1"
+                  fontSize={10}
+                  label={{
+                    value: `Max: ${selectedDog.maxBreathingRate} BPM`,
+                    position: "top",
+                    fill: "#f59e0b",
+                  }}
+                />
+              )}
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* [ARIA] screen-reader-only table as non-visual fallback */}
+        {filteredData.length > 0 && (
+          <table className="sr-only">
+            <caption>{`Breathing logs for ${dogName}`}</caption>
+            <thead>
+              <tr>
+                <th scope="col">Date</th>
+                <th scope="col">BPM</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredData.map((d, i) => (
+                <tr key={i}>
+                  <td>{d.dateLong}</td>
+                  <td>{d.bpm}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </figure>
 
       {/* Legend (below, at or above max BPM) */}
       {selectedDog && (
         <div className="flex flex-wrap items-center justify-center gap-1 sm:gap-4 md:gap-8">
           <div className="flex items-center">
-            <GoDotFill className="w-5 h-5 text-green-500 " />
+            <GoDotFill className="w-5 h-5 text-green-500" aria-hidden="true" />
             <span className="text-xs sm:text-sm">
               Below {selectedDog.maxBreathingRate} BPM
             </span>
           </div>
           <div className="flex items-center">
-            <GoDotFill className="w-5 h-5 text-yellow-500 " />
+            <GoDotFill className="w-5 h-5 text-yellow-500" aria-hidden="true" />
             <span className="text-xs sm:text-sm">
               At {selectedDog.maxBreathingRate} BPM
             </span>
           </div>
           <div className="flex items-center">
-            <GoDotFill className="w-5 h-5 text-red-500 " />
+            <GoDotFill className="w-5 h-5 text-red-500" aria-hidden="true" />
             <span className="text-xs sm:text-sm">
               Above {selectedDog.maxBreathingRate} BPM
             </span>

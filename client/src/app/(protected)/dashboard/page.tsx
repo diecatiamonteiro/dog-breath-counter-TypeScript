@@ -213,6 +213,7 @@ export default function DashboardPage() {
             <Button
               variant="secondary"
               className="mt-4"
+              ariaLabel="Edit user data"
               onClick={handleEditData}
               disabled={isSubmitting}
             >
@@ -234,7 +235,7 @@ export default function DashboardPage() {
                 onClose={() => setShowDeleteAccountModal(false)}
               >
                 <div className="flex flex-col items-center justify-center space-y-2 p-6 text-center">
-                <IoWarning className="w-10 h-10 text-accent" />
+                <IoWarning className="w-10 h-10 text-accent" aria-label="Warning"/>
                   <h3 className="text-lg md:text-xl font-extrabold text-accent">
                     Are you sure you want to delete your account?
                     
@@ -246,6 +247,7 @@ export default function DashboardPage() {
                     <Button
                       variant="secondary"
                       onClick={() => setShowDeleteAccountModal(false)}
+                      ariaLabel="Cancel user account deletion"
                     >
                       Cancel
                     </Button>
@@ -383,12 +385,13 @@ export default function DashboardPage() {
             </form>
             </div>
             <div className="mt-4 flex gap-3 pt-2">
-                <Button  type="button" onClick={handleInputChange} disabled={isSubmitting}>
+                <Button  type="button" onClick={handleInputChange} ariaLabel="Save updated user data" disabled={isSubmitting}>
                   Save
                 </Button>
                 <Button
                   variant="secondary"
                   onClick={handleCancel}
+                  ariaLabel="Cancel user data update"
                   disabled={isSubmitting}
                 >
                   Cancel

@@ -33,7 +33,7 @@ export default function NavigationDesktop() {
 
   return (
     <div className="h-screen w-56 xl:w-64 2xl:w-76 bg-navbar-bg flex-shrink-0 border-r border-primary/20">
-      <nav className="h-full flex flex-col py-6 px-4">
+      <nav className="h-full flex flex-col py-6 px-4" aria-label="Main navigation">
         {/* Logo Section */}
         <div className="mb-12 px-2">
           <Link href="/" className="block">
@@ -83,6 +83,7 @@ export default function NavigationDesktop() {
                         : "text-primary bg-primary/20 group-hover:bg-primary/50 group-hover:text-foreground"
                     }
                   `}
+                  aria-hidden="true"
                   >
                     {item.icon}
                   </div>

@@ -129,7 +129,7 @@ export default function MonitorBreathingPage() {
             href={`/my-dogs/${dogId}`}
             variant="secondary"
             size="sm"
-            icon={<RiArrowLeftSLine className="w-5 h-5" />}
+            icon={<RiArrowLeftSLine className="w-5 h-5" aria-hidden="true" />}
           >
             Back to {dogName || "Dog"}`s Profile
           </Button>
@@ -161,6 +161,7 @@ export default function MonitorBreathingPage() {
                           key={duration}
                           onClick={() => handleSetDuration(duration)}
                           disabled={isMonitoring}
+                          aria-label={`Set duration to ${duration} seconds`}
                           className={`p-4 rounded-xl border-2 transition-all duration-200 ${
                             selectedDuration === duration
                               ? "border-primary bg-primary text-white shadow-lg"
@@ -183,6 +184,7 @@ export default function MonitorBreathingPage() {
                       }}
                       variant="primary"
                       size="md"
+                      aria-label={`Start tracking ${dogName}'s breathing`}
                       className="w-full mt-3"
                       disabled={!selectedDuration}
                     >
@@ -212,9 +214,9 @@ export default function MonitorBreathingPage() {
                       <button
                         onClick={handleBreathTap}
                         className="relative w-28 h-28 md:w-32 md:h-32 lg:w-36 lg:h-36 rounded-full flex items-center justify-center transition-all duration-200 bg-accent hover:bg-accent/90 hover:scale-105 active:scale-95 shadow-lg cursor-pointer"
-                        aria-label="Tap for each breath"
+                        aria-label="Tap for each breath you fell or observe"
                       >
-                        <FaHeart className="w-16 h-16 md:w-20 md:h-20 text-white" />
+                        <FaHeart className="w-16 h-16 md:w-20 md:h-20 text-white" aria-hidden="true" />
                         {!hasStartedMonitoring ? (
                           <span className="absolute text-base text-accent font-bold">
                             Start
@@ -287,8 +289,8 @@ export default function MonitorBreathingPage() {
                     }`}
                   >
                     {calculateBPM() <= (selectedDog?.maxBreathingRate || 30)
-                      ? "✓ Normal breathing rate"
-                      : `⚠ Above target rate (${selectedDog?.maxBreathingRate} BPM)`}
+                      ? "Normal breathing rate"
+                      : `Above target rate (${selectedDog?.maxBreathingRate} BPM)`}
                   </p>
                 </div>
 
@@ -311,6 +313,8 @@ export default function MonitorBreathingPage() {
                   href={`/my-dogs/${dogId}`}
                   variant="primary"
                   size="md"
+                  ariaLabel={`Save ${dogName}'s breathing track`}
+
                   className="w-full"
                 >
                   Save

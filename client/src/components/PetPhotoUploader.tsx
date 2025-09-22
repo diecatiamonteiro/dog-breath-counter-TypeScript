@@ -75,6 +75,7 @@ export const PetPhotoUploader: React.FC<PetPhotoUploaderProps> = ({
             size="sm"
             onClick={handleRemove}
             variant="danger"
+            ariaLabel="Delete dog photo"
             className="absolute -top-2 -right-2 !rounded-full !gap-0"
           >
             {<FaTrash className="w-4 h-4" />}
@@ -100,7 +101,7 @@ export const PetPhotoUploader: React.FC<PetPhotoUploaderProps> = ({
             variant="secondary"
             size="sm"
             disabled={isUploading}
-            icon={<FaCamera className="w-4 h-4" />}
+            icon={<FaCamera className="w-4 h-4" aria-hidden="true" />}
           >
             {" "}
             {isUploading

@@ -26,7 +26,10 @@ export default function HomePage() {
           <div className="py-5 md:py-10 text-center max-w-4xl mx-auto relative z-10">
             <div className="flex justify-center">
               <div className="relative">
-                <TbLungsFilled className="text-7xl text-accent animate-pulse" />
+                <TbLungsFilled
+                  className="text-7xl text-accent animate-pulse"
+                  aria-hidden="true"
+                />
               </div>
             </div>
             <h1 className="text-2xl md:text-4xl font-bold text-primary my-4 md:my-8 leading-tight max-w-xl mx-auto">
@@ -44,7 +47,8 @@ export default function HomePage() {
                   size="md"
                   className="px-4 py-2 md:px-8 md:py-4 w-full sm:w-fit"
                 >
-Start Tracking Breathing                </Button>
+                  Start Tracking Breathing{" "}
+                </Button>
               ) : (
                 <Button
                   href="/auth"
@@ -59,6 +63,7 @@ Start Tracking Breathing                </Button>
                 href="#how-it-works"
                 variant="secondary"
                 size="md"
+                ariaLabel="Learn more about how PawPulse works"
                 className="px-4 py-2 md:px-8 md:py-4 w-full sm:w-fit"
               >
                 Learn More
@@ -107,7 +112,10 @@ Start Tracking Breathing                </Button>
             </div>
             <div>
               <div className="border border-primary/10 bg-gradient-to-br from-primary-light to-primary/20 rounded-2xl p-8 flex flex-col items-center md:items-start">
-                <TbHeart className="text-5xl md:text-6xl text-primary mb-4" />
+                <TbHeart
+                  className="text-5xl md:text-6xl text-primary mb-4"
+                  aria-hidden="true"
+                />
                 <h3 className="text-xl font-semibold text-primary mb-3">
                   The Heart-Breathing Connection
                 </h3>
@@ -124,7 +132,10 @@ Start Tracking Breathing                </Button>
       </section>
 
       {/* How It Works - Visual Process */}
-      <section id="how-it-works" className="scroll-mt-6 py-5 md:py-10 bg-primary/20">
+      <section
+        id="how-it-works"
+        className="scroll-mt-6 py-5 md:py-10 bg-primary/20"
+      >
         <Container>
           <h2 className="text-3xl md:text-4xl font-bold text-primary mb-8 md:mb-14 text-center">
             How Paw Pulse Works
@@ -134,7 +145,7 @@ Start Tracking Breathing                </Button>
             <div className="relative">
               <div className="bg-main-text-bg rounded-xl p-4 xl:p-6 text-center shadow-sm border border-primary/10 h-full">
                 <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <TbClock className="text-xl md:text-2xl text-primary" />
+                  <TbClock className="text-xl md:text-2xl text-primary" aria-hidden="true" />
                 </div>
                 <h3 className="text-xl font-semibold text-primary mb-3">
                   1. Count Breaths
@@ -145,14 +156,17 @@ Start Tracking Breathing                </Button>
                 </p>
               </div>
               <div className="hidden md:block absolute top-1/2 -right-7 transform -translate-y-1/2">
-                <TbArrowRight className="text-2xl text-primary" />
+                <TbArrowRight
+                  className="text-2xl text-primary"
+                  aria-hidden="true"
+                />
               </div>
             </div>
 
             <div className="relative">
               <div className="bg-main-text-bg rounded-xl p-6 text-center shadow-sm border border-primary/10 h-full">
                 <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <TbTrendingUp className="text-xl md:text-2xl text-primary" />
+                  <TbTrendingUp className="text-xl md:text-2xl text-primary" aria-hidden="true"/>
                 </div>
                 <h3 className="text-xl font-semibold text-primary mb-3">
                   2. Get BPM
@@ -163,14 +177,14 @@ Start Tracking Breathing                </Button>
                 </p>
               </div>
               <div className="hidden md:block absolute top-1/2 -right-7 transform -translate-y-1/2">
-                <TbArrowRight className="text-2xl text-primary" />
+                <TbArrowRight className="text-2xl text-primary" aria-hidden="true"/>
               </div>
             </div>
 
             <div>
               <div className="bg-main-text-bg rounded-xl p-6 text-center shadow-sm border border-primary/10 h-full">
                 <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <TbFileText className="text-xl md:text-2xl text-primary" />
+                  <TbFileText className="text-xl md:text-2xl text-primary" aria-hidden="true"/>
                 </div>
                 <h3 className="text-xl font-semibold text-primary mb-3">
                   3. Track & Share
@@ -211,21 +225,21 @@ Start Tracking Breathing                </Button>
 
           <div className="grid md:grid-cols-3 gap-8 mb-12">
             <div className="bg-gradient-to-br from-primary-light to-primary/10 rounded-xl p-6 text-center transform hover:scale-105 transition-transform">
-              <TbHeart className="text-4xl md:text-5xl text-primary mx-auto mb-4" />
+              <TbHeart className="text-4xl md:text-5xl text-primary mx-auto mb-4" aria-hidden="true"/>
               <h3 className="text-3xl font-bold text-primary mb-3">1 in 10</h3>
               <p className="text-primary/90 text-lg leading-tight">
                 dogs develops heart disease
               </p>
             </div>
             <div className="bg-gradient-to-br from-accent/10 to-accent/5 rounded-xl p-6 text-center transform hover:scale-105 transition-transform">
-              <TbChartLine className="text-4xl md:text-5xl text-accent mx-auto mb-4" />
+              <TbChartLine className="text-4xl md:text-5xl text-accent mx-auto mb-4" aria-hidden="true"/>
               <h3 className="text-3xl font-bold text-accent mb-2">60%</h3>
               <p className="text-accent/90 text-lg leading-tight">
                 increase in heart disease risk for senior dogs
               </p>
             </div>
             <div className="bg-gradient-to-br from-primary-dark/10 to-primary-dark/5 rounded-xl p-6 text-center transform hover:scale-105 transition-transform">
-              <TbShieldCheck className="text-4xl md:text-5xl text-primary mx-auto mb-4" />
+              <TbShieldCheck className="text-4xl md:text-5xl text-primary mx-auto mb-4" aria-hidden="true"/>
               <h3 className="text-3xl font-bold text-primary mb-2">75%</h3>
               <p className="text-primary/90 text-lg leading-tight">
                 of dogs over 16 years are affected
@@ -281,7 +295,7 @@ Start Tracking Breathing                </Button>
             </div>
             <div>
               <div className="flex flex-col items-center md:items-start border border-foreground/50 bg-foreground/10 backdrop-blur-sm rounded-2xl p-8">
-                <TbLungsFilled className="text-5xl md:text-6xl text-accent mb-4 " />
+                <TbLungsFilled className="text-5xl md:text-6xl text-accent mb-4" aria-hidden="true" />
                 <h3 className="text-xl md:text-2xl font-bold mb-3 text-foreground">
                   Join Other Pet Parents
                 </h3>

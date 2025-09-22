@@ -73,7 +73,7 @@ export default function MyDogsPage() {
           <Button
             href="/my-dogs/add-dog"
             variant="primary"
-            icon={<MdAddCircleOutline className="w-5 h-5" />}
+            icon={<MdAddCircleOutline className="w-5 h-5" aria-hidden="true" />}
           >
             Add Dog
           </Button>
@@ -105,7 +105,10 @@ export default function MyDogsPage() {
                             />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/20 to-primary/10">
-                              <FaDog className="w-8 h-8 text-primary/50" />
+                              <FaDog
+                                className="w-8 h-8 text-primary/50"
+                                aria-hidden="true"
+                              />
                             </div>
                           )}
                         </div>
@@ -138,7 +141,10 @@ export default function MyDogsPage() {
                         variant="secondary"
                         size="sm"
                         icon={
-                          <RiArrowRightSLine className="w-4 h-4 md:w-5 md:h-5" />
+                          <RiArrowRightSLine
+                            className="w-4 h-4 md:w-5 md:h-5"
+                            aria-hidden="true"
+                          />
                         }
                         iconPosition="right"
                         className="shadow-md text-sm md:text-sm flex-1 md:flex-none"
@@ -152,10 +158,14 @@ export default function MyDogsPage() {
                           e.stopPropagation(); // Prevent card click
                           handleDeleteDog(dog.id, dog.name);
                         }}
-                        className="p-2 md:p-2 text-foreground/40 hover:text-accent hover:bg-accent/10 rounded-lg transition-all duration-200 border border-transparent hover:border-accent/20 cursor-pointer flex-shrink-0"
+                        aria-label="Delete dog"
                         title="Delete dog"
+                        className="p-2 md:p-2 text-foreground/40 hover:text-accent hover:bg-accent/10 rounded-lg transition-all duration-200 border border-transparent hover:border-accent/20 cursor-pointer flex-shrink-0"
                       >
-                        <RiDeleteBin7Line className="w-4 h-4 md:w-4 md:h-4" />
+                        <RiDeleteBin7Line
+                          className="w-4 h-4 md:w-4 md:h-4"
+                          aria-hidden="true"
+                        />
                       </button>
                     </div>
                   </div>

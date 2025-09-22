@@ -283,9 +283,7 @@ export default function AddDogPage() {
       };
 
       if (isEditMode && editDogId) {
-        console.log("before PUSH:", dogData);
         await updateDog(dogDispatch, editDogId, dogData);
-        console.log("after PUSH:", dogData);
         router.push(`/my-dogs/${editDogId}`);
       } else {
         await addDog(dogDispatch, dogData);
@@ -329,7 +327,7 @@ export default function AddDogPage() {
             href={`/my-dogs/${editDogId}`}
             variant="secondary"
             size="sm"
-            icon={<RiArrowLeftSLine className="w-5 h-5" />}
+            icon={<RiArrowLeftSLine className="w-5 h-5" aria-hidden="true" />}
             className="mb-4 lg:mb-16"
           >
             Back to {formattedDogName}&apos;s Profile
@@ -339,7 +337,7 @@ export default function AddDogPage() {
             href="/my-dogs"
             variant="secondary"
             size="sm"
-            icon={<RiArrowLeftSLine className="w-5 h-5" />}
+            icon={<RiArrowLeftSLine className="w-5 h-5" aria-hidden="true" />}
             className="mb-4 lg:mb-16"
           >
             Back to My Dogs
@@ -502,7 +500,10 @@ export default function AddDogPage() {
         >
           <div className="bg-main-text-bg rounded-lg shadow-md p-3 md:p-6 border border-primary-light/20">
             <div className="flex items-center mb-4">
-              <TbLungsFilled className="w-5 h-5 md:w-6 md:h-6 inline-block mr-2 md:mr-4 text-foreground" />
+              <TbLungsFilled
+                className="w-5 h-5 md:w-6 md:h-6 inline-block mr-2 md:mr-4 text-foreground"
+                aria-hidden="true"
+              />
               <h2 className="text-base md:text-xl font-semibold text-foreground">
                 Breathing Rate
               </h2>
@@ -552,7 +553,10 @@ export default function AddDogPage() {
         >
           <div className="bg-main-text-bg rounded-lg shadow-md p-3 md:p-6 border border-primary-light/20">
             <div className="flex items-center mb-4">
-              <FaHospital className="w-5 h-5 md:w-6 md:h-6 inline-block mr-2 md:mr-4 text-foreground" />
+              <FaHospital
+                className="w-5 h-5 md:w-6 md:h-6 inline-block mr-2 md:mr-4 text-foreground"
+                aria-hidden="true"
+              />
               <h2 className="text-base md:text-xl font-semibold text-foreground">
                 Veterinarian (Optional)
               </h2>
@@ -665,17 +669,15 @@ export default function AddDogPage() {
             </div>
           </div>
         </div>
-        {/* ***************** END OF VETERINARIAN SECTION ***************** */}
 
         {/* ***************** SAVE BUTTON ***************** */}
         <Button
           type="submit"
           variant="primary"
           size="lg"
-          fullWidth
           loading={isSubmitting || isLoading}
           loadingText={isEditMode ? "Updating..." : "Saving..."}
-          className="mt-10"
+          className="mt-10 w-full"
         >
           {isEditMode ? "Update Dog" : "Save Dog"}
         </Button>

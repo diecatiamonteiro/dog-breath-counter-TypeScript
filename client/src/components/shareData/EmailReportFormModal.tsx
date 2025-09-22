@@ -50,16 +50,17 @@ export default function EmailReportFormModal({
       <div className="bg-main-text-bg rounded-lg shadow-lg max-w-md w-full p-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
-            <MdEmail className="text-primary" />
+            <MdEmail className="text-primary" aria-hidden="true" />
             Send Email Report
           </h3>
           <Button
             onClick={onCancel}
             variant="ghost"
             size="sm"
+            ariaLabel="Close send email report modal"
             className="text-foreground/60 hover:text-foreground"
           >
-            <MdClose className="w-5 h-5" />
+            <MdClose className="w-5 h-5" aria-hidden="true" />
           </Button>
         </div>
 
@@ -98,7 +99,7 @@ export default function EmailReportFormModal({
                 </div>
               ) : (
                 <div className="flex items-center gap-2">
-                  <MdSend className="w-4 h-4" />
+                  <MdSend className="w-4 h-4" aria-hidden="true" />
                   Send Report
                 </div>
               )}

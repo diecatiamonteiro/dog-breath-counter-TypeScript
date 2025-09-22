@@ -11,6 +11,7 @@ export default function ShowHidePassword({
     <button
       type="button"
       onClick={onToggle}
+      aria-label={show ? "Hide password" : "Show password"}
       className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600 z-10"
     >
       {show ? (

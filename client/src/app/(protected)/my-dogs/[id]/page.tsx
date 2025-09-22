@@ -211,8 +211,7 @@ export default function DogProfilePage() {
             href="/my-dogs"
             size="sm"
             variant="secondary"
-            icon={<RiArrowLeftSLine className="w-5 h-5" />}
-            className=""
+            icon={<RiArrowLeftSLine className="w-5 h-5" aria-hidden="true" />}
           >
             Back to My Dogs
           </Button>
@@ -224,10 +223,14 @@ export default function DogProfilePage() {
             href={`/my-dogs/${dogId}/monitor-breathing`}
             variant="primary"
             size="lg"
+            ariaLabel={`Track ${dogName}'s Breathing`}
             className="w-full"
           >
             <div className="flex items-center">
-              <TbLungsFilled className="w-7 h-7 inline-block mr-2 md:mr-4 text-foreground" />{" "}
+              <TbLungsFilled
+                className="w-7 h-7 inline-block mr-2 md:mr-4 text-foreground"
+                aria-hidden="true"
+              />{" "}
               Track Breathing
             </div>
           </Button>
@@ -238,7 +241,10 @@ export default function DogProfilePage() {
           <div className="bg-main-text-bg rounded-lg shadow-md p-3 md:p-6 border border-primary-light/20">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center">
-                <FaPaw className="w-5 h-5 md:w-6 md:h-6 inline-block mr-2 md:mr-4 text-foreground" />
+                <FaPaw
+                  className="w-5 h-5 md:w-6 md:h-6 inline-block mr-2 md:mr-4 text-foreground"
+                  aria-hidden="true"
+                />
                 <h2 className="text-base md:text-xl font-semibold text-foreground">
                   Dog
                 </h2>
@@ -248,7 +254,8 @@ export default function DogProfilePage() {
                 href={`/my-dogs/add-dog?edit=${dogId}&section=info`}
                 size="sm"
                 variant="ghost"
-                icon={<RiEditLine className="w-4 h-4" />}
+                icon={<RiEditLine className="w-4 h-4" aria-hidden="true" />}
+                ariaLabel={`Edit ${dogName} dog data`}
                 className="text-sm text-primary hover:text-primary-dark"
               >
                 Edit
@@ -276,7 +283,10 @@ export default function DogProfilePage() {
                     />
                   ) : (
                     <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5">
-                      <FaDog className="w-16 h-16 text-primary/40 mb-3" />
+                      <FaDog
+                        className="w-16 h-16 text-primary/40 mb-3"
+                        aria-hidden="true"
+                      />
                       <p className="text-sm text-primary/60 mb-4 font-medium">
                         No photo
                       </p>
@@ -284,6 +294,7 @@ export default function DogProfilePage() {
                         href={`/my-dogs/add-dog?edit=${dogId}&section=info`}
                         variant="secondary"
                         size="sm"
+                        ariaLabel={`Add photo to ${dogName}'s profile`}
                         className="text-xs px-4 py-2 bg-primary/10 hover:bg-primary/20 border-primary/20"
                       >
                         Add Photo
@@ -301,6 +312,7 @@ export default function DogProfilePage() {
                         href={`/my-dogs/add-dog?edit=${dogId}&section=info`}
                         variant="secondary"
                         size="sm"
+                        ariaLabel={`Change ${dogName}'s photo`}
                         className="text-xs bg-white/80 hover:bg-background text-background border-0"
                       >
                         Change Photo
@@ -371,7 +383,10 @@ export default function DogProfilePage() {
           <div className="bg-main-text-bg rounded-lg shadow-md p-3 md:p-6 border border-primary-light/20">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center">
-                <FaHospital className="w-5 h-5 md:w-6 md:h-6 inline-block mr-2 md:mr-4 text-foreground" />
+                <FaHospital
+                  className="w-5 h-5 md:w-6 md:h-6 inline-block mr-2 md:mr-4 text-foreground"
+                  aria-hidden="true"
+                />
                 <h2 className="text-base md:text-xl font-semibold text-foreground">
                   Veterinarian
                 </h2>
@@ -382,10 +397,15 @@ export default function DogProfilePage() {
                 variant="ghost"
                 icon={
                   hasVeterinarianData() ? (
-                    <RiEditLine className="w-4 h-4" />
+                    <RiEditLine className="w-4 h-4" aria-hidden="true" />
                   ) : (
-                    <RiAddLine className="w-4 h-4" />
+                    <RiAddLine className="w-4 h-4" aria-hidden="true" />
                   )
+                }
+                ariaLabel={
+                  hasVeterinarianData()
+                    ? `Edit ${dogName}'s Veterinarian data`
+                    : `Add ${dogName}'s Veterinarian data`
                 }
                 className="text-sm text-primary hover:text-primary-dark"
               >
@@ -462,7 +482,8 @@ export default function DogProfilePage() {
               href={`/my-dogs/add-dog?edit=${dogId}&section=breathing`}
               variant="ghost"
               size="sm"
-              icon={<RiEditLine className="w-4 h-4" />}
+              icon={<RiEditLine className="w-4 h-4" aria-hidden="true" />}
+              ariaLabel={`Edit ${dogName}'s breathing rate`}
               className="text-sm text-primary hover:text-primary-dark"
             >
               Edit
@@ -485,7 +506,7 @@ export default function DogProfilePage() {
                   </p>
                 </div>
                 <div className="text-primary text-2xl md:text-3xl xl:text-4xl">
-                  <LuTriangleAlert />
+                  <LuTriangleAlert aria-hidden="true" />
                 </div>
               </div>
             </div>
@@ -507,7 +528,7 @@ export default function DogProfilePage() {
                   </p>
                 </div>
                 <div className="text-primary text-2xl md:text-3xl xl:text-4xl">
-                  <PiHeartbeatBold />
+                  <PiHeartbeatBold aria-hidden="true" />
                 </div>
               </div>
             </div>
@@ -518,7 +539,10 @@ export default function DogProfilePage() {
         <div className="bg-main-text-bg rounded-lg shadow-md p-3 md:p-6 md:p-6 mb-4 sm:mb-6 md:mb-8 border border-primary-light/20">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center">
-              <BsClipboardData className="w-5 h-5 md:w-6 md:h-6 inline-block mr-2 md:mr-4 text-foreground" />
+              <BsClipboardData
+                className="w-5 h-5 md:w-6 md:h-6 inline-block mr-2 md:mr-4 text-foreground"
+                aria-hidden="true"
+              />
               <h2 className="text-base md:text-xl font-semibold text-foreground">
                 Breathing Logs
               </h2>
@@ -534,9 +558,13 @@ export default function DogProfilePage() {
                 href={`/my-dogs/${dogId}/monitor-breathing`}
                 variant="primary"
                 size="md"
+                ariaLabel={`Start tracking ${dogName}'s breathing`}
               >
                 <div className="flex items-center">
-                  <TbLungsFilled className="w-5 h-5 md:w-6 md:h-6 inline-block mr-2 md:mr-4 text-foreground" />{" "}
+                  <TbLungsFilled
+                    className="w-5 h-5 md:w-6 md:h-6 inline-block mr-2 md:mr-4 text-foreground"
+                    aria-hidden="true"
+                  />{" "}
                   Start Tracking Breathing
                 </div>
               </Button>
@@ -563,7 +591,10 @@ export default function DogProfilePage() {
         <div className="bg-main-text-bg rounded-lg shadow-md p-3 md:p-6 mb-4 sm:mb-6 md:mb-8 border border-primary-light/20">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center">
-              <LuShare2 className="w-5 h-5 md:w-6 md:h-6 inline-block mr-2 md:mr-4 text-foreground" />
+              <LuShare2
+                className="w-5 h-5 md:w-6 md:h-6 inline-block mr-2 md:mr-4 text-foreground"
+                aria-hidden="true"
+              />
               <h2 className="text-base md:text-xl font-semibold text-foreground">
                 Share Report
               </h2>
@@ -579,9 +610,13 @@ export default function DogProfilePage() {
                 href={`/my-dogs/${dogId}/monitor-breathing`}
                 variant="primary"
                 size="md"
+                ariaLabel={`Start tracking ${dogName}'s breathing`}
               >
                 <div className="flex items-center">
-                  <TbLungsFilled className="w-5 h-5 md:w-6 md:h-6 inline-block mr-2 md:mr-4 text-foreground" />{" "}
+                  <TbLungsFilled
+                    className="w-5 h-5 md:w-6 md:h-6 inline-block mr-2 md:mr-4 text-foreground"
+                    aria-hidden="true"
+                  />{" "}
                   Start Tracking Breathing
                 </div>
               </Button>
@@ -602,7 +637,17 @@ export default function DogProfilePage() {
                   size="sm"
                   disabled={isLoadingPdf}
                   className="flex items-center gap-2 w-full sm:w-fit"
-                  icon={<GrDocumentDownload className="w-5 h-5" />}
+                  icon={
+                    <GrDocumentDownload
+                      className="w-5 h-5"
+                      aria-hidden="true"
+                    />
+                  }
+                  ariaLabel={
+                    isLoadingPdf
+                      ? `Generating ${dogName}'s Report...`
+                      : `Download ${dogName}'s Report`
+                  }
                 >
                   {isLoadingPdf ? (
                     <>Generating Report...</>
@@ -616,8 +661,9 @@ export default function DogProfilePage() {
                   variant="secondary"
                   size="sm"
                   disabled={isLoadingEmail}
+                  ariaLabel={`Email ${dogName}'s report`}
                   className="flex items-center gap-2 w-full sm:w-fit"
-                  icon={<TfiEmail className="w-5 h-5" />}
+                  icon={<TfiEmail className="w-5 h-5" aria-hidden="true" />}
                 >
                   Email Report
                 </Button>
@@ -639,10 +685,14 @@ export default function DogProfilePage() {
               href={`/my-dogs/${dogId}/monitor-breathing`}
               variant="primary"
               size="lg"
+              ariaLabel={`Track ${dogName}'s breathing`}
               className="w-full"
             >
               <div className="flex items-center">
-                <TbLungsFilled className="w-7 h-7 inline-block mr-2 md:mr-4 text-foreground" />{" "}
+                <TbLungsFilled
+                  className="w-7 h-7 inline-block mr-2 md:mr-4 text-foreground"
+                  aria-hidden="true"
+                />{" "}
                 Track Breathing
               </div>
             </Button>

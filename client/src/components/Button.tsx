@@ -15,7 +15,6 @@ export interface ButtonProps {
   // Styling variants
   variant?: "primary" | "secondary" | "ghost" | "danger";
   size?: "sm" | "md" | "lg";
-  fullWidth?: boolean;
 
   // Icon support
   icon?: ReactNode;
@@ -24,6 +23,10 @@ export interface ButtonProps {
   // Loading state
   loading?: boolean;
   loadingText?: string;
+
+  // Accessibility
+  ariaLabel?: string;
+  title?: string;
 
   // Additional styling
   className?: string;
@@ -37,11 +40,12 @@ const Button = ({
   onClick,
   variant = "primary",
   size = "md",
-  fullWidth = false,
   icon,
   iconPosition = "left",
   loading = false,
   loadingText,
+  ariaLabel,
+  title,
   className = "",
 }: ButtonProps) => {
   // Base styles that apply to both Link and button
@@ -72,7 +76,6 @@ const Button = ({
     baseStyles,
     variantStyles[variant],
     sizeStyles[size],
-    fullWidth ? "w-full" : "w-fit",
     className,
   ].join(" ");
 
@@ -119,6 +122,9 @@ const Button = ({
               }
             }
           }}
+          aria-label={ariaLabel}
+          aria-busy={loading || undefined}
+          title={title}
         >
           {content}
         </a>
@@ -130,6 +136,9 @@ const Button = ({
         href={href}
         className={combinedStyles}
         onClick={(e) => onClick?.(e)}
+        aria-label={ariaLabel}
+        aria-busy={loading || undefined}
+        title={title}
       >
         {content}
       </Link>
@@ -143,6 +152,9 @@ const Button = ({
       disabled={disabled || loading}
       onClick={(e) => onClick?.(e)}
       className={combinedStyles}
+      aria-label={ariaLabel}
+      aria-busy={loading || undefined}
+      title={title}
     >
       {content}
     </button>

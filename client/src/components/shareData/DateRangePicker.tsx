@@ -80,8 +80,9 @@ export default function DateRangePicker({
             onClick={clearDates}
             variant="ghost"
             size="sm"
+            ariaLabel="Clear date range"
             className="text-xs text-foreground/60 hover:text-foreground"
-            icon={<MdClear className="w-3 h-3" />}
+            icon={<MdClear className="w-3 h-3" aria-hidden="true" />}
           >
             Clear
           </Button>

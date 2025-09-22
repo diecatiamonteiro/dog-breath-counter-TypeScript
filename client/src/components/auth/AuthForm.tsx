@@ -69,7 +69,7 @@ export default function AuthForm({
 
   // Handle form input changes (it tells TS that event is coming from an <input> element)
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Destructures input name ("email") and value ("whatever the user types")
+    // De-structures input name ("email") and value ("whatever the user types")
     const { name, value } = e.target;
 
     // Update formData state with only changed fields; others (...prev) stay untouched
@@ -172,7 +172,7 @@ export default function AuthForm({
           disabled={isSubmitting || userState.isLoading}
           className="w-full flex items-center justify-center gap-3 bg-main-text-bg border border-primary/30 rounded-lg px-4 py-3 font-medium hover:bg-primary/50 focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed mb-6 transition-colors transition-duration-300"
         >
-          <FcGoogle className="w-5 h-5" />
+          <FcGoogle className="w-5 h-5" aria-hidden="true" />
           Continue with Google
         </button>
 

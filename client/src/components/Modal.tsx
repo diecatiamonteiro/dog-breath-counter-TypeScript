@@ -32,6 +32,7 @@ export default function Modal({ title, children, onClose}: { title: string, chil
                 onClick={onClose}
                 variant="ghost"
                 size="sm"
+                ariaLabel=""
               >
                 <svg
                   className="w-6 h-6"

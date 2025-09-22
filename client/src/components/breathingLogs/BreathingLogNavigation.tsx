@@ -70,8 +70,11 @@ export default function BreathingNavigation({ logs }: Props) {
   // Simple helper functions using existing logic
   const hasPreviousData = () => {
     if (viewMode === "month") {
-      return (selectedMonth > 0 && hasDataInMonth(selectedYear, selectedMonth - 1, dateGroups)) ||
-             hasDataInYear(selectedYear - 1, dateGroups);
+      return (
+        (selectedMonth > 0 &&
+          hasDataInMonth(selectedYear, selectedMonth - 1, dateGroups)) ||
+        hasDataInYear(selectedYear - 1, dateGroups)
+      );
     } else {
       return hasDataInYear(selectedYear - 1, dateGroups);
     }
@@ -79,8 +82,11 @@ export default function BreathingNavigation({ logs }: Props) {
 
   const hasNextData = () => {
     if (viewMode === "month") {
-      return (selectedMonth < 11 && hasDataInMonth(selectedYear, selectedMonth + 1, dateGroups)) ||
-             hasDataInYear(selectedYear + 1, dateGroups);
+      return (
+        (selectedMonth < 11 &&
+          hasDataInMonth(selectedYear, selectedMonth + 1, dateGroups)) ||
+        hasDataInYear(selectedYear + 1, dateGroups)
+      );
     } else {
       return hasDataInYear(selectedYear + 1, dateGroups);
     }
@@ -96,7 +102,7 @@ export default function BreathingNavigation({ logs }: Props) {
             onClick={() => onViewTypeChange("chart")}
             size="sm"
             variant={viewType === "chart" ? "primary" : "ghost"}
-            icon={<MdBarChart />}
+            icon={<MdBarChart aria-hidden="true" />}
             iconPosition="left"
           >
             Chart View
@@ -105,7 +111,7 @@ export default function BreathingNavigation({ logs }: Props) {
             onClick={() => onViewTypeChange("calendar")}
             size="sm"
             variant={viewType === "calendar" ? "primary" : "ghost"}
-            icon={<MdCalendarToday />}
+            icon={<MdCalendarToday aria-hidden="true" />}
             iconPosition="left"
           >
             Calendar View
@@ -118,7 +124,7 @@ export default function BreathingNavigation({ logs }: Props) {
             onClick={() => onViewModeChange("month")}
             size="sm"
             variant={viewMode === "month" ? "primary" : "ghost"}
-            icon={<MdCalendarViewMonth />}
+            icon={<MdCalendarViewMonth aria-hidden="true" />}
             iconPosition="left"
           >
             Month
@@ -127,7 +133,7 @@ export default function BreathingNavigation({ logs }: Props) {
             onClick={() => onViewModeChange("year")}
             size="sm"
             variant={viewMode === "year" ? "primary" : "ghost"}
-            icon={<MdCalendarViewWeek />}
+            icon={<MdCalendarViewWeek aria-hidden="true" />}
             iconPosition="left"
           >
             Year
@@ -142,8 +148,13 @@ export default function BreathingNavigation({ logs }: Props) {
           disabled={!hasPreviousData()}
           iconPosition="left"
           variant="ghost"
+          ariaLabel="Move to previous"
           className="text-primary !bg-transparent !border-none hover:!bg-primary/10"
-        ><MdChevronLeft className="w-6 h-6 text-foreground"/>
+        >
+          <MdChevronLeft
+            className="w-6 h-6 text-foreground"
+            aria-hidden="true"
+          />
         </Button>
 
         <h3 className="font-semibold text-foreground text-lg">
@@ -156,8 +167,13 @@ export default function BreathingNavigation({ logs }: Props) {
           onClick={onNextPeriod}
           disabled={!hasNextData()}
           variant="ghost"
+          ariaLabel="Move to next"
           className="text-primary !bg-transparent !border-none hover:!bg-primary/10"
-        ><MdChevronRight className="w-6 h-6 text-foreground"/>
+        >
+          <MdChevronRight
+            className="w-6 h-6 text-foreground"
+            aria-hidden="true"
+          />
         </Button>
       </div>
     </div>

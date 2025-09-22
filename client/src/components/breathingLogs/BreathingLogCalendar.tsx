@@ -117,9 +117,6 @@ export default function BreathingCalendar({ logs, onDeleteLog }: Props) {
                         // Tooltip
                         title="Lowest BPM"
                       >
-                        {/* <TbLungsFilled className="text-primary text-sm" /> */}
-                        {/* <FaCircleArrowDown className="text-primary text-sm" /> */}
-
                         <span className="text-xs md:text-sm font-semibold text-primary">
                           {lowestBpm} BPM (min)
                         </span>
@@ -127,9 +124,9 @@ export default function BreathingCalendar({ logs, onDeleteLog }: Props) {
                     </div>
                     <div className="flex items-center gap-1">
                       {expandedDays.has(date) ? (
-                        <MdExpandLess />
+                        <MdExpandLess aria-hidden="true" />
                       ) : (
-                        <MdExpandMore />
+                        <MdExpandMore aria-hidden="true" />
                       )}
                     </div>
                   </div>
@@ -164,10 +161,11 @@ export default function BreathingCalendar({ logs, onDeleteLog }: Props) {
                                 e.stopPropagation();
                                 onDeleteLog(log.id);
                               }}
+                              aria-label="Delete breathing log"
                               className="p-1 text-accent/50 hover:text-accent hover:bg-accent/10 rounded-lg transition-all duration-200 border border-transparent hover:border-accent/20 cursor-pointer flex-shrink-0 group-hover:bg-accent/20 group-hover:text-accent"
                               title="Delete log"
                             >
-                              <RiDeleteBin7Line className="w-4 h-4" />
+                              <RiDeleteBin7Line className="w-4 h-4" aria-hidden="true" />
                             </button>
                           )}
                         </div>
@@ -199,6 +197,11 @@ export default function BreathingCalendar({ logs, onDeleteLog }: Props) {
                   role={monthData ? "button" : undefined}
                   tabIndex={monthData ? 0 : -1}
                   aria-disabled={!monthData}
+                  aria-label={
+                    monthData
+                      ? `View ${monthName} logs`
+                      : `No logs for ${monthName}`
+                  }
                   onClick={() => {
                     if (monthData) {
                       logDispatch({
