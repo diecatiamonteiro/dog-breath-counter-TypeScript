@@ -279,7 +279,6 @@ export default function HomePage() {
                 <Button
                   href="/my-dogs"
                   size="md"
-                  className="text-lg bg-accent hover:bg-accent/80"
                 >
                   Start Tracking Breathing
                 </Button>
@@ -287,7 +286,6 @@ export default function HomePage() {
                 <Button
                   href="/auth"
                   size="md"
-                  className="text-lg bg-accent hover:bg-accent/80"
                 >
                   Start Tracking Breathing
                 </Button>

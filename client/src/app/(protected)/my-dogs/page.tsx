@@ -153,20 +153,19 @@ export default function MyDogsPage() {
                         View Dog
                       </Button>
 
-                      <button
+                      <Button
                         onClick={(e) => {
-                          e.stopPropagation(); // Prevent card click
+                          e?.stopPropagation();
                           handleDeleteDog(dog.id, dog.name);
                         }}
-                        aria-label="Delete dog"
+                        ariaLabel="Delete dog"
                         title="Delete dog"
-                        className="p-2 md:p-2 text-foreground/40 hover:text-accent hover:bg-accent/10 rounded-lg transition-all duration-200 border border-transparent hover:border-accent/20 cursor-pointer flex-shrink-0"
-                      >
-                        <RiDeleteBin7Line
-                          className="w-4 h-4 md:w-4 md:h-4"
-                          aria-hidden="true"
-                        />
-                      </button>
+                        variant="dangerGhost"
+                        size="sm"
+                        icon={<RiDeleteBin7Line className="w-4 h-4 md:w-4 md:h-4" aria-hidden="true" />}
+                        iconOnly
+                        shape="square"
+                      />
                     </div>
                   </div>
                 </div>

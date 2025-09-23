@@ -71,15 +71,15 @@ export const PetPhotoUploader: React.FC<PetPhotoUploaderProps> = ({
 
           {/* Remove button */}
           <Button
-            type="button"
             size="sm"
             onClick={handleRemove}
             variant="danger"
             ariaLabel="Delete dog photo"
-            className="absolute -top-2 -right-2 !rounded-full !gap-0"
-          >
-            {<FaTrash className="w-4 h-4" />}
-          </Button>
+            icon={<FaTrash className="w-4 h-4" aria-hidden="true" />}
+            iconOnly
+            shape="circle"
+            className="absolute -top-2 -right-2"
+          />
         </div>
       )}
 
@@ -96,7 +96,6 @@ export const PetPhotoUploader: React.FC<PetPhotoUploaderProps> = ({
       >
         {({ open }) => (
           <Button
-            type="button"
             onClick={() => open()}
             variant="secondary"
             size="sm"

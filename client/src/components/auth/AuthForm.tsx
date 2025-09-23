@@ -18,6 +18,7 @@ import LoadingSpinner from "@/app/loading";
 import { useGoogleLogin } from "@react-oauth/google";
 import { validateForm, loginWithEmail, loginWithGoogle } from "./util";
 import ShowHidePassword from "./showHidePassword";
+import Button from "../Button";
 
 // Type alias to restrict values to 2 possible strings and control mode on the form
 type AuthMode = "login" | "register";
@@ -166,15 +167,15 @@ export default function AuthForm({
         </div>
 
         {/* Google login button */}
-        <button
-          type="button"
+        <Button
           onClick={() => handleGoogleLogin()}
           disabled={isSubmitting || userState.isLoading}
-          className="w-full flex items-center justify-center gap-3 bg-main-text-bg border border-primary/30 rounded-lg px-4 py-3 font-medium hover:bg-primary/50 focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed mb-6 transition-colors transition-duration-300"
+          variant="secondary"
+          icon={<FcGoogle className="w-5 h-5" aria-hidden="true" />}
+          className="w-full mb-8"
         >
-          <FcGoogle className="w-5 h-5" aria-hidden="true" />
           Continue with Google
-        </button>
+        </Button>
 
         {/* Divider */}
         <div className="relative mb-6">
@@ -280,23 +281,23 @@ export default function AuthForm({
               Password
             </label>
             <div className="relative">
-            <input
-              type={showPassword ? "text" : "password"}
-              id={`password-${mode}-${uniqueId}`}
-              name="password"
-              value={formData.password}
-              onChange={handleInputChange}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-main-text-bg placeholder-foreground/50 transition-colors ${
-                errors.password
-                  ? "border-accent"
-                  : "border-primary/30 focus:border-primary"
-              }`}
-              placeholder="••••••••"
-            />
-            <ShowHidePassword
-              show={showPassword}
-              onToggle={() => setShowPassword(!showPassword)}
-            />
+              <input
+                type={showPassword ? "text" : "password"}
+                id={`password-${mode}-${uniqueId}`}
+                name="password"
+                value={formData.password}
+                onChange={handleInputChange}
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-main-text-bg placeholder-foreground/50 transition-colors ${
+                  errors.password
+                    ? "border-accent"
+                    : "border-primary/30 focus:border-primary"
+                }`}
+                placeholder="••••••••"
+              />
+              <ShowHidePassword
+                show={showPassword}
+                onToggle={() => setShowPassword(!showPassword)}
+              />
             </div>
             {errors.password && (
               <p className="mt-1 text-sm text-accent">{errors.password}</p>
@@ -318,23 +319,23 @@ export default function AuthForm({
                 Confirm Password
               </label>
               <div className="relative">
-              <input
-                type={showPassword ? "text" : "password"}
-                id={`confirmPassword-${mode}-${uniqueId}`}
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleInputChange}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-main-text-bg placeholder-foreground/50 transition-colors ${
-                  errors.confirmPassword
-                    ? "border-accent"
-                    : "border-primary/30 focus:border-primary"
-                }`}
-                placeholder="••••••••"
-              />
-              <ShowHidePassword
-                show={showPassword}
-                onToggle={() => setShowPassword(!showPassword)}
-              />
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id={`confirmPassword-${mode}-${uniqueId}`}
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleInputChange}
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary bg-main-text-bg placeholder-foreground/50 transition-colors ${
+                    errors.confirmPassword
+                      ? "border-accent"
+                      : "border-primary/30 focus:border-primary"
+                  }`}
+                  placeholder="••••••••"
+                />
+                <ShowHidePassword
+                  show={showPassword}
+                  onToggle={() => setShowPassword(!showPassword)}
+                />
               </div>
               {errors.confirmPassword && (
                 <p className="mt-1 text-sm text-accent">
@@ -351,10 +352,11 @@ export default function AuthForm({
           )}
 
           {/* Submit button */}
-          <button
+          <Button
             type="submit"
             disabled={isSubmitting || userState.isLoading}
-            className="w-full bg-primary text-white py-3 px-4 mt-8 rounded-lg font-medium hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            variant="primary"
+            className="w-full mt-8"
           >
             {isSubmitting || userState.isLoading ? (
               <span className="flex items-center justify-center gap-2">
@@ -366,7 +368,7 @@ export default function AuthForm({
             ) : (
               "Create Account"
             )}
-          </button>
+          </Button>
         </form>
 
         {/* Mode toggle */}
@@ -375,13 +377,14 @@ export default function AuthForm({
             {mode === "login"
               ? "Don't have an account?"
               : "Already have an account?"}
-            <button
-              type="button"
+            <Button
               onClick={toggleMode}
-              className="ml-1 text-primary hover:text-primary-dark font-medium focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded transition-colors"
+              size="sm"
+              variant="ghost"
+              className="ml-1 border-none shadow-none hover:text-primary-dark hover:bg-transparent"
             >
               {mode === "login" ? "Sign up" : "Sign in"}
-            </button>
+            </Button>
           </p>
         </div>
       </div>

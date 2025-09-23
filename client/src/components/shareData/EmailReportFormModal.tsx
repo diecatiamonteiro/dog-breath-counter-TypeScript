@@ -105,7 +105,6 @@ export default function EmailReportFormModal({
               )}
             </Button>
             <Button
-              type="button"
               onClick={onCancel}
               variant="ghost"
               disabled={isLoading}

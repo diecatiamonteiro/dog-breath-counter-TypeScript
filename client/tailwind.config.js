@@ -23,6 +23,7 @@ module.exports = {
         primary: "var(--primary) / <alpha-value>)",
         primaryDark: "var(--primary-dark) / <alpha-value>)",
         accent: "var(--accent) / <alpha-value>)",
+        accentDark: "var(--accent-dark) / <alpha-value>)",
       },
     },
   },

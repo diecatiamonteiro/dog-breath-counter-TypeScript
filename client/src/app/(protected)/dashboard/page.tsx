@@ -371,7 +371,6 @@ export default function DashboardPage() {
                 {isGoogleAccount && (
                   <div className="mt-3">
                     <Button
-                      type="button"
                       size="sm"
                       variant="secondary"
                       onClick={() => handleGoogleSync()}
@@ -385,7 +384,7 @@ export default function DashboardPage() {
             </form>
             </div>
             <div className="mt-4 flex gap-3 pt-2">
-                <Button  type="button" onClick={handleInputChange} ariaLabel="Save updated user data" disabled={isSubmitting}>
+                <Button onClick={handleInputChange} ariaLabel="Save updated user data" disabled={isSubmitting}>
                   Save
                 </Button>
                 <Button

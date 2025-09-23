@@ -149,7 +149,7 @@ export default function BreathingNavigation({ logs }: Props) {
           iconPosition="left"
           variant="ghost"
           ariaLabel="Move to previous"
-          className="text-primary !bg-transparent !border-none hover:!bg-primary/10"
+          className="!bg-transparent !border-none hover:!bg-primary/10"
         >
           <MdChevronLeft
             className="w-6 h-6 text-foreground"
@@ -168,7 +168,7 @@ export default function BreathingNavigation({ logs }: Props) {
           disabled={!hasNextData()}
           variant="ghost"
           ariaLabel="Move to next"
-          className="text-primary !bg-transparent !border-none hover:!bg-primary/10"
+          className="!bg-transparent !border-none hover:!bg-primary/10"
         >
           <MdChevronRight
             className="w-6 h-6 text-foreground"

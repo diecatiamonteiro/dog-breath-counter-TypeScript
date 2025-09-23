@@ -325,7 +325,7 @@ export default function AddDogPage() {
         {isEditMode ? (
           <Button
             href={`/my-dogs/${editDogId}`}
-            variant="secondary"
+            variant="ghost"
             size="sm"
             icon={<RiArrowLeftSLine className="w-5 h-5" aria-hidden="true" />}
             className="mb-4 lg:mb-16"
@@ -335,7 +335,7 @@ export default function AddDogPage() {
         ) : (
           <Button
             href="/my-dogs"
-            variant="secondary"
+            variant="ghost"
             size="sm"
             icon={<RiArrowLeftSLine className="w-5 h-5" aria-hidden="true" />}
             className="mb-4 lg:mb-16"

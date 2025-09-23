@@ -17,6 +17,7 @@ import { useAppContext } from "@/context/Context";
 import { LOG_ACTIONS } from "@/reducers/breathingLogReducer";
 import { useState, useEffect } from "react";
 import { RiDeleteBin7Line } from "react-icons/ri";
+import Button from "@/components/Button";
 
 type Props = {
   logs: BreathingLog[]; // Raw breathing logs
@@ -156,17 +157,25 @@ export default function BreathingCalendar({ logs, onDeleteLog }: Props) {
                           </div>
 
                           {onDeleteLog && (
-                            <button
+                            <Button
+                              iconOnly
                               onClick={(e) => {
-                                e.stopPropagation();
+                                e?.stopPropagation();
                                 onDeleteLog(log.id);
                               }}
-                              aria-label="Delete breathing log"
-                              className="p-1 text-accent/50 hover:text-accent hover:bg-accent/10 rounded-lg transition-all duration-200 border border-transparent hover:border-accent/20 cursor-pointer flex-shrink-0 group-hover:bg-accent/20 group-hover:text-accent"
+                              icon={
+                                <RiDeleteBin7Line
+                                  className="w-4 h-4"
+                                  aria-hidden="true"
+                                />
+                              }
+                              ariaLabel="Delete breathing log"
                               title="Delete log"
-                            >
-                              <RiDeleteBin7Line className="w-4 h-4" aria-hidden="true" />
-                            </button>
+                              variant="dangerGhost"
+                              size="xs"
+                              shape="square"
+                              className="group-hover:bg-accent/20 group-hover:text-accent"
+                            />
                           )}
                         </div>
                       ))}

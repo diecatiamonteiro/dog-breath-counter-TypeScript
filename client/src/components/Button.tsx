@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ReactNode } from "react";
 
 export interface ButtonProps {
-  children: ReactNode;
+  children?: ReactNode;
 
   // Navigation vs Action
   href?: string; // If provided, renders as Link; if not, renders as button
@@ -13,12 +13,14 @@ export interface ButtonProps {
   onClick?: (e?: React.MouseEvent) => void;
 
   // Styling variants
-  variant?: "primary" | "secondary" | "ghost" | "danger";
-  size?: "sm" | "md" | "lg";
+  variant?: "primary" | "secondary" | "ghost" | "danger" | "dangerGhost";
+  size?: "xs" | "sm" | "md" | "lg";
 
   // Icon support
   icon?: ReactNode;
   iconPosition?: "left" | "right";
+  iconOnly?: boolean; // Icon-only button (no visible text)
+  shape?: "default" | "square" | "circle"; // Button shape
 
   // Loading state
   loading?: boolean;
@@ -42,6 +44,8 @@ const Button = ({
   size = "md",
   icon,
   iconPosition = "left",
+  iconOnly = false,
+  shape = "default",
   loading = false,
   loadingText,
   ariaLabel,
@@ -50,47 +54,71 @@ const Button = ({
 }: ButtonProps) => {
   // Base styles that apply to both Link and button
   const baseStyles =
-    "inline-flex items-center justify-center gap-1 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer disabled:cursor-not-allowed";
+    "inline-flex items-center justify-center gap-1 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer disabled:cursor-not-allowed";
 
   // Variant styles
   const variantStyles = {
     primary:
-      "bg-primary text-white hover:bg-primary/70 focus:ring-primary disabled:opacity-50 disabled:bg-primary/50",
+      "bg-primary text-white hover:bg-primary/80 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed",
     secondary:
-      "bg-primary/30 text-primary hover:bg-primary hover:text-white focus:ring-primary border border-primary/20 disabled:opacity-50",
+      "bg-navbar-icons/90 text-white border border-primary/50 hover:bg-navbar-icons focus:ring-primary  disabled:opacity-50 disabled:cursor-not-allowed",
     ghost:
-      "border border-primary/20 text-primary hover:bg-primary/10 focus:ring-primary disabled:opacity-50",
+      "border border-primary text-primary hover:bg-primary/10 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed",
     danger:
-      "bg-accent text-white hover:bg-accent/80 focus:ring-accent disabled:opacity-50",
+      "bg-accent text-white hover:bg-accent-dark focus:ring-accent disabled:opacity-50 disabled:cursor-not-allowed",
+    dangerGhost: "text-accent/70  border border-transparent hover:text-accent hover:bg-accent/10 flex-shrink-0",
   };
 
   // Size styles
   const sizeStyles = {
+    xs: "px-1.5 py-1 text-xs",
     sm: "p-2 text-sm",
     md: "px-4 py-2.5 text-base",
     lg: "px-6 py-3 text-lg",
   };
 
+  // Icon-only paddings (no text) to make square/circle buttons compact
+  const iconOnlySizeStyles = {
+    xs: "p-1",
+    sm: "p-2",
+    md: "p-2.5",
+    lg: "p-3",
+  } as const;
+
+  // Shape styles
+  const shapeStyles = {
+    default: "rounded-lg",
+    square: "rounded-lg",
+    circle: "!rounded-full",
+  };
+
   // Combine all styles
   const combinedStyles = [
     baseStyles,
+    shapeStyles[shape],
     variantStyles[variant],
-    sizeStyles[size],
+    iconOnly ? iconOnlySizeStyles[size] : sizeStyles[size],
+    iconOnly ? "gap-0" : "",
     className,
   ].join(" ");
 
-  // Loading spinner component
-  const LoadingSpinner = () => (
-    <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-  );
-
-  // Content with icon and loading state
+  // Content with icon
   const content = (
     <>
-      {loading && <LoadingSpinner />}
-      {!loading && icon && iconPosition === "left" && icon}
-      <span>{loading && loadingText ? loadingText : children}</span>
-      {!loading && icon && iconPosition === "right" && icon}
+      {iconOnly ? (
+        // Icon-only: show spinner text only if loadingText provided, otherwise just the icon/children
+        loading && loadingText ? (
+          <span>{loadingText}</span>
+        ) : (
+          (icon as ReactNode) || (children as ReactNode)
+        )
+      ) : (
+        <>
+          {!loading && icon && iconPosition === "left" && icon}
+          <span>{loading && loadingText ? loadingText : children}</span>
+          {!loading && icon && iconPosition === "right" && icon}
+        </>
+      )}
     </>
   );
 

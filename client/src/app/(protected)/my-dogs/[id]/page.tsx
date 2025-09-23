@@ -210,7 +210,7 @@ export default function DogProfilePage() {
           <Button
             href="/my-dogs"
             size="sm"
-            variant="secondary"
+            variant="ghost"
             icon={<RiArrowLeftSLine className="w-5 h-5" aria-hidden="true" />}
           >
             Back to My Dogs
@@ -228,7 +228,7 @@ export default function DogProfilePage() {
           >
             <div className="flex items-center">
               <TbLungsFilled
-                className="w-7 h-7 inline-block mr-2 md:mr-4 text-foreground"
+                className="w-7 h-7 inline-block mr-2 md:mr-4 text-white"
                 aria-hidden="true"
               />{" "}
               Track Breathing
@@ -256,7 +256,6 @@ export default function DogProfilePage() {
                 variant="ghost"
                 icon={<RiEditLine className="w-4 h-4" aria-hidden="true" />}
                 ariaLabel={`Edit ${dogName} dog data`}
-                className="text-sm text-primary hover:text-primary-dark"
               >
                 Edit
               </Button>
@@ -295,7 +294,6 @@ export default function DogProfilePage() {
                         variant="secondary"
                         size="sm"
                         ariaLabel={`Add photo to ${dogName}'s profile`}
-                        className="text-xs px-4 py-2 bg-primary/10 hover:bg-primary/20 border-primary/20"
                       >
                         Add Photo
                       </Button>
@@ -313,7 +311,6 @@ export default function DogProfilePage() {
                         variant="secondary"
                         size="sm"
                         ariaLabel={`Change ${dogName}'s photo`}
-                        className="text-xs bg-white/80 hover:bg-background text-background border-0"
                       >
                         Change Photo
                       </Button>
@@ -407,7 +404,6 @@ export default function DogProfilePage() {
                     ? `Edit ${dogName}'s Veterinarian data`
                     : `Add ${dogName}'s Veterinarian data`
                 }
-                className="text-sm text-primary hover:text-primary-dark"
               >
                 {hasVeterinarianData() ? "Edit" : "Add"}
               </Button>
@@ -484,7 +480,6 @@ export default function DogProfilePage() {
               size="sm"
               icon={<RiEditLine className="w-4 h-4" aria-hidden="true" />}
               ariaLabel={`Edit ${dogName}'s breathing rate`}
-              className="text-sm text-primary hover:text-primary-dark"
             >
               Edit
             </Button>
@@ -690,7 +685,7 @@ export default function DogProfilePage() {
             >
               <div className="flex items-center">
                 <TbLungsFilled
-                  className="w-7 h-7 inline-block mr-2 md:mr-4 text-foreground"
+                  className="w-7 h-7 inline-block mr-2 md:mr-4 text-white"
                   aria-hidden="true"
                 />{" "}
                 Track Breathing

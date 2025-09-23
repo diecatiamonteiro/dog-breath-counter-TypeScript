@@ -127,7 +127,7 @@ export default function MonitorBreathingPage() {
           </div>
           <Button
             href={`/my-dogs/${dogId}`}
-            variant="secondary"
+            variant="ghost"
             size="sm"
             icon={<RiArrowLeftSLine className="w-5 h-5" aria-hidden="true" />}
           >
