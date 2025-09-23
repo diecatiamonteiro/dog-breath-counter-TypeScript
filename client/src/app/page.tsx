@@ -231,14 +231,14 @@ export default function HomePage() {
                 dogs develops heart disease
               </p>
             </div>
-            <div className="bg-gradient-to-br from-accent/10 to-accent/5 rounded-xl p-6 text-center transform hover:scale-105 transition-transform">
-              <TbChartLine className="text-4xl md:text-5xl text-accent mx-auto mb-4" aria-hidden="true"/>
-              <h3 className="text-3xl font-bold text-accent mb-2">60%</h3>
-              <p className="text-accent/90 text-lg leading-tight">
+            <div className="bg-gradient-to-br from-primary-light to-primary/10 rounded-xl p-6 text-center transform hover:scale-105 transition-transform">
+              <TbChartLine className="text-4xl md:text-5xl text-primary mx-auto mb-4" aria-hidden="true"/>
+              <h3 className="text-3xl font-bold text-primary mb-2">60%</h3>
+              <p className="text-primary/90 text-lg leading-tight">
                 increase in heart disease risk for senior dogs
               </p>
             </div>
-            <div className="bg-gradient-to-br from-primary-dark/10 to-primary-dark/5 rounded-xl p-6 text-center transform hover:scale-105 transition-transform">
+            <div className="bg-gradient-to-br from-primary-light to-primary/10 rounded-xl p-6 text-center transform hover:scale-105 transition-transform">
               <TbShieldCheck className="text-4xl md:text-5xl text-primary mx-auto mb-4" aria-hidden="true"/>
               <h3 className="text-3xl font-bold text-primary mb-2">75%</h3>
               <p className="text-primary/90 text-lg leading-tight">

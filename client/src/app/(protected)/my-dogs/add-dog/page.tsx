@@ -350,6 +350,17 @@ export default function AddDogPage() {
           <p className="text-accent">{serverErrors}</p>
         </div>
       )}
+      {/* ***************** SAVE BUTTON ***************** */}
+      <Button
+        type="submit"
+        variant="primary"
+        size="lg"
+        loading={isSubmitting || isLoading}
+        loadingText={isEditMode ? "Updating..." : "Saving..."}
+        className="mt-4 w-full"
+      >
+        {isEditMode ? "Update Dog" : "Save Dog"}
+      </Button>
 
       <form
         onSubmit={handleSubmit}
@@ -677,7 +688,7 @@ export default function AddDogPage() {
           size="lg"
           loading={isSubmitting || isLoading}
           loadingText={isEditMode ? "Updating..." : "Saving..."}
-          className="mt-10 w-full"
+          className="mt-4 w-full"
         >
           {isEditMode ? "Update Dog" : "Save Dog"}
         </Button>
