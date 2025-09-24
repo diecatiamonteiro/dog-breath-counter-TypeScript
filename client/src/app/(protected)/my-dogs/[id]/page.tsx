@@ -37,6 +37,7 @@ import { GrDocumentDownload } from "react-icons/gr";
 import { LuTriangleAlert, LuShare2 } from "react-icons/lu";
 import { TfiEmail } from "react-icons/tfi";
 import { BsClipboardData } from "react-icons/bs";
+import InfoDialog from "@/components/InfoDialog";
 
 export default function DogProfilePage() {
   const params = useParams();
@@ -466,9 +467,26 @@ export default function DogProfilePage() {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center">
               <FaLungs className="w-5 h-5 md:w-6 md:h-6 inline-block mr-2 md:md:mr-4 text-foreground" />
-              <h2 className="text-base md:text-xl font-semibold text-foreground">
+              <h2 className="text-base md:text-xl font-semibold text-foreground mr-1 md:mr-2">
                 Breathing Rate
               </h2>
+              <InfoDialog title="Breathing Rate">
+                <p>
+                  The{" "}
+                  <span className="font-semibold">maximum breathing rate </span>
+                  you find here is the value you set when you created your dog’s
+                  profile. Your dog’s{" "}
+                  <span className="font-semibold">
+                    average breathing rate{" "}
+                  </span>{" "}
+                  is calculated using this max BPM.
+                </p>
+                <p>
+                  Since most dogs rest between 15-30 breaths per minute (BPM),
+                  30 is the recommended max by default, but your vet may suggest
+                  adjusting it based on your dog’s health.
+                </p>
+              </InfoDialog>
             </div>
 
             <Button
@@ -487,7 +505,7 @@ export default function DogProfilePage() {
               <div className="flex items-center justify-between">
                 <div className="flex flex-col gap-2">
                   <p className="text-sm font-medium text-primary/80 leading-tight">
-                    Maximum Breath Rate
+                    Max Breathing Rate
                   </p>
                   <p className="text-xl md:text-2xl font-bold text-primary leading-tight">
                     {selectedDog?.maxBreathingRate} BPM
@@ -506,7 +524,7 @@ export default function DogProfilePage() {
               <div className="flex items-center justify-between">
                 <div className="flex flex-col gap-2">
                   <p className="text-sm font-medium text-primary/80 leading-tight">
-                    Average Breath Rate
+                    Average Breathing Rate
                   </p>
                   <p className="text-xl md:text-2xl font-bold text-primary leading-tight">
                     {averageBPM ? `${averageBPM} BPM` : "No data"}

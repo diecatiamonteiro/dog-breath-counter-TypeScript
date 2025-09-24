@@ -1,6 +1,6 @@
 /**
  * @file client/src/app/(protected)/my-dogs/add-dog/page.tsx
- * @description Add dog / Update dog page 
+ * @description Add dog / Update dog page
  *              Add a new dog or edit an existing dog (when navigated from the
  *              dog profile Edit button). Supports section-focused editing via
  *              the `section` query param: "photo" | "info" | "breathing" | "vet".
@@ -16,6 +16,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Button from "@/components/Button";
 import { PetPhotoUploader } from "@/components/PetPhotoUploader";
 import { CloudinaryPhoto } from "@/types/DogTypes";
+import InfoDialog from "@/components/InfoDialog";
 import { RiArrowLeftSLine } from "react-icons/ri";
 import { TbLungsFilled } from "react-icons/tb";
 import { FaHospital, FaPaw } from "react-icons/fa";
@@ -519,6 +520,21 @@ export default function AddDogPage() {
               <h2 className="text-base md:text-xl font-semibold text-foreground">
                 Breathing Rate
               </h2>
+              <InfoDialog title="Why a max of 30 BPM?">
+                <p>
+                  <span className="font-semibold">
+                    Breaths per minute (BPM){" "}
+                  </span>
+                  show how often your dog breathes while sleeping. Tracking this
+                  can help detect early heart or lung problems.
+                </p>
+                <p>
+                  Healthy dogs usually breathe 15-30 times per minute when
+                  sleeping. That’s why 30 BPM is set as the recommended maximum.
+                  Rates consistently above may signal an issue and should be
+                  checked with a vet.
+                </p>
+              </InfoDialog>
             </div>
 
             <div>
