@@ -37,7 +37,7 @@ export const loginWithGoogle = async ({
     if (onSuccess) {
       onSuccess();
     }
-    router.push("/dashboard");
+    router.push("/my-dogs");
     return { success: true };
   } catch (error) {
     console.error("Google login error:", error);

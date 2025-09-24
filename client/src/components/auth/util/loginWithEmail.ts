@@ -58,7 +58,7 @@ export const loginWithEmail = async ({
     if (onSuccess) {
       onSuccess();
     }
-    router.push("/dashboard");
+    router.push("/my-dogs");
     return { success: true };
   } catch (error) {
     const errorMsg = handleAuthError(error);
