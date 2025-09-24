@@ -1,11 +1,16 @@
 /**
- * @file authController.ts
- * @description Controller for authentication routes: register, login, login with Google, logout, forgot password (not implemented), reset password (not implemented)
+ * @file server/src/controllers/authController.ts
+ * @description Controller for authentication routes:
+ *                - register
+ *                - login
+ *                - login with Google
+ *                - logout
+ *                - forgot password (not implemented)
+ *                - reset password (not implemented)
  */
 
 import User from "../models/User";
 import { Controller } from "../types/controller";
-import { AuthenticatedRequest } from "../types/express";
 import {
   GoogleLoginRequestBody,
   LoginRequestBody,
@@ -13,7 +18,6 @@ import {
 } from "../types/userRequests";
 import createError from "http-errors";
 import { clearAuthCookie, setAuthCookie } from "../utils/auth";
-import { OAuth2Client } from "google-auth-library";
 
 /**
  * @desc   Register a new user
@@ -117,11 +121,14 @@ export const loginGoogle: Controller<{ body: GoogleLoginRequestBody }> = async (
     }
 
     // Use the access token to get user info from Google
-    const userInfoResponse = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const userInfoResponse = await fetch(
+      "https://www.googleapis.com/oauth2/v2/userinfo",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
     if (!userInfoResponse.ok) {
       throw createError(400, "Invalid Google token");
@@ -144,7 +151,10 @@ export const loginGoogle: Controller<{ body: GoogleLoginRequestBody }> = async (
     if (user) {
       // Google-linked user already exists: sync email if changed
       if (user.email !== email) {
-        const emailInUse = await User.findOne({ email, _id: { $ne: user._id } });
+        const emailInUse = await User.findOne({
+          email,
+          _id: { $ne: user._id },
+        });
         if (emailInUse) {
           throw createError(400, "Email already in use by another account");
         }
@@ -154,7 +164,7 @@ export const loginGoogle: Controller<{ body: GoogleLoginRequestBody }> = async (
     } else {
       // No googleId match: try by email to link accounts
       user = await User.findOne({ email });
-    
+
       if (!user) {
         user = await User.create({
           email,
@@ -195,11 +205,7 @@ export const loginGoogle: Controller<{ body: GoogleLoginRequestBody }> = async (
  * @route  GET /api/auth/logout
  * @access Public (no authentication required)
  */
-export const logout: Controller = async (
-  req,
-  res,
-  next
-) => {
+export const logout: Controller = async (req, res, next) => {
   try {
     // Clear the JWT token cookie (regardless of authentication status)
     clearAuthCookie(res);

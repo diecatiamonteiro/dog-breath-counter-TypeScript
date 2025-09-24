@@ -1,5 +1,5 @@
 /**
- * @file checkToken.ts
+ * @file server/src/middleware/checkToken.ts
  * @description Middleware to check if the user is authenticated
  */
 

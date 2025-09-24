@@ -1,5 +1,5 @@
 /**
- * @file User.ts
+ * @file server/src/models/User.ts
  * @description User model
  */
 

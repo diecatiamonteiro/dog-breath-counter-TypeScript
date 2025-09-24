@@ -1,15 +1,20 @@
 /**
- * @desc   Wrapper for mongoose transactions so that we can ensure all deletions happen together or not at all (if any delete operation fails, nothing is deleted)
- * It is used in controllers: deleteBreathingLogById, deleteDog, deleteUser
- * @param  {TransactionCallback} callback - The callback function that contains the database operations we want to run inside a transaction
- * @returns {Promise<T>} - The result of the callback function (it returns whatever that callback returns, wrapped in a Promise<T> (generic type).)
+ * @file server/src/utils/transaction.ts
+ * @desc Wrapper for mongoose transactions so that we can ensure all deletions
+ *       happen together or not at all (if any delete operation fails, nothing is deleted).
+ *        It is used in controllers: deleteBreathingLogById, deleteDog, deleteUser
+ * @param  {TransactionCallback} callback - The callback function that contains the
+ *                                          database operations we want to run inside
+ *                                          a transaction
+ * @returns {Promise<T>} - The result of the callback function (it returns whatever that
+ *                          callback returns, wrapped in a Promise<T> (generic type).)
  */
 
 import mongoose from "mongoose";
 
 // Callback function we want to run inside a transaction
 type TransactionCallback = (
-  session: mongoose.ClientSession | null // argument iseither a session or null if in test mode
+  session: mongoose.ClientSession | null // argument is either a session or null if in test mode
 ) => Promise<any>; // returns anything, so we use any as the return type
 
 // Wrapper for mongoose transactions (returns whatever the callback returns, Promise<T>)

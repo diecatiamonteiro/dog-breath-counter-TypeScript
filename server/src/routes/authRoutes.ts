@@ -16,7 +16,7 @@ import {
 const authRouter = express.Router();
 
 authRouter
-  .post("/register", validateRegisterRequest, register) 
+  .post("/register", validateRegisterRequest, register)
   .post("/login", validateLoginRequest, login)
   .post("/login/google", loginGoogle)
   .get("/logout", logout) // no checkToken - users should be able to logout without authentication

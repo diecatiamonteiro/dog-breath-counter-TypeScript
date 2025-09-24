@@ -1,5 +1,5 @@
 /**
- * @file pdfService.ts
+ * @file server/src/services/pdfService.ts
  * @description Service for generating PDF reports from HTML content (breathing log data)
  *              Uses generateHTML() from htmlGenerator.ts to generate the HTML content
  */

@@ -1,3 +1,12 @@
+/**
+ * @file client/src/utils/validateDogForm.ts
+ * @description Validation utility for the dog profile form.
+ *              Checks required fields (dog name, max breathing rate),
+ *              validates birth year range (2000–current year),
+ *              and ensures veterinarian email format.
+ *              Returns { isValid, errors } for form handling.
+ */
+
 interface DogFormData {
   dogName: string;
   breed: string;

@@ -80,7 +80,10 @@ export const loginUser = async (
   dispatch({ type: USER_ACTIONS.SET_ERROR, payload: null }); // clears prev errors
 
   try {
-    const res = await axios.post<{ message: string; data: { user: User } }>("/api/auth/login", userData);
+    const res = await axios.post<{ message: string; data: { user: User } }>(
+      "/api/auth/login",
+      userData
+    );
     dispatch({
       type: USER_ACTIONS.LOGIN_SUCCESS,
       payload: { data: { user: res.data.data.user } },
@@ -259,7 +262,10 @@ export const deleteUserAccount = async (
   dispatch({ type: USER_ACTIONS.SET_ERROR, payload: null }); // clears prev errors
 
   try {
-    const res = await axios.delete<{ message: string; data: { deletedUserId: string } }>("/api/user/me");
+    const res = await axios.delete<{
+      message: string;
+      data: { deletedUserId: string };
+    }>("/api/user/me");
     dispatch({
       type: USER_ACTIONS.DELETE_USER,
       payload: {

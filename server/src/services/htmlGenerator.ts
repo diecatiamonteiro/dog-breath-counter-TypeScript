@@ -1,5 +1,5 @@
 /**
- * @file htmlGenerator.ts
+ * @file server/src/services/htmlGenerator.ts
  * @description Service for generating HTML template for PDF reports
  */
 

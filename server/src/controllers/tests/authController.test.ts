@@ -1,5 +1,5 @@
 /**
- * @file authController.test.ts
+ * @file server/src/controllers/tests/authController.test.ts
  * @description Test suite for authController: register, login, loginGoogle, logout
  */
 

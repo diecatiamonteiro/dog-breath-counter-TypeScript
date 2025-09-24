@@ -1,3 +1,11 @@
+/**
+ * @file client/src/components/shareData/DateRangePicker.tsx
+ * @description Reusable date range picker for filtering data.
+ *              Manages start/end dates, validates ranges, allows clearing,
+ *              and notifies parent via onDateRangeChange. Defaults to showing
+ *              last 30 days if no range is selected.
+ */
+
 "use client";
 
 import { useState } from "react";

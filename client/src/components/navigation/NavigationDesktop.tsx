@@ -8,7 +8,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { getNavItems } from "../NavItems";
+import { getNavItems } from "./NavItems";
 import { useAppContext } from "@/context/Context";
 import { logoutUser } from "@/api/userApi";
 import { toast } from "react-toastify";

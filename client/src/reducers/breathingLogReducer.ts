@@ -12,11 +12,11 @@ export const breathingLogInitialState: BreathingLogState = {
   isLoading: false,
   error: null,
   // Navigation state
-  viewMode: 'month',
-  viewType: 'chart',
+  viewMode: "month",
+  viewType: "chart",
   selectedYear: new Date().getFullYear(),
   selectedMonth: new Date().getMonth(),
-  selectedWeek: new Date().getDay()
+  selectedWeek: new Date().getDay(),
 };
 
 export const LOG_ACTIONS = {
@@ -59,8 +59,8 @@ export type BreathingLogAction =
   | { type: typeof LOG_ACTIONS.SET_LOADING; payload: boolean }
   | { type: typeof LOG_ACTIONS.SET_ERROR; payload: string | null }
   // Navigation actions
-  | { type: typeof LOG_ACTIONS.SET_VIEW_MODE; payload: 'month' | 'year' }
-  | { type: typeof LOG_ACTIONS.SET_VIEW_TYPE; payload: 'chart' | 'calendar' }
+  | { type: typeof LOG_ACTIONS.SET_VIEW_MODE; payload: "month" | "year" }
+  | { type: typeof LOG_ACTIONS.SET_VIEW_TYPE; payload: "chart" | "calendar" }
   | { type: typeof LOG_ACTIONS.SET_SELECTED_YEAR; payload: number }
   | { type: typeof LOG_ACTIONS.SET_SELECTED_MONTH; payload: number };
 
@@ -80,7 +80,9 @@ export const BreathingLogReducer = (
       return {
         ...state,
         selectedLog: action.payload.data.breathingLog,
-        // Update logs array (if state.breathingLogs already exists, create a new array with all existing logs plus the new log at the end; otherwise, just create a new array that contains new log only)
+        // Update logs array (if state.breathingLogs already exists,
+        // create a new array with all existing logs, plus the new log at the end;
+        // otherwise, just create a new array that contains new log only).
         breathingLogs: state.breathingLogs
           ? [...state.breathingLogs, action.payload.data.breathingLog]
           : [action.payload.data.breathingLog],

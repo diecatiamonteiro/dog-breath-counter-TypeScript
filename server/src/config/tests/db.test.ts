@@ -1,5 +1,5 @@
 /**
- * @file db.test.ts
+ * @file server/src/config/tests/db.test.ts
  * @description Test suite for database connection: connectDB
  */
 

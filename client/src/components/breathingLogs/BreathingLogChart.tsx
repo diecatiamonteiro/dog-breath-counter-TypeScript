@@ -1,3 +1,13 @@
+/**
+ * @file client/src/components/breathingLogs/BreathingLogChart.tsx
+ * @description Chart view for breathing logs.
+ *                - Uses Recharts to display breaths per minute as bars.
+ *                - Colour bars relative to the selected dog's max breathing rate
+ *                  (green = below set BPM, yellow = at set BPM, red = above set BPM).
+ *                - Supports month/year filtering via context.
+ *                - Accessible: ARIA labels, hidden table fallback, and key.
+ */
+
 "use client";
 
 import { useAppContext } from "@/context/Context";
@@ -61,19 +71,20 @@ export default function BreathingChart({ logs, selectedDog }: Props) {
   // Format date labels to show only day number
   const formatDateLabel = formatDateChartLabel;
 
+  // ARIA identifiers
   const chartTitleId = "breathing-chart-title"; // [ARIA] id used by aria-labelledby
   const chartDescId = "breathing-chart-desc"; // [ARIA] id used by aria-describedby
   const dogName = selectedDog?.name ?? "your dog";
 
   return (
     <div className="bg-main-text-bg rounded-lg border border-primary-light/20">
-      {/* [ARIA] wrap chart in a figure and name/describe it */}
+      {/* [ARIA] wrap chart in a figure */}
       <figure aria-labelledby={chartTitleId} aria-describedby={chartDescId}>
-        {/* [ARIA] sr-only title provides an accessible name */}
+        {/* [ARIA] screen-reader-only title, ie visually hidden but screen readers can still read it */}
         <h2 id={chartTitleId} className="sr-only">
           Breathing rate chart for {dogName}
         </h2>
-        {/* [ARIA] sr-only description provides extra context */}
+        {/* [ARIA] screen-reader-only */}
         <p id={chartDescId} className="sr-only">
           Bar chart of breaths per minute over time
           {selectedDog
@@ -124,7 +135,7 @@ export default function BreathingChart({ logs, selectedDog }: Props) {
                 }}
               />
 
-              {/* Bars - one for each reading */}
+              {/* Bars - one per reading */}
               <Bar
                 dataKey="bpm"
                 radius={[2, 2, 0, 0]}
@@ -136,7 +147,7 @@ export default function BreathingChart({ logs, selectedDog }: Props) {
                 ))}
               </Bar>
 
-              {/* Reference line for max breathing rate - placed after bars to appear on top */}
+              {/* Reference line for max breathing rate - placed after bars to appear on top on them */}
               {selectedDog && (
                 <ReferenceLine
                   y={selectedDog.maxBreathingRate}
@@ -176,7 +187,7 @@ export default function BreathingChart({ logs, selectedDog }: Props) {
         )}
       </figure>
 
-      {/* Legend (below, at or above max BPM) */}
+      {/* Key (below, at or above max BPM) */}
       {selectedDog && (
         <div className="flex flex-wrap items-center justify-center gap-1 sm:gap-4 md:gap-8">
           <div className="flex items-center">

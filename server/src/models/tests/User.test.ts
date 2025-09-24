@@ -1,5 +1,5 @@
 /**
- * @file User.test.ts
+ * @file server/src/models/tests/User.test.ts
  * @description Test suite for User model
  */
 

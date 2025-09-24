@@ -1,5 +1,5 @@
 /**
- * @file express.d.ts
+ * @file server/src/types/express.d.ts
  * @description Type declarations for Express request objects.
  *              This file extends the Request interface to include user and isAuthenticated properties.
  */

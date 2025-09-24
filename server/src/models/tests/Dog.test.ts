@@ -1,5 +1,5 @@
 /**
- * @file Dog.test.ts
+ * @file server/src/models/tests/Dog.test.ts
  * @description Test suite for Dog model
  */
 
@@ -33,7 +33,9 @@ describe("Dog Model Test", () => {
     const dog = await Dog.create(validDog);
     expect(dog.userId.toString()).toBe(validDog.userId.toString());
     expect(dog.name).toBe("Max");
-    expect(dog.photo?.url).toBe("https://res.cloudinary.com/demo/image/upload/dog.jpg");
+    expect(dog.photo?.url).toBe(
+      "https://res.cloudinary.com/demo/image/upload/dog.jpg"
+    );
     expect(dog.photo?.publicId).toBe("pets/dog123");
     expect(dog.breed).toBeUndefined();
     expect(dog.birthYear).toBe(2020);

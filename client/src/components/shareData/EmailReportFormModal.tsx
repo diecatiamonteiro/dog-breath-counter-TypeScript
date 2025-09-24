@@ -1,3 +1,11 @@
+/**
+ * @file client/src/components/shareData/EmailReportFormModal.tsx
+ * @description Modal dialog for sending a breathing report via email.
+ *              Provides a form to enter a recipient email, validates input,
+ *              shows errors or loading state, and calls onSendEmail on submit.
+ *              Uses the generic Modal component for layout and accessibility.
+ */
+
 "use client";
 
 import { useState } from "react";
@@ -104,11 +112,7 @@ export default function EmailReportFormModal({
                 </div>
               )}
             </Button>
-            <Button
-              onClick={onCancel}
-              variant="ghost"
-              disabled={isLoading}
-            >
+            <Button onClick={onCancel} variant="ghost" disabled={isLoading}>
               Cancel
             </Button>
           </div>

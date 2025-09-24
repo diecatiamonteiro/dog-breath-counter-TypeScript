@@ -1,7 +1,16 @@
+/**
+ * @file client/src/app/page.tsx
+ * @description Landing page for Paw Pulse (homepage)
+ *              Includes hero section, feature highlights, educational content
+ *              on canine heart health, step-by-step instructions, statistics,
+ *              and call-to-action buttons for authentication and dog tracking.
+ */
+
 "use client";
 
 import Container from "@/components/Container";
 import Button from "@/components/Button";
+import { useAppContext } from "@/context/Context";
 import {
   TbLungsFilled,
   TbHeart,
@@ -12,7 +21,6 @@ import {
   TbTrendingUp,
   TbFileText,
 } from "react-icons/tb";
-import { useAppContext } from "@/context/Context";
 
 export default function HomePage() {
   const { userState } = useAppContext();
@@ -95,7 +103,7 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* Why It Matters - Split Layout */}
+      {/* Why It Matters */}
       <section className="py-5 md:py-10">
         <Container>
           <div className="grid md:grid-cols-2 gap-5 md:gap-12 items-center text-center md:text-left">
@@ -131,7 +139,7 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* How It Works - Visual Process */}
+      {/* How It Works */}
       <section
         id="how-it-works"
         className="scroll-mt-6 py-5 md:py-10 bg-primary/20"
@@ -145,7 +153,10 @@ export default function HomePage() {
             <div className="relative">
               <div className="bg-main-text-bg rounded-xl p-4 xl:p-6 text-center shadow-sm border border-primary/10 h-full">
                 <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <TbClock className="text-xl md:text-2xl text-primary" aria-hidden="true" />
+                  <TbClock
+                    className="text-xl md:text-2xl text-primary"
+                    aria-hidden="true"
+                  />
                 </div>
                 <h3 className="text-xl font-semibold text-primary mb-3">
                   1. Count Breaths
@@ -166,7 +177,10 @@ export default function HomePage() {
             <div className="relative">
               <div className="bg-main-text-bg rounded-xl p-6 text-center shadow-sm border border-primary/10 h-full">
                 <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <TbTrendingUp className="text-xl md:text-2xl text-primary" aria-hidden="true"/>
+                  <TbTrendingUp
+                    className="text-xl md:text-2xl text-primary"
+                    aria-hidden="true"
+                  />
                 </div>
                 <h3 className="text-xl font-semibold text-primary mb-3">
                   2. Get BPM
@@ -177,14 +191,20 @@ export default function HomePage() {
                 </p>
               </div>
               <div className="hidden md:block absolute top-1/2 -right-7 transform -translate-y-1/2">
-                <TbArrowRight className="text-2xl text-primary" aria-hidden="true"/>
+                <TbArrowRight
+                  className="text-2xl text-primary"
+                  aria-hidden="true"
+                />
               </div>
             </div>
 
             <div>
               <div className="bg-main-text-bg rounded-xl p-6 text-center shadow-sm border border-primary/10 h-full">
                 <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <TbFileText className="text-xl md:text-2xl text-primary" aria-hidden="true"/>
+                  <TbFileText
+                    className="text-xl md:text-2xl text-primary"
+                    aria-hidden="true"
+                  />
                 </div>
                 <h3 className="text-xl font-semibold text-primary mb-3">
                   3. Track & Share
@@ -211,7 +231,7 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* Statistics - Visual Cards */}
+      {/* Statistics */}
       <section className="py-5 md:py-10">
         <Container>
           <div className="text-center mb-8 md:mb-16">
@@ -225,21 +245,30 @@ export default function HomePage() {
 
           <div className="grid md:grid-cols-3 gap-8 mb-12">
             <div className="bg-gradient-to-br from-primary-light to-primary/10 rounded-xl p-6 text-center transform hover:scale-105 transition-transform">
-              <TbHeart className="text-4xl md:text-5xl text-primary mx-auto mb-4" aria-hidden="true"/>
+              <TbHeart
+                className="text-4xl md:text-5xl text-primary mx-auto mb-4"
+                aria-hidden="true"
+              />
               <h3 className="text-3xl font-bold text-primary mb-3">1 in 10</h3>
               <p className="text-primary/90 text-lg leading-tight">
                 dogs develops heart disease
               </p>
             </div>
             <div className="bg-gradient-to-br from-primary-light to-primary/10 rounded-xl p-6 text-center transform hover:scale-105 transition-transform">
-              <TbChartLine className="text-4xl md:text-5xl text-primary mx-auto mb-4" aria-hidden="true"/>
+              <TbChartLine
+                className="text-4xl md:text-5xl text-primary mx-auto mb-4"
+                aria-hidden="true"
+              />
               <h3 className="text-3xl font-bold text-primary mb-2">60%</h3>
               <p className="text-primary/90 text-lg leading-tight">
                 increase in heart disease risk for senior dogs
               </p>
             </div>
             <div className="bg-gradient-to-br from-primary-light to-primary/10 rounded-xl p-6 text-center transform hover:scale-105 transition-transform">
-              <TbShieldCheck className="text-4xl md:text-5xl text-primary mx-auto mb-4" aria-hidden="true"/>
+              <TbShieldCheck
+                className="text-4xl md:text-5xl text-primary mx-auto mb-4"
+                aria-hidden="true"
+              />
               <h3 className="text-3xl font-bold text-primary mb-2">75%</h3>
               <p className="text-primary/90 text-lg leading-tight">
                 of dogs over 16 years are affected
@@ -260,7 +289,7 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* Call to Action - Split Layout */}
+      {/* Call to Action */}
       <section className="py-5 md:py-10 bg-primary/20">
         <Container>
           <div className="grid md:grid-cols-2 gap-12 items-start text-center md:text-left">
@@ -276,24 +305,21 @@ export default function HomePage() {
               </p>
 
               {user && isAuthenticated ? (
-                <Button
-                  href="/my-dogs"
-                  size="md"
-                >
+                <Button href="/my-dogs" size="md">
                   Start Tracking Breathing
                 </Button>
               ) : (
-                <Button
-                  href="/auth"
-                  size="md"
-                >
+                <Button href="/auth" size="md">
                   Start Tracking Breathing
                 </Button>
               )}
             </div>
             <div>
               <div className="flex flex-col items-center md:items-start border border-foreground/50 bg-foreground/10 backdrop-blur-sm rounded-2xl p-8">
-                <TbLungsFilled className="text-5xl md:text-6xl text-accent mb-4" aria-hidden="true" />
+                <TbLungsFilled
+                  className="text-5xl md:text-6xl text-accent mb-4"
+                  aria-hidden="true"
+                />
                 <h3 className="text-xl md:text-2xl font-bold mb-3 text-foreground">
                   Join Other Pet Parents
                 </h3>

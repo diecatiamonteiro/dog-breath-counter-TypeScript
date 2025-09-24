@@ -1,6 +1,8 @@
 /**
- * @file app/(protected)/my-dogs/[id]/monitor-breathing/page.tsx
- * @description Count breaths per minute
+ * @file client/src/app/(protected)/my-dogs/[id]/monitor-breathing/page.tsx
+ * @description Interactive breathing tracker for a selected dog.
+ *              Allows setting monitoring duration, tapping to count breaths,
+ *              calculating breaths per minute, and saving the results as a log.
  */
 
 "use client";
@@ -19,7 +21,6 @@ export default function MonitorBreathingPage() {
   const dogId = params.id as string;
   const { dogState, dogDispatch, logDispatch } = useAppContext();
   const { selectedDog } = dogState;
-
   const [selectedDuration, setSelectedDuration] = useState(15);
   const [isMonitorOpen, setIsMonitorOpen] = useState(false);
   const [isMonitoring, setIsMonitoring] = useState(false);
@@ -135,7 +136,6 @@ export default function MonitorBreathingPage() {
           </Button>
         </div>
 
-        {/* Target */}
         <div className="flex flex-col mt-2">
           {!isMonitorOpen && (
             <div className="my-6 md:my-12 border border-accent text-accent p-1 text-center rounded-xl">
@@ -216,7 +216,10 @@ export default function MonitorBreathingPage() {
                         className="relative w-28 h-28 md:w-32 md:h-32 lg:w-36 lg:h-36 rounded-full flex items-center justify-center transition-all duration-200 bg-accent hover:bg-accent/90 hover:scale-105 active:scale-95 shadow-lg cursor-pointer"
                         aria-label="Tap for each breath you fell or observe"
                       >
-                        <FaHeart className="w-16 h-16 md:w-20 md:h-20 text-white" aria-hidden="true" />
+                        <FaHeart
+                          className="w-16 h-16 md:w-20 md:h-20 text-white"
+                          aria-hidden="true"
+                        />
                         {!hasStartedMonitoring ? (
                           <span className="absolute text-base text-accent font-bold">
                             Start
@@ -314,7 +317,6 @@ export default function MonitorBreathingPage() {
                   variant="primary"
                   size="md"
                   ariaLabel={`Save ${dogName}'s breathing track`}
-
                   className="w-full"
                 >
                   Save

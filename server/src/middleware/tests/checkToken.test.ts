@@ -1,5 +1,5 @@
 /**
- * @file checkToken.test.ts
+ * @file server/src/middleware/tests/checkToken.test.ts
  * @description Test suite for checkToken middleware
  */
 

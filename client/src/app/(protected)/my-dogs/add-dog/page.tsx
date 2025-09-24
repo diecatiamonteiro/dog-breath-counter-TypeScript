@@ -1,6 +1,9 @@
 /**
- * @file app/(protected)/my-dogs/add-dog/page.tsx
- * @description Add a new dog or edit existing dog when coming from the dog profile page (through the edit button)
+ * @file client/src/app/(protected)/my-dogs/add-dog/page.tsx
+ * @description Add dog / Update dog page 
+ *              Add a new dog or edit an existing dog (when navigated from the
+ *              dog profile Edit button). Supports section-focused editing via
+ *              the `section` query param: "photo" | "info" | "breathing" | "vet".
  */
 
 "use client";
@@ -10,12 +13,12 @@ import { useEffect, useState, useRef } from "react";
 import { validateDogForm } from "../../../../utils/validateDogForm";
 import { addDog, getSelectedDog, updateDog } from "@/api/dogApi";
 import { useRouter, useSearchParams } from "next/navigation";
-import { RiArrowLeftSLine } from "react-icons/ri";
-import { TbLungsFilled } from "react-icons/tb";
-import { FaHospital, FaPaw } from "react-icons/fa";
 import Button from "@/components/Button";
 import { PetPhotoUploader } from "@/components/PetPhotoUploader";
 import { CloudinaryPhoto } from "@/types/DogTypes";
+import { RiArrowLeftSLine } from "react-icons/ri";
+import { TbLungsFilled } from "react-icons/tb";
+import { FaHospital, FaPaw } from "react-icons/fa";
 
 export default function AddDogPage() {
   const router = useRouter();
@@ -30,10 +33,8 @@ export default function AddDogPage() {
   const breathingRef = useRef<HTMLDivElement>(null);
   const vetRef = useRef<HTMLDivElement>(null);
 
-  // Context state
   const { dogState, dogDispatch } = useAppContext();
   const { isLoading } = dogState;
-
   // Form state
   const [formData, setFormData] = useState({
     dogName: "",
@@ -350,22 +351,22 @@ export default function AddDogPage() {
           <p className="text-accent">{serverErrors}</p>
         </div>
       )}
-      {/* ***************** SAVE BUTTON ***************** */}
-      <Button
-        type="submit"
-        variant="primary"
-        size="lg"
-        loading={isSubmitting || isLoading}
-        loadingText={isEditMode ? "Updating..." : "Saving..."}
-        className="mt-4 w-full"
-      >
-        {isEditMode ? "Update Dog" : "Save Dog"}
-      </Button>
 
       <form
         onSubmit={handleSubmit}
         className="space-y-4 sm:space-y-6 md:space-y-8"
       >
+        <Button
+          type="submit"
+          variant="primary"
+          size="lg"
+          loading={isSubmitting || isLoading}
+          loadingText={isEditMode ? "Updating..." : "Saving..."}
+          className="mt-4 w-full"
+        >
+          {isEditMode ? "Update Dog" : "Save Dog"}
+        </Button>
+
         {/* ***************** DOG INFO SECTION ***************** */}
         <div
           ref={dogInfoRef}
@@ -574,7 +575,6 @@ export default function AddDogPage() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {/* Vet Name */}
               <div>
                 <label
                   htmlFor="vetName"
@@ -593,7 +593,6 @@ export default function AddDogPage() {
                 />
               </div>
 
-              {/* Clinic Name */}
               <div>
                 <label
                   htmlFor="vetClinicName"
@@ -612,7 +611,6 @@ export default function AddDogPage() {
                 />
               </div>
 
-              {/* Phone Number */}
               <div>
                 <label
                   htmlFor="vetPhoneNumber"
@@ -631,7 +629,6 @@ export default function AddDogPage() {
                 />
               </div>
 
-              {/* Email */}
               <div>
                 <label
                   htmlFor="vetEmail"
@@ -659,7 +656,6 @@ export default function AddDogPage() {
                 )}
               </div>
 
-              {/* Address */}
               <div className="sm:col-span-2">
                 <label
                   htmlFor="vetAddress"
@@ -681,7 +677,6 @@ export default function AddDogPage() {
           </div>
         </div>
 
-        {/* ***************** SAVE BUTTON ***************** */}
         <Button
           type="submit"
           variant="primary"

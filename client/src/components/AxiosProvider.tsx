@@ -15,4 +15,4 @@ export const AxiosProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return <>{children}</>;
-}; 
+};

@@ -51,12 +51,12 @@ export const formatMonthName = (year: number, monthIndex: number) => {
   });
 };
 
-  // Format date labels to show only day number
+// Format date labels to show only day number
 export const formatDateChartLabel = (dateString: string) => {
   if (!dateString) return "";
   const date = new Date(dateString);
   return date.getDate().toString(); // Just the day number
-}
+};
 
 // Format time as "HH:MM" (e.g., "14:30")
 export const formatTime = (date: string) => {
@@ -132,16 +132,25 @@ export const groupLogsByDate = (processedData: ProcessedLogForCalendar[]) => {
  * Check if data exists for a specific year
  * Returns true if any logs exist for the given year
  */
-export const hasDataInYear = (year: number, dateGroups: Record<string, ProcessedLogForCalendar[]>) => {
-  return Object.keys(dateGroups).some(date => new Date(date).getFullYear() === year);
+export const hasDataInYear = (
+  year: number,
+  dateGroups: Record<string, ProcessedLogForCalendar[]>
+) => {
+  return Object.keys(dateGroups).some(
+    (date) => new Date(date).getFullYear() === year
+  );
 };
 
 /**
  * Check if data exists for a specific month and year
  * Returns true if any logs exist for the given month/year combination
  */
-export const hasDataInMonth = (year: number, month: number, dateGroups: Record<string, ProcessedLogForCalendar[]>) => {
-  return Object.keys(dateGroups).some(date => {
+export const hasDataInMonth = (
+  year: number,
+  month: number,
+  dateGroups: Record<string, ProcessedLogForCalendar[]>
+) => {
+  return Object.keys(dateGroups).some((date) => {
     const dateObj = new Date(date);
     return dateObj.getFullYear() === year && dateObj.getMonth() === month;
   });

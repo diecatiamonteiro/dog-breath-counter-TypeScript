@@ -1,6 +1,9 @@
 /**
- * @file userController.test.ts
- * @description Test suite for userController: getUser, deleteUser, updateUser
+ * @file server/src/controllers/tests/userController.test.ts
+ * @description Test suite for userController:
+ *                - getUser
+ *                - deleteUser
+ *                - updateUser
  */
 
 // Mock transaction before deleteUser is called

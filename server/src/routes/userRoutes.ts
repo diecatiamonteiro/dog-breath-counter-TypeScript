@@ -8,6 +8,6 @@ const userRouter = express.Router();
 userRouter
   .get("/me", checkToken, getUser)
   .delete("/me", checkToken, deleteUser)
-  .patch("/me", checkToken, updateUser); // to be implemented later
+  .patch("/me", checkToken, updateUser);
 
 export default userRouter;

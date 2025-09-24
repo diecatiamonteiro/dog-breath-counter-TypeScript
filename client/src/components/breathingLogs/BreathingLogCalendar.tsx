@@ -1,6 +1,15 @@
+/**
+ * @file client/src/components/breathingLogs/BreathingLogCalendar.tsx
+ * @description Calendar view for breathing logs.
+ *              Includes:
+ *                - Month view: groups logs by date, expandable to show daily entries
+ *                  with time, BPM, and optional comments (with delete support).
+ *                - Year view: shows per-month summaries (count, avg BPM) and allows
+ *                  navigation into a month.
+ */
+
 "use client";
 
-import { MdExpandMore, MdExpandLess } from "react-icons/md";
 import {
   processLogsForCalendar,
   groupLogsByDate,
@@ -16,8 +25,9 @@ import { BreathingLog } from "@/types/BreathingLogTypes";
 import { useAppContext } from "@/context/Context";
 import { LOG_ACTIONS } from "@/reducers/breathingLogReducer";
 import { useState, useEffect } from "react";
-import { RiDeleteBin7Line } from "react-icons/ri";
 import Button from "@/components/Button";
+import { RiDeleteBin7Line } from "react-icons/ri";
+import { MdExpandMore, MdExpandLess } from "react-icons/md";
 
 type Props = {
   logs: BreathingLog[]; // Raw breathing logs

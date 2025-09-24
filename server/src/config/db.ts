@@ -1,5 +1,5 @@
 /**
- * @file db.ts
+ * @file server/src/config/db.ts
  * @description Database connection
  */
 

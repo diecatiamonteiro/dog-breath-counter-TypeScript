@@ -1,3 +1,10 @@
+/**
+ * @file client/src/app/(protected)/my-dogs/page.tsx
+ * @description My Dogs page
+ *              Lists the user's dogs with photo, basic info, and actions
+ *              (view, delete). Loads dogs after auth is confirmed.
+ */
+
 "use client";
 
 import { deleteDog, getAllDogs, getSelectedDog } from "@/api/dogApi";
@@ -5,10 +12,10 @@ import LoadingSpinner from "@/app/loading";
 import { useAppContext } from "@/context/Context";
 import Image from "next/image";
 import { useEffect } from "react";
+import Button from "@/components/Button";
 import { MdAddCircleOutline } from "react-icons/md";
 import { RiArrowRightSLine, RiDeleteBin7Line } from "react-icons/ri";
 import { FaDog } from "react-icons/fa";
-import Button from "@/components/Button";
 
 export default function MyDogsPage() {
   const { dogState, dogDispatch, userState, authLoading } = useAppContext();
@@ -44,7 +51,6 @@ export default function MyDogsPage() {
   }
 
   const handleDeleteDog = async (dogId: string, dogName: string) => {
-    // Confirm deletion
     const confirmed = window.confirm(
       `Are you sure you want to delete ${dogName}? This action cannot be undone.`
     );
@@ -162,7 +168,12 @@ export default function MyDogsPage() {
                         title="Delete dog"
                         variant="dangerGhost"
                         size="sm"
-                        icon={<RiDeleteBin7Line className="w-4 h-4 md:w-4 md:h-4" aria-hidden="true" />}
+                        icon={
+                          <RiDeleteBin7Line
+                            className="w-4 h-4 md:w-4 md:h-4"
+                            aria-hidden="true"
+                          />
+                        }
                         iconOnly
                         shape="square"
                       />

@@ -54,7 +54,9 @@ export const dogReducer = (state: DogState, action: DogAction): DogState => {
       return {
         ...state,
         selectedDog: action.payload.data.dog,
-        // Update dogs array (if state.dogs already exists, create a new array with all existing dogs plus the new dog at the end; otherwise, just create a new array that contains new dog only)
+        // Update dogs array (if state.dogs already exists,create a
+        // new array with all existing dogs, plus the new dog at the end;
+        // otherwise, just create a new array that contains new dog only)
         dogs: state.dogs
           ? [...state.dogs, action.payload.data.dog]
           : [action.payload.data.dog],

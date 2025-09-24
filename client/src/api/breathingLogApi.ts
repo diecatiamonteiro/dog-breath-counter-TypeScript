@@ -207,7 +207,7 @@ export const generateBreathingLogPdf = async (
     );
     const url = window.URL.createObjectURL(new Blob([res.data]));
     return url;
-     // Note 1: Blob means Binary Large Object, which is a JS object that represents a file-like object in the browser (ie, a file-like object that the browser can understand and manipulate)
+    // Note 1: Blob means Binary Large Object, which is a JS object that represents a file-like object in the browser (ie, a file-like object that the browser can understand and manipulate)
     // Note 2: window.URL.createObjectURL() is a browser API that creates a URL that points to the Blob object, which can be used to download the file
   } catch (error) {
     const errorMessage = isAxiosError(error)
@@ -243,10 +243,10 @@ export const sendBreathingLogEmail = async (
         dateRange: string;
         totalLogs: number;
       };
-    }>(`/api/dogs/${dogId}/breathing-logs/send-email`, { 
-      recipientEmail, 
-      startDate, 
-      endDate 
+    }>(`/api/dogs/${dogId}/breathing-logs/send-email`, {
+      recipientEmail,
+      startDate,
+      endDate,
     });
     return res.data.data;
   } catch (error) {

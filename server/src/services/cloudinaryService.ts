@@ -1,5 +1,5 @@
 /**
- * @file cloudinaryService.ts
+ * @file server/src/services/cloudinaryService.ts
  * @description Cloudinary service for handling photo operations
  */
 

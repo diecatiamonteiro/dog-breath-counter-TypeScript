@@ -1,5 +1,5 @@
 /**
- * @file errorHandler.test.ts
+ * @file server/src/middleware/tests/errorHandler.test.ts
  * @description Test suite for errorHandler middleware
  */
 

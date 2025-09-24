@@ -1,6 +1,9 @@
 /**
- * @file userController.ts
- * @description Controller for user routes: getUser, deleteUser, updateUser
+ * @file server/src/controllers/userController.ts
+ * @description Controller for user routes:
+ *                - getUser
+ *                - deleteUser
+ *                - updateUser
  */
 
 import BreathingLog from "../models/BreathingLog";

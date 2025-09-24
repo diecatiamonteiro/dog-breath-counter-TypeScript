@@ -1,6 +1,7 @@
 /**
  * @file validateForm.ts
- * @description Pure validation logic that takes form data and mode, returns validation result
+ * @description Pure validation logic that takes form data and mode
+ *              Returns validation result
  *              Imported in AuthForm.tsx in handleSubmit()
  */
 

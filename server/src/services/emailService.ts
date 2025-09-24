@@ -1,8 +1,9 @@
 /**
- * @file emailService.ts
- * @description Service for sending email reports with PDF attachments
- *              It styles the email content
- *              It contains the logo that was previously uploaded to Cloudinary in server/src/services/cloudinaryService.ts
+ * @file server/src/services/emailService.ts
+ * @description Service for sending email reports with PDF attachments.
+ *              It styles the email content.It contains the logo that
+ *              was previously uploaded to Cloudinary in
+ *              server/src/services/cloudinaryService.ts.
  */
 
 import nodemailer from "nodemailer";

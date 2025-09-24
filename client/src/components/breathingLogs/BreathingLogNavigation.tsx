@@ -1,3 +1,10 @@
+/**
+ * @file client/src/components/breathingLogs/BreathingLogNavigation.tsx
+ * @description Navigation controls for breathing logs.
+ *              Provides toggles for chart/calendar view, month/year mode,
+ *              and previous/next period navigation using shared context and utils.
+ */
+
 import { useAppContext } from "@/context/Context";
 import { LOG_ACTIONS } from "@/reducers/breathingLogReducer";
 import { BreathingLog } from "@/types/BreathingLogTypes";

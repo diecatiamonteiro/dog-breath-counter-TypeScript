@@ -1,10 +1,10 @@
-# Dog Breath Counter 🫀
+# Dog Breath Counter 
 
-A full-stack web application to count and monitor dog breathing rates, built with **TypeScript**, **Next.js**, and **Express**. **CI/CD** is implemented using **GitHub Actions**, with automated tests using **Vitest**, to ensure seamless deployment and code quality.
+A full-stack web application to track dog breathing rates, built with **TypeScript**, **Next.js**, and **Express**. **CI/CD** is implemented using **GitHub Actions**, with automated tests using **Vitest**, to ensure seamless deployment and code quality.
 
 When a dog has or is at risk of developing a heart condition, monitoring their resting respiratory rate can be crucial. This app helps dog owners track their dog's breathing over time, detect early signs of heart disease, and share data with their veterinarian, ultimately helping to prevent the condition from worsening.
 
-❤️ To all 🐕 lovers, and especially to those who, like me, are facing the anxiety of managing a beloved pet’s heart condition, this app is for you. ❤️
+I’ve been using [Boehringer Ingelheim’s My Pet´s Heart2Heart app](https://apps.apple.com/de/app/my-pet-s-heart2heart/id1564965551) for the past year to help care for my dog, April, who has a heart condition. Inspired by that experience, I wanted to create an **improved tool** that offers the same core functionality while adding features that make daily tracking and sharing data with a veterinarian even easier.
 
 ## Table of Contents
 
@@ -280,7 +280,9 @@ pet-breath-counter-typescript/
 
 - Run backend only: `npm run server`
 
-- Run tests: `npm run test`
+- Run tests from **server/**: `npm run test`
+
+- Run lint from **client/**: `npm run lint`
 
 ## Development Notes
 
@@ -339,15 +341,24 @@ pet-breath-counter-typescript/
 - [x] Implement /my-dogs/id/monitor-breathing page
 - [x] Implement edit dog data
 - [x] Implement basic /my-dogs/id profile page (with no data yet)
-- [X] Implement /my-dogs/id page with monitoring data, graphs and share options
-- [X] Implement add dog photo via Cloudinary
-- [X] Create homepage
-- [ ] Implement user dashboard
-- [ ] Check and fix UI and UX of all page
-- [ ] Improve responsiveness of all page
-- [ ] Test with Lighthouse for performance and accessibility for mobile and desktop 
+- [x] Implement /my-dogs/id page with monitoring data, graphs and share options
+- [x] Implement add dog photo via Cloudinary
+- [x] Create homepage
+- [x] Implement user dashboard
+- [x] Check and fix UI and UX of all page
+- [x] Improve responsiveness of all page
+- [x] Improve accessibility of all repo
+- [x] Improve documentation across repo
+- [ ] Fix errors & warnings from console
+- [ ] Add InfoDialog
+- [ ] Test with Lighthouse for performance and accessibility for mobile and desktop
+- [ ] Integrate Parlant
 - [ ] Integration tests (Cypress)
 
 ## Author
 
-Built with ❤️ by [Cátia Monteiro](https://github.com/diecatiamonteiro)
+Built with ❤️ by [Cátia Monteiro](https://github.com/diecatiamonteiro).
+
+& 
+
+Inspired by [Boehringer Ingelheim’s My Pet´s Heart2Heart app](https://apps.apple.com/de/app/my-pet-s-heart2heart/id1564965551), which I’ve been using daily for the past year.

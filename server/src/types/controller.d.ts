@@ -1,5 +1,5 @@
 /**
- * @file controller.d.ts (d = type declaration file)
+ * @file server/src/types/controller.d.ts (d = type declaration file)
  * @description Shared Controller type for Express route handlers.
  *              This type is used to avoid repeating (req, res, next) in all controller functions.
  */

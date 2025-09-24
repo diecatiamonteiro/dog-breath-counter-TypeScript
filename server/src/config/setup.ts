@@ -1,7 +1,8 @@
 /**
- * @file setup.ts
+ * @file server/src/config/setup.ts
  * @description Global test setup file for Vitest using MongoMemoryServer and Mongoose.
- *              This file prepares a clean, temporary DB environment for each test run using Vitest + Mongoose + MongoMemoryServer.
+ *              This file prepares a clean, temporary DB environment for each test run
+ *              using Vitest + Mongoose + MongoMemoryServer.
  *              Add this file to `test.setupFiles` in `vitest.config.ts`.
  */
 

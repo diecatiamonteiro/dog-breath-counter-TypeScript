@@ -1,6 +1,12 @@
 /**
- * @file breathingLogController.ts
- * @description Controller for breathing log routes: createBreathingLog, getAllBreathingLogs, getBreathingLogById, deleteBreathingLogById, generateBreathingLogPdf, sendBreathingLogEmail
+ * @file server/src/controllers/breathingLogController.ts
+ * @description Controller for breathing log routes:
+ *                - createBreathingLog
+ *                - getAllBreathingLogs
+ *                - getBreathingLogById
+ *                - deleteBreathingLogById
+ *                - generateBreathingLogPdf
+ *                - sendBreathingLogEmail
  */
 
 import mongoose from "mongoose";
@@ -9,7 +15,11 @@ import Dog from "../models/Dog";
 import User from "../models/User";
 import { Controller } from "../types/controller";
 import { AuthenticatedRequest } from "../types/express";
-import { CreateBreathingLogRequestBody, GenerateReportRequestBody, SendEmailReportRequestBody } from "../types/userRequests";
+import {
+  CreateBreathingLogRequestBody,
+  GenerateReportRequestBody,
+  SendEmailReportRequestBody,
+} from "../types/userRequests";
 import createError from "http-errors";
 import { withTransaction } from "../utils/transaction";
 import { generatePDF, ReportData } from "../services/pdfService";
@@ -41,7 +51,7 @@ export const createBreathingLog: Controller<
       ...req.body,
       dogId: dog._id,
       userId: req.user?._id,
-      bpm: calculatedBPM
+      bpm: calculatedBPM,
     };
 
     const newBreathingLog = await BreathingLog.create(breathingLogData);
@@ -230,49 +240,58 @@ export const generateBreathingLogPdf: Controller<
     }
 
     // Parse date range
-    const startDate = req.body.startDate ? new Date(req.body.startDate) : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000); // Default: last 30 days
+    const startDate = req.body.startDate
+      ? new Date(req.body.startDate)
+      : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000); // Default: last 30 days
     const endDate = req.body.endDate ? new Date(req.body.endDate) : new Date();
 
     // Get breathing logs for the date range
     const logs = await BreathingLog.find({
       dogId: req.params.id,
       userId: req.user?._id,
-      createdAt: { $gte: startDate, $lte: endDate }
+      createdAt: { $gte: startDate, $lte: endDate },
     }).sort({ createdAt: -1 });
 
     if (logs.length === 0) {
-      throw createError(404, "No breathing logs found for the specified date range");
+      throw createError(
+        404,
+        "No breathing logs found for the specified date range"
+      );
     }
 
     // Filter out logs with BPM 0
-    const validLogs = logs.filter(log => log.bpm > 0);
+    const validLogs = logs.filter((log) => log.bpm > 0);
 
     if (validLogs.length === 0) {
-      throw createError(404, "No valid breathing logs found for the specified date range (all logs have BPM 0)");
+      throw createError(
+        404,
+        "No valid breathing logs found for the specified date range (all logs have BPM 0)"
+      );
     }
 
     // Calculate summary statistics
-    const bpmValues = validLogs.map(log => log.bpm);
-    const averageBPM = bpmValues.reduce((sum, bpm) => sum + bpm, 0) / bpmValues.length;
+    const bpmValues = validLogs.map((log) => log.bpm);
+    const averageBPM =
+      bpmValues.reduce((sum, bpm) => sum + bpm, 0) / bpmValues.length;
     const lowestBPM = Math.min(...bpmValues);
     const highestBPM = Math.max(...bpmValues);
 
     // Format logs for report
-    const formattedLogs = validLogs.map(log => ({
-      date: log.createdAt.toLocaleDateString('en-GB', { 
-        year: 'numeric', 
-        month: 'short', 
-        day: 'numeric' 
+    const formattedLogs = validLogs.map((log) => ({
+      date: log.createdAt.toLocaleDateString("en-GB", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
       }),
-      time: log.createdAt.toLocaleTimeString('en-GB', { 
-        hour: '2-digit', 
-        minute: '2-digit',
-        hour12: false
+      time: log.createdAt.toLocaleTimeString("en-GB", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
       }),
       bpm: log.bpm,
       breathCount: log.breathCount,
       duration: log.duration,
-      comment: log.comment
+      comment: log.comment,
     }));
 
     // Prepare report data
@@ -281,7 +300,7 @@ export const generateBreathingLogPdf: Controller<
         name: dog.name,
         breed: dog.breed,
         age: dog.age,
-        maxBreathingRate: dog.maxBreathingRate
+        maxBreathingRate: dog.maxBreathingRate,
       },
       logs: formattedLogs,
       summary: {
@@ -289,22 +308,27 @@ export const generateBreathingLogPdf: Controller<
         averageBPM,
         lowestBPM,
         highestBPM,
-        dateRange: `${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`
+        dateRange: `${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`,
       },
       user: {
         firstName: user.firstName,
         lastName: user.lastName,
-        email: user.email
-      }
+        email: user.email,
+      },
     };
 
     // Generate PDF
     const pdfBuffer = await generatePDF(reportData);
 
     // Set response headers for PDF download
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `attachment; filename="breathing-report-${dog.name}-${new Date().toISOString().split('T')[0]}.pdf"`);
-    res.setHeader('Content-Length', pdfBuffer.length);
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename="breathing-report-${dog.name}-${
+        new Date().toISOString().split("T")[0]
+      }.pdf"`
+    );
+    res.setHeader("Content-Length", pdfBuffer.length);
 
     res.send(pdfBuffer);
   } catch (error) {
@@ -345,54 +369,63 @@ export const sendBreathingLogEmail: Controller<
 
     // Validate recipient email
     const { recipientEmail } = req.body;
-    if (!recipientEmail || !recipientEmail.includes('@')) {
+    if (!recipientEmail || !recipientEmail.includes("@")) {
       throw createError(400, "Valid recipient email is required");
     }
 
     // Parse date range
-    const startDate = req.body.startDate ? new Date(req.body.startDate) : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000); // Default: last 30 days
+    const startDate = req.body.startDate
+      ? new Date(req.body.startDate)
+      : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000); // Default: last 30 days
     const endDate = req.body.endDate ? new Date(req.body.endDate) : new Date();
 
     // Get breathing logs for the date range
     const logs = await BreathingLog.find({
       dogId: req.params.id,
       userId: req.user?._id,
-      createdAt: { $gte: startDate, $lte: endDate }
+      createdAt: { $gte: startDate, $lte: endDate },
     }).sort({ createdAt: -1 });
 
     if (logs.length === 0) {
-      throw createError(404, "No breathing logs found for the specified date range");
+      throw createError(
+        404,
+        "No breathing logs found for the specified date range"
+      );
     }
 
     // Filter out logs with BPM 0
-    const validLogs = logs.filter(log => log.bpm > 0);
+    const validLogs = logs.filter((log) => log.bpm > 0);
 
     if (validLogs.length === 0) {
-      throw createError(404, "No valid breathing logs found for the specified date range (all logs have BPM 0)");
+      throw createError(
+        404,
+        "No valid breathing logs found for the specified date range (all logs have BPM 0)"
+      );
     }
 
     // Calculate summary statistics
-    const bpmValues = validLogs.map(log => log.bpm);
-    const averageBPM = bpmValues.reduce((sum, bpm) => sum + bpm, 0) / bpmValues.length;
+    const bpmValues = validLogs.map((log) => log.bpm);
+    const averageBPM =
+      bpmValues.reduce((sum, bpm) => sum + bpm, 0) / bpmValues.length;
     const lowestBPM = Math.min(...bpmValues);
     const highestBPM = Math.max(...bpmValues);
 
     // Format logs for report
-    const formattedLogs = validLogs.map(log => ({
-      date: log.createdAt.toLocaleDateString('en-GB', { 
-        year: 'numeric', 
-        month: 'short', 
-        day: 'numeric' 
+    const formattedLogs = validLogs.map((log) => ({
+      date: log.createdAt.toLocaleDateString("en-GB", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
       }),
-      time: log.createdAt.toLocaleTimeString('en-GB', { 
-        hour: '2-digit', 
-        minute: '2-digit',
-        hour12: false
+      time: log.createdAt.toLocaleTimeString("en-GB", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
       }),
       bpm: log.bpm,
       breathCount: log.breathCount,
       duration: log.duration,
-      comment: log.comment
+      comment: log.comment,
     }));
 
     // Prepare report data
@@ -401,7 +434,7 @@ export const sendBreathingLogEmail: Controller<
         name: dog.name,
         breed: dog.breed,
         age: dog.age,
-        maxBreathingRate: dog.maxBreathingRate
+        maxBreathingRate: dog.maxBreathingRate,
       },
       logs: formattedLogs,
       summary: {
@@ -409,13 +442,13 @@ export const sendBreathingLogEmail: Controller<
         averageBPM,
         lowestBPM,
         highestBPM,
-        dateRange: `${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`
+        dateRange: `${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`,
       },
       user: {
         firstName: user.firstName,
         lastName: user.lastName,
-        email: user.email
-      }
+        email: user.email,
+      },
     };
 
     // Generate PDF
@@ -427,13 +460,19 @@ export const sendBreathingLogEmail: Controller<
     // Send email with PDF attachment
     await sendEmail({
       to: recipientEmail,
-      subject: `Breathing Report for ${dog.name} - ${startDate.toLocaleDateString()} to ${endDate.toLocaleDateString()}`,
+      subject: `Breathing Report for ${
+        dog.name
+      } - ${startDate.toLocaleDateString()} to ${endDate.toLocaleDateString()}`,
       html: emailHTML,
-      attachments: [{
-        filename: `breathing-report-${dog.name}-${new Date().toISOString().split('T')[0]}.pdf`,
-        content: pdfBuffer,
-        contentType: 'application/pdf'
-      }]
+      attachments: [
+        {
+          filename: `breathing-report-${dog.name}-${
+            new Date().toISOString().split("T")[0]
+          }.pdf`,
+          content: pdfBuffer,
+          contentType: "application/pdf",
+        },
+      ],
     });
 
     res.json({
@@ -442,18 +481,18 @@ export const sendBreathingLogEmail: Controller<
         recipientEmail,
         dogName: dog.name,
         dateRange: `${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`,
-        totalLogs: validLogs.length
-      }
+        totalLogs: validLogs.length,
+      },
     });
   } catch (error) {
-    console.error('Email sending error details:', {
-      error: error instanceof Error ? error.message : 'Unknown error',
+    console.error("Email sending error details:", {
+      error: error instanceof Error ? error.message : "Unknown error",
       stack: error instanceof Error ? error.stack : undefined,
       recipientEmail: req.body.recipientEmail,
       dogId: req.params.id,
-      userId: req.user?._id
+      userId: req.user?._id,
     });
-    
+
     if (error instanceof createError.HttpError) {
       return next(error);
     }

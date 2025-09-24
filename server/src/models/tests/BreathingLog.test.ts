@@ -1,5 +1,5 @@
 /**
- * @file BreathingLog.test.ts
+ * @file server/src/models/tests/BreathingLog.test.ts
  * @description Test suite for BreathingLog model
  */
 

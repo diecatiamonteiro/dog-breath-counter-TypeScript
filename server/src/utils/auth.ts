@@ -1,5 +1,5 @@
 /**
- * @file auth.ts
+ * @file server/src/utils/auth.ts
  * @description Utility functions for handling authentication (JWT token creation & cookie setting)
  */
 

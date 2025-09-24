@@ -1,7 +1,13 @@
 /**
- * @file app/(protected)/my-dogs/[id]/page.tsx
+ * @file client/src/app/(protected)/my-dogs/[id]/page.tsx
  * @description Dog profile page
- *              Includes: dog info, veterinarian info, resting respiratory rate, breathing logs, and share data
+ *
+ * Displays:
+ * - Dog information and photo
+ * - Veterinarian details
+ * - Resting respiratory rate (max and average BPM)
+ * - Breathing logs (chart/calendar view with delete option)
+ * - Share data functionality (PDF download, email report)
  */
 
 "use client";
@@ -38,7 +44,6 @@ export default function DogProfilePage() {
   const { dogState, dogDispatch, logState, logDispatch } = useAppContext();
   const { selectedDog } = dogState;
   const { breathingLogs } = logState;
-
   // State for Share Data functionality
   const [startDate, setStartDate] = useState<string | null>(null);
   const [endDate, setEndDate] = useState<string | null>(null);
@@ -58,13 +63,11 @@ export default function DogProfilePage() {
     getSelectedDog(dogDispatch, dogId);
   }, [dogId, dogDispatch]);
 
-  // Handle date range changes
   const handleDateRangeChange = (start: string | null, end: string | null) => {
     setStartDate(start);
     setEndDate(end);
   };
 
-  // Handle PDF download
   const handleDownloadPdf = async () => {
     if (!selectedDog) return;
 
@@ -105,7 +108,6 @@ export default function DogProfilePage() {
     }, 5000);
   };
 
-  // Handle email sending
   const handleSendEmail = async (recipientEmail: string) => {
     if (!selectedDog) return;
 
@@ -163,7 +165,6 @@ export default function DogProfilePage() {
   };
 
   const handleDeleteBreathingLog = async (logId: string) => {
-    // Confirm deletion
     const confirmed = window.confirm(
       `Are you sure you want to delete this log? This action cannot be undone.`
     );
@@ -200,7 +201,6 @@ export default function DogProfilePage() {
   return (
     <div className="max-w-5xl relative">
       <div className="mb-36">
-        {/* Dog name & "Back to My Dogs" button */}
         <div className="flex flex-wrap gap-2 justify-between align-center">
           <div className="flex items-center justify-between">
             <h1 className="text-lg md:text-2xl font-bold text-foreground">
@@ -217,7 +217,6 @@ export default function DogProfilePage() {
           </Button>
         </div>
 
-        {/* "Monitor Breathing Now" button */}
         <div className="w-full my-8">
           <Button
             href={`/my-dogs/${dogId}/monitor-breathing`}
@@ -236,8 +235,8 @@ export default function DogProfilePage() {
           </Button>
         </div>
 
+        {/* ***************** DOG INFO SECTION ***************** */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 md:gap-8 mb-4 sm:mb-6 md:mb-8">
-          {/* Dog Info Section */}
           <div className="bg-main-text-bg rounded-lg shadow-md p-3 md:p-6 border border-primary-light/20">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center">
@@ -261,7 +260,6 @@ export default function DogProfilePage() {
               </Button>
             </div>
 
-            {/* ***************** DOG INFO SECTION ***************** */}
             <div className="grid grid-cols-2 gap-4">
               {/* Dog Photo */}
               <div className="">
@@ -321,13 +319,11 @@ export default function DogProfilePage() {
 
               {/* Dog Details */}
               <div className="flex-1 space-y-6">
-                {/* Dog Name and Stats */}
                 <div className="space-y-2">
                   <h3 className="font-bold text-xl md:text-2xl text-foreground">
                     {dogName}
                   </h3>
 
-                  {/* Dog Stats - Simple format like vet info */}
                   <div className="grid grid-cols-2 gap-4">
                     {/* Age */}
                     {selectedDog?.age && (
@@ -339,7 +335,6 @@ export default function DogProfilePage() {
                       </div>
                     )}
 
-                    {/* Gender */}
                     {selectedDog?.gender && (
                       <div>
                         <p className="text-sm text-foreground/70">Gender</p>
@@ -350,7 +345,6 @@ export default function DogProfilePage() {
                       </div>
                     )}
 
-                    {/* Breed */}
                     {selectedDog?.breed && (
                       <div className="leading-tight">
                         <p className="text-sm text-foreground/70">Breed</p>
@@ -360,6 +354,7 @@ export default function DogProfilePage() {
                         </p>
                       </div>
                     )}
+
                     {/* Show message if no info available */}
                     {!selectedDog?.age &&
                       !selectedDog?.breed &&
@@ -388,6 +383,7 @@ export default function DogProfilePage() {
                   Veterinarian
                 </h2>
               </div>
+
               <Button
                 href={`/my-dogs/add-dog?edit=${dogId}&section=vet`}
                 size="sm"
@@ -474,6 +470,7 @@ export default function DogProfilePage() {
                 Breathing Rate
               </h2>
             </div>
+
             <Button
               href={`/my-dogs/add-dog?edit=${dogId}&section=breathing`}
               variant="ghost"
@@ -486,7 +483,6 @@ export default function DogProfilePage() {
           </div>
 
           <div className="flex flex-row gap-4">
-            {/* Maximum Breath Rate */}
             <div className="rounded-lg p-4 border border-navbar-icons flex-1">
               <div className="flex items-center justify-between">
                 <div className="flex flex-col gap-2">
@@ -506,7 +502,6 @@ export default function DogProfilePage() {
               </div>
             </div>
 
-            {/* Average Breath Rate */}
             <div className="rounded-lg p-4 border border-navbar-icons flex-1">
               <div className="flex items-center justify-between">
                 <div className="flex flex-col gap-2">
@@ -618,13 +613,11 @@ export default function DogProfilePage() {
             </div>
           ) : (
             <div className="space-y-6">
-              {/* Date Range Picker */}
               <DateRangePicker
                 onDateRangeChange={handleDateRangeChange}
                 className="mb-4"
               />
 
-              {/* Action Buttons */}
               <div className="flex flex-wrap gap-3">
                 <Button
                   onClick={handleDownloadPdf}

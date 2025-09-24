@@ -1,5 +1,5 @@
 /**
- * @file userRequests.ts
+ * @file server/src/types/userRequests.ts
  * @description Types for user requests.
  *              Used in the controllers files.
  */

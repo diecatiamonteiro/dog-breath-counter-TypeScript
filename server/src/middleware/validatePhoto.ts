@@ -1,5 +1,5 @@
 /**
- * @file validatePhoto.ts
+ * @file server/src/middleware/validatePhoto.ts
  * @description Middleware to validate Cloudinary photo data in the request body.
  *              This middleware ensures that:
  *                 - If `req.body.photo` is present, it must include a valid `url` and `publicId`.

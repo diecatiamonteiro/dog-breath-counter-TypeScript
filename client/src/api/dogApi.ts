@@ -30,7 +30,9 @@ export const getAllDogs = async (
   dispatch({ type: DOG_ACTIONS.SET_ERROR, payload: null });
 
   try {
-    const res = await axios.get<{ message: string; data: { dogs: Dog[] } }>("/api/dogs");
+    const res = await axios.get<{ message: string; data: { dogs: Dog[] } }>(
+      "/api/dogs"
+    );
     dispatch({
       type: DOG_ACTIONS.GET_ALL_DOGS,
       payload: { data: { dogs: res.data.data.dogs } },
@@ -64,7 +66,10 @@ export const addDog = async (
   dispatch({ type: DOG_ACTIONS.SET_ERROR, payload: null });
 
   try {
-    const res = await axios.post<{ message: string; data: { dog: Dog } }>("/api/dogs", dogData);
+    const res = await axios.post<{ message: string; data: { dog: Dog } }>(
+      "/api/dogs",
+      dogData
+    );
     dispatch({
       type: DOG_ACTIONS.ADD_DOG,
       payload: { data: { dog: res.data.data.dog } },
@@ -98,7 +103,9 @@ export const getSelectedDog = async (
   dispatch({ type: DOG_ACTIONS.SET_ERROR, payload: null });
 
   try {
-    const res = await axios.get<{ message: string; data: { dog: Dog } }>(`/api/dogs/${dogId}`);
+    const res = await axios.get<{ message: string; data: { dog: Dog } }>(
+      `/api/dogs/${dogId}`
+    );
     dispatch({
       type: DOG_ACTIONS.GET_SELECTED_DOG,
       payload: { data: { dog: res.data.data.dog } },
@@ -134,8 +141,11 @@ export const updateDog = async (
   dispatch({ type: DOG_ACTIONS.SET_ERROR, payload: null });
 
   try {
-    const res = await axios.patch<{ message: string; data: { dog: Dog } }>(`/api/dogs/${dogId}`, dogData);
-    
+    const res = await axios.patch<{ message: string; data: { dog: Dog } }>(
+      `/api/dogs/${dogId}`,
+      dogData
+    );
+
     dispatch({
       type: DOG_ACTIONS.UPDATE_DOG,
       payload: { data: { dog: res.data.data.dog } },
@@ -169,9 +179,10 @@ export const deleteDog = async (
   dispatch({ type: DOG_ACTIONS.SET_ERROR, payload: null });
 
   try {
-    const res = await axios.delete<{ message: string; data: { deletedDogId: string } }>(
-      `/api/dogs/${dogId}`
-    );
+    const res = await axios.delete<{
+      message: string;
+      data: { deletedDogId: string };
+    }>(`/api/dogs/${dogId}`);
     dispatch({
       type: DOG_ACTIONS.DELETE_DOG,
       payload: { data: { deletedDogId: res.data.data.deletedDogId } },

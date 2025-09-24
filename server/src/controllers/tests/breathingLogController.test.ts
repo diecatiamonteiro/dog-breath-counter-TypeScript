@@ -1,6 +1,10 @@
 /**
- * @file breathingLog.test.ts
- * @description Test suite for breathingLogController: createBreathingLog, getAllBreathingLogs, getBreathingLogById, deleteBreathingLogById
+ * @file server/src/controllers/tests/breathingLogController.test.ts
+ * @description Test suite for breathingLogController:
+ *                - createBreathingLog
+ *                - getAllBreathingLogs
+ *                - getBreathingLogById
+ *                - deleteBreathingLogById
  */
 
 import { describe, it, expect, beforeEach, vi, Mock } from "vitest";
@@ -16,7 +20,6 @@ import {
   deleteBreathingLogById,
 } from "../breathingLogController";
 import { CreateBreathingLogRequestBody } from "../../types/userRequests";
-import createError from "http-errors";
 import Dog from "../../models/Dog";
 
 describe("Breathing Log Controller", () => {

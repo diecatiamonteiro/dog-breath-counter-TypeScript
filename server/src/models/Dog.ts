@@ -1,5 +1,5 @@
 /**
- * @file Dog.ts
+ * @file server/src/models/Dog.ts
  * @description Dog model
  */
 

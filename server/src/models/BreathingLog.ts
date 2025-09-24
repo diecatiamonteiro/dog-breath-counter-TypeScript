@@ -1,5 +1,5 @@
 /**
- * @file BreathingLog.ts
+ * @file server/src/models/BreathingLog.ts
  * @description BreathingLog model
  */
 

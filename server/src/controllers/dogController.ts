@@ -1,6 +1,11 @@
 /**
- * @file dogController.ts
- * @description Controller for dog routes: getAllDogs, createDog, getDogById, updateDog, deleteDog
+ * @file server/src/controllers/dogController.ts
+ * @description Controller for dog routes:
+ *                - getAllDogs
+ *                - createDog
+ *                - getDogById
+ *                - updateDog
+ *                - deleteDog
  */
 
 import Dog from "../models/Dog";
@@ -156,7 +161,8 @@ export const updateDog: Controller<
       breed: req.body.breed ?? existingDog.breed,
       birthYear: req.body.birthYear ?? existingDog.birthYear,
       gender: req.body.gender ?? existingDog.gender,
-      maxBreathingRate: req.body.maxBreathingRate ?? existingDog.maxBreathingRate,
+      maxBreathingRate:
+        req.body.maxBreathingRate ?? existingDog.maxBreathingRate,
     };
 
     // Build update operations to support unsetting photo
@@ -172,17 +178,15 @@ export const updateDog: Controller<
     }
 
     // Handle veterinarian data - allow null/undefined to clear the data
-    if (req.body.hasOwnProperty('veterinarian')) {
-      updateOps.$set.veterinarian = req.body.veterinarian === undefined ? null : req.body.veterinarian;
+    if (req.body.hasOwnProperty("veterinarian")) {
+      updateOps.$set.veterinarian =
+        req.body.veterinarian === undefined ? null : req.body.veterinarian;
     }
 
-    const updatedDog = await Dog.findByIdAndUpdate(
-      existingDog._id,
-      updateOps,
-      { new: true, runValidators: true }
-    );
-
-
+    const updatedDog = await Dog.findByIdAndUpdate(existingDog._id, updateOps, {
+      new: true,
+      runValidators: true,
+    });
 
     res.json({
       message: "Dog updated successfully",
@@ -232,7 +236,9 @@ export const deleteDog: Controller<AuthenticatedRequest> = async (
       }
 
       // Delete all breathing logs associated with the dog
-      await BreathingLog.deleteMany({ dogId: dogToDelete._id }).session(session);
+      await BreathingLog.deleteMany({ dogId: dogToDelete._id }).session(
+        session
+      );
 
       // Delete the dog
       await dogToDelete.deleteOne({ session });

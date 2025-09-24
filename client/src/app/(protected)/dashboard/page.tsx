@@ -1,3 +1,10 @@
+/**
+ * @file client/src/app/(protected)/dashboard/page.tsx
+ * @description User dashboard page.
+ *              Allows editing profile data, syncing with Google, and deleting the user account.
+ *              Also handles form validation and error display.
+ */
+
 "use client";
 
 import { deleteUserAccount, updateUserProfile } from "@/api/userApi";
@@ -11,7 +18,6 @@ import { getErrorMessage, isAxiosError } from "@/lib/apiUtils";
 import { useRouter } from "next/navigation";
 import Modal from "@/components/Modal";
 import { IoWarning } from "react-icons/io5";
-
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -177,7 +183,9 @@ export default function DashboardPage() {
 
   return (
     <div className="max-w-5xl mb-19 lg:mb-0">
-      <h1 className="text-lg md:text-2xl font-bold text-foreground">Settings</h1>
+      <h1 className="text-lg md:text-2xl font-bold text-foreground">
+        Settings
+      </h1>
       {user && (
         <h2 className="mt-1 md:mt-3 text-foreground/80">Hi, {userName}!</h2>
       )}
@@ -235,10 +243,12 @@ export default function DashboardPage() {
                 onClose={() => setShowDeleteAccountModal(false)}
               >
                 <div className="flex flex-col items-center justify-center space-y-2 p-6 text-center">
-                <IoWarning className="w-10 h-10 text-accent" aria-label="Warning"/>
+                  <IoWarning
+                    className="w-10 h-10 text-accent"
+                    aria-label="Warning"
+                  />
                   <h3 className="text-lg md:text-xl font-extrabold text-accent">
                     Are you sure you want to delete your account?
-                    
                   </h3>
                   <p className="text-sm text-accent">
                     This action is irreversible and will remove all your data.
@@ -365,7 +375,8 @@ export default function DashboardPage() {
                 )}
                 {isGoogleAccount && (
                   <p className="mt-1 text-sm text-accent">
-                    You are logged in with Google. To change your email, switch to a different Google account by clicking the button below.
+                    You are logged in with Google. To change your email, switch
+                    to a different Google account by clicking the button below.
                   </p>
                 )}
                 {isGoogleAccount && (
@@ -382,21 +393,25 @@ export default function DashboardPage() {
                 )}
               </div>
             </form>
-            </div>
-            <div className="mt-4 flex gap-3 pt-2">
-                <Button onClick={handleInputChange} ariaLabel="Save updated user data" disabled={isSubmitting}>
-                  Save
-                </Button>
-                <Button
-                  variant="secondary"
-                  onClick={handleCancel}
-                  ariaLabel="Cancel user data update"
-                  disabled={isSubmitting}
-                >
-                  Cancel
-                </Button>
-              </div>
           </div>
+          <div className="mt-4 flex gap-3 pt-2">
+            <Button
+              onClick={handleInputChange}
+              ariaLabel="Save updated user data"
+              disabled={isSubmitting}
+            >
+              Save
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={handleCancel}
+              ariaLabel="Cancel user data update"
+              disabled={isSubmitting}
+            >
+              Cancel
+            </Button>
+          </div>
+        </div>
       )}
 
       {/* Footer Section - only visible until lg; from lg, info below is placed in the footer in NavigationDesktop.tsx */}

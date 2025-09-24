@@ -59,7 +59,6 @@ export const loginWithEmail = async ({
       onSuccess();
     }
     router.push("/dashboard");
-
     return { success: true };
   } catch (error) {
     const errorMsg = handleAuthError(error);

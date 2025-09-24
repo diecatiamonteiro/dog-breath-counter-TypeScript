@@ -4,10 +4,7 @@
  */
 
 import { Controller } from "../types/controller";
-import {
-  LoginRequestBody,
-  RegisterRequestBody,
-} from "../types/userRequests";
+import { LoginRequestBody, RegisterRequestBody } from "../types/userRequests";
 import { validateEmail, validatePassword } from "../utils/validation";
 import createError from "http-errors";
 
@@ -16,10 +13,10 @@ export const validateRegisterRequest: Controller<{
 }> = async (req, res, next) => {
   try {
     const { firstName, lastName, email, password } = req.body;
-    
+
     if (!email || !password || !firstName || !lastName) {
-        throw createError(400, "All fields are required");
-      }
+      throw createError(400, "All fields are required");
+    }
 
     req.body.email = validateEmail(email);
 

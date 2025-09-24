@@ -1,11 +1,16 @@
 /**
- * @file dogController.test.ts
- * @description Test suite for dogController: getAllDogs, createDog, getDogById, updateDog, deleteDog
+ * @file server/src/controllers/tests/dogController.test.ts
+ * @description Test suite for dogController:
+ *                - getAllDogs
+ *                - createDog
+ *                - getDogById
+ *                - updateDog
+ *                - deleteDog
  */
 
 import { describe, it, expect, beforeEach, vi, Mock } from "vitest";
 import { Response } from "express";
-import mongoose, { Document } from "mongoose";
+import mongoose from "mongoose";
 import Dog from "../../models/Dog";
 import BreathingLog from "../../models/BreathingLog";
 import { AuthenticatedRequest } from "../../types/express";
@@ -21,9 +26,7 @@ import {
   CreateDogRequestBody,
   UpdateDogRequestBody,
 } from "../../types/userRequests";
-import createError from "http-errors";
 import cloudinary from "../../config/cloudinary";
-import { IDog } from "../../models/Dog";
 
 // Mock cloudinary
 vi.mock("../../config/cloudinary", () => ({
@@ -43,7 +46,7 @@ describe("Dog Controller", () => {
   // Mock photo data
   const mockPhotoData = {
     url: "https://res.cloudinary.com/demo/image/upload/dog.jpg",
-    publicId: "pets/dog123"
+    publicId: "pets/dog123",
   };
 
   beforeEach(async () => {
@@ -167,7 +170,7 @@ describe("Dog Controller", () => {
         body: {
           name: "Rex",
           maxBreathingRate: 35,
-          photo: mockPhotoData
+          photo: mockPhotoData,
         },
       };
 
@@ -187,8 +190,8 @@ describe("Dog Controller", () => {
             userId: testUser._id,
             photo: expect.objectContaining({
               url: mockPhotoData.url,
-              publicId: mockPhotoData.publicId
-            })
+              publicId: mockPhotoData.publicId,
+            }),
           }),
         }),
       });
@@ -288,8 +291,8 @@ describe("Dog Controller", () => {
         maxBreathingRate: 30,
         photo: {
           url: "https://old-photo.jpg",
-          publicId: "pets/old123"
-        }
+          publicId: "pets/old123",
+        },
       });
 
       const dogId = createdDog._id as mongoose.Types.ObjectId;
@@ -297,14 +300,14 @@ describe("Dog Controller", () => {
       // New photo data
       const newPhotoData = {
         url: "https://new-photo.jpg",
-        publicId: "pets/new123"
+        publicId: "pets/new123",
       };
 
       mockReq = {
         user: testUser,
         params: { id: dogId.toString() },
         body: {
-          photo: newPhotoData
+          photo: newPhotoData,
         },
       };
 
@@ -322,7 +325,7 @@ describe("Dog Controller", () => {
         message: "Dog updated successfully",
         data: {
           dog: expect.objectContaining({
-            photo: expect.objectContaining(newPhotoData)
+            photo: expect.objectContaining(newPhotoData),
           }),
         },
       });
@@ -396,7 +399,7 @@ describe("Dog Controller", () => {
         userId: testUser._id,
         name: "Max",
         maxBreathingRate: 30,
-        photo: mockPhotoData
+        photo: mockPhotoData,
       });
 
       const dogId = createdDog._id as mongoose.Types.ObjectId;
@@ -421,7 +424,9 @@ describe("Dog Controller", () => {
       );
 
       // Verify photo deletion was attempted
-      expect(cloudinary.uploader.destroy).toHaveBeenCalledWith(mockPhotoData.publicId);
+      expect(cloudinary.uploader.destroy).toHaveBeenCalledWith(
+        mockPhotoData.publicId
+      );
 
       // Use toString() for ObjectId comparison
       expect(mockRes.json).toHaveBeenCalledWith({

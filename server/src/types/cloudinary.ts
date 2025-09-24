@@ -1,5 +1,5 @@
 /**
- * @file cloudinary.ts
+ * @file server/src/types/cloudinary.ts
  * @description TypeScript interfaces for Cloudinary operations
  */
 

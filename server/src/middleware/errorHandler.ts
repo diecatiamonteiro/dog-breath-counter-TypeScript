@@ -1,5 +1,5 @@
 /**
- * @file errorHandler.ts
+ * @file server/src/middleware/errorHandler.ts
  * @description Middleware to handle errors
  */
 

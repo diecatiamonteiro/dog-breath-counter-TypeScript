@@ -1,6 +1,7 @@
 /**
  * @file components/Container.tsx
- * @description Container component for the app to center the content with max-width and padding
+ * @description Container component for the app to center
+ *              the content with max-width and padding
  */
 
 interface ContainerProps {
