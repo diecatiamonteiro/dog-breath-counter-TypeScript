@@ -258,7 +258,7 @@ export default function SettingsPage() {
                   </p>
                   <div className="flex justify-center gap-4 pt-6">
                     <Button
-                      variant="secondary"
+                      variant="primary"
                       onClick={() => setShowDeleteAccountModal(false)}
                       ariaLabel="Cancel user account deletion"
                     >
@@ -406,7 +406,7 @@ export default function SettingsPage() {
               Save
             </Button>
             <Button
-              variant="secondary"
+              variant="ghost"
               onClick={handleCancel}
               ariaLabel="Cancel user data update"
               disabled={isSubmitting}
