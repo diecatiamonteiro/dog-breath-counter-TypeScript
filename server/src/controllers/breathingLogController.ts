@@ -75,7 +75,7 @@ export const createBreathingLog: Controller<
 };
 
 /**
- * @desc   Get all breathing logs for a specific dog with pagination
+ * @desc   Get all breathing logs for a specific dog
  * @route  GET /api/dogs/:id/breathing-logs
  * @access Protected
  */
@@ -85,36 +85,17 @@ export const getAllBreathingLogs: Controller<AuthenticatedRequest> = async (
   next
 ) => {
   try {
-    // Query params
-    const page = parseInt(req.query.page as string) || 1; // which page the user wants to see; default to page 1 if no page is provided
-    const limit = parseInt(req.query.limit as string) || 10; // how many logs per page; default to 10 if no limit is provided
-    const skip = (page - 1) * limit; // how many logs to skip; eg if page 1, skip 0 logs; if page 2, skip 10 logs; if page 3, skip 20 logs; etc
-
     // Get all breathing logs for a specific dog
     const logs = await BreathingLog.find({
       dogId: req.params.id,
       userId: req.user?._id,
     })
-      .sort({ createdAt: -1 }) // newest logs first
-      .skip(skip) // skip the logs that are not in the current page
-      .limit(limit); // limit the number of logs per page
-
-    // Get the total number of logs for the specific dog
-    const total = await BreathingLog.countDocuments({
-      dogId: req.params.id,
-      userId: req.user?._id,
-    });
+      .sort({ createdAt: -1 }); // newest logs first
 
     res.json({
       message: "Breathing logs retrieved successfully",
       data: {
         breathingLogs: logs,
-        pagination: {
-          page, // current page number
-          limit, // logs per page
-          total, // total number of logs
-          totalPages: Math.ceil(total / limit), // total number of pages
-        },
       },
     });
   } catch (error) {

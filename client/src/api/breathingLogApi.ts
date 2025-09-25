@@ -18,21 +18,17 @@ import axios from "axios";
 type LogDispatch = React.Dispatch<BreathingLogAction>;
 
 /**
- * Fetches all breathing logs for a specific dog with pagination.
- * Retrieves breathing logs with pagination metadata.
+ * Fetches all breathing logs for a specific dog.
+ * Retrieves all breathing logs for health tracking and trend analysis.
  *
  * @param dispatch - The breathing log dispatch function from useReducer to update global state
  * @param dogId - The ID of the dog to get breathing logs for
- * @param page - Page number (optional, defaults to 1)
- * @param limit - Number of logs per page (optional, defaults to 10)
  * @returns A Promise that resolves to the array of breathing logs
  * @throws Will re-throw the error after dispatching SET_ERROR for component handling
  */
 export const getAllBreathingLogs = async (
   dispatch: LogDispatch,
-  dogId: string,
-  page: number = 1,
-  limit: number = 10
+  dogId: string
 ): Promise<BreathingLog[]> => {
   dispatch({ type: LOG_ACTIONS.SET_LOADING, payload: true });
   dispatch({ type: LOG_ACTIONS.SET_ERROR, payload: null });
@@ -42,21 +38,14 @@ export const getAllBreathingLogs = async (
       message: string;
       data: {
         breathingLogs: BreathingLog[];
-        pagination: {
-          page: number;
-          limit: number;
-          total: number;
-          totalPages: number;
-        };
       };
-    }>(`/api/dogs/${dogId}/breathing-logs?page=${page}&limit=${limit}`);
+    }>(`/api/dogs/${dogId}/breathing-logs`);
 
     dispatch({
       type: LOG_ACTIONS.GET_ALL_LOGS,
       payload: {
         data: {
           breathingLogs: res.data.data.breathingLogs,
-          pagination: res.data.data.pagination,
         },
       },
     });

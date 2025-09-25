@@ -39,12 +39,6 @@ export type BreathingLogAction =
       payload: {
         data: {
           breathingLogs: BreathingLog[];
-          pagination: {
-            page: number;
-            limit: number;
-            total: number;
-            totalPages: number;
-          };
         };
       };
     }
@@ -73,7 +67,7 @@ export const BreathingLogReducer = (
       return {
         ...state,
         breathingLogs: action.payload.data.breathingLogs,
-        pagination: action.payload.data.pagination,
+        pagination: null, // No pagination needed
       };
 
     case LOG_ACTIONS.ADD_LOG:

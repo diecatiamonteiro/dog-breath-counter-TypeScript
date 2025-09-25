@@ -1,5 +1,5 @@
 /**
- * @file breathingLogUtils.ts
+ * @file client/src/utils/breathingLogUtils.ts
  * @description Utility functions for processing breathing logs
  *              Used in the breathingChart and breathingCalendar components
  */
@@ -51,11 +51,11 @@ export const formatMonthName = (year: number, monthIndex: number) => {
   });
 };
 
-// Format date labels to show only day number
+// Format date labels to show day & month number (18/9)
 export const formatDateChartLabel = (dateString: string) => {
   if (!dateString) return "";
   const date = new Date(dateString);
-  return date.getDate().toString(); // Just the day number
+  return `${date.getDate()}/${date.getMonth() + 1}`; // +1 because months are zero-indexed
 };
 
 // Format time as "HH:MM" (e.g., "14:30")
@@ -179,15 +179,15 @@ export const getFilteredDataForChart = (
         logDate.getMonth() === selectedMonth
       );
     });
-    // Limit to last 30 entries to prevent overcrowding
-    return monthData.slice(-30);
+    // Show ALL logs from the selected month for complete tracking (no entry limit)
+    return monthData;
   } else {
-    // For year view, show all data for the selected year
+    // For year view, show data from the selected year
     const yearData = processedData.filter((log) => {
       const logDate = new Date(log.log.createdAt);
       return logDate.getFullYear() === selectedYear;
     });
-    // Limit to last 50 entries for year view
-    return yearData.slice(-50);
+    // Show first 100 entries for year overview (mobile-friendly)
+    return yearData.slice(0, 100);
   }
 };

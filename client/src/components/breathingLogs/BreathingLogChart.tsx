@@ -6,6 +6,9 @@
  *                  (green = below set BPM, yellow = at set BPM, red = above set BPM).
  *                - Supports month/year filtering via context.
  *                - Accessible: ARIA labels, hidden table fallback, and key.
+ *                - Responsive: adjusts bar size and data density based on screen size.
+ *                - Currently there is no limit for monthly entries, and a 100 limit for
+ *                  year view (set on client/src/utils/breathingLogUtils.ts)
  */
 
 "use client";
@@ -13,6 +16,7 @@
 import { useAppContext } from "@/context/Context";
 import { BreathingLog } from "@/types/BreathingLogTypes";
 import { Dog } from "@/types/DogTypes";
+import { useMemo, useState, useEffect } from "react";
 import {
   formatDateChartLabel,
   processLogsForChart,
@@ -26,6 +30,7 @@ import {
   ResponsiveContainer,
   ReferenceLine,
   Cell,
+  LabelList,
 } from "recharts";
 import { GoDotFill } from "react-icons/go";
 
@@ -50,6 +55,30 @@ export default function BreathingChart({ logs, selectedDog }: Props) {
     selectedMonth
   );
 
+  // Responsive bar size state
+  const [windowWidth, setWindowWidth] = useState(0);
+
+  // Update window width on mount and resize
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    // Set initial width
+    handleResize();
+    // Listen for resize
+    window.addEventListener("resize", handleResize);
+    // Cleanup
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Calculate bar size based on screen width and data count
+  const barSize = useMemo(() => {
+    if (windowWidth === 0) return 6; // Default while loading
+    const dataCount = filteredData.length;
+    let baseSize = windowWidth < 640 ? 4 : windowWidth < 1024 ? 6 : 8;
+    // Reduce size if too many data points
+    if (dataCount > 50) baseSize = Math.max(baseSize - 2, 2);
+    return baseSize;
+  }, [windowWidth, filteredData.length]);
+
   // Make Y-axis adaptable to any BPM value
   const allBpmValues = filteredData.map((log) => log.bpm);
   const maxBpm = Math.max(...allBpmValues, selectedDog?.maxBreathingRate || 0);
@@ -58,7 +87,6 @@ export default function BreathingChart({ logs, selectedDog }: Props) {
   // Color bars based on BPM vs max breathing rate
   const getBarColor = (bpm: number) => {
     if (!selectedDog) return "#8884d8";
-
     if (bpm < selectedDog.maxBreathingRate) {
       return "#10b981"; // Green - normal
     } else if (bpm === selectedDog.maxBreathingRate) {
@@ -70,6 +98,21 @@ export default function BreathingChart({ logs, selectedDog }: Props) {
 
   // Format date labels to show only day number
   const formatDateLabel = formatDateChartLabel;
+
+  // Create a stable mapping of which indices should show date labels
+  const dateLabelsToShow = useMemo(() => {
+    const seenDates = new Set<string>();
+    const indicesToShow = new Set<number>();
+    filteredData.forEach((entry, index) => {
+      const date = entry.dateLong;
+      if (!seenDates.has(date)) {
+        seenDates.add(date);
+        indicesToShow.add(index);
+      }
+    });
+
+    return indicesToShow;
+  }, [filteredData]);
 
   // ARIA identifiers
   const chartTitleId = "breathing-chart-title"; // [ARIA] id used by aria-labelledby
@@ -93,7 +136,7 @@ export default function BreathingChart({ logs, selectedDog }: Props) {
         </p>
 
         {/* Chart */}
-        <div className="h-70 md:h-96">
+        <div className="h-72 md:h-80">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={filteredData}
@@ -105,11 +148,16 @@ export default function BreathingChart({ logs, selectedDog }: Props) {
               <XAxis
                 dataKey="index"
                 stroke="#6b7280"
-                fontSize={10}
+                fontSize={9}
                 tick={{ fill: "#6b7280" }}
-                tickFormatter={(value, index) =>
-                  formatDateLabel(filteredData[index]?.dateLong || "")
-                }
+                tickFormatter={(value, index) => {
+                  // Only show the date if this is the first occurrence of this date
+                  if (dateLabelsToShow.has(index)) {
+                    const currentDate = filteredData[index]?.dateLong || "";
+                    return formatDateLabel(currentDate);
+                  }
+                  return ""; // Return empty string for duplicate dates
+                }}
                 height={40}
                 interval={0}
                 label={{
@@ -139,25 +187,26 @@ export default function BreathingChart({ logs, selectedDog }: Props) {
               <Bar
                 dataKey="bpm"
                 radius={[2, 2, 0, 0]}
-                barSize={12}
+                barSize={barSize}
                 fill="#8884d8"
               >
                 {filteredData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={getBarColor(entry.bpm)} />
                 ))}
+                <LabelList dataKey="bpm" position="top" fontSize={9} />
               </Bar>
 
               {/* Reference line for max breathing rate - placed after bars to appear on top on them */}
               {selectedDog && (
                 <ReferenceLine
                   y={selectedDog.maxBreathingRate}
-                  stroke="#f59e0b"
+                  stroke="var(--foreground)"
                   strokeDasharray="1 1"
                   fontSize={10}
                   label={{
                     value: `Max: ${selectedDog.maxBreathingRate} BPM`,
                     position: "top",
-                    fill: "#f59e0b",
+                    fill: "var(--foreground)",
                   }}
                 />
               )}

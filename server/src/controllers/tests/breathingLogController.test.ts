@@ -105,7 +105,7 @@ describe("Breathing Log Controller", () => {
   });
 
   describe("getAllBreathingLogs", () => {
-    it("should get all breathing logs for a specific dog with pagination", async () => {
+    it("should get all breathing logs for a specific dog", async () => {
       // Create test dog
       const dog = (await Dog.create({
         userId: testUser._id,
@@ -163,12 +163,6 @@ describe("Breathing Log Controller", () => {
               bpm: expect.any(Number),
             }),
           ]),
-          pagination: {
-            page: 1,
-            limit: 2,
-            total: 3,
-            totalPages: 2,
-          },
         },
       });
     });
