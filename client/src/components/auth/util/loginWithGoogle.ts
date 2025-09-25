@@ -33,7 +33,7 @@ export const loginWithGoogle = async ({
     // Send Google data to the server
     await googleLoginUser(userDispatch, googleData);
 
-    // Success - navigate to dashboard
+    // Success - navigate to my-dogs
     if (onSuccess) {
       onSuccess();
     }

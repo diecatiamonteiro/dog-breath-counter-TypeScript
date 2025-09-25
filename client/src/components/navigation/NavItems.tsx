@@ -32,7 +32,7 @@ export const privateNavItems = [
     icon: <PiDogBold className="w-7 h-7" aria-hidden="true" />,
   },
   {
-    href: "/dashboard",
+    href: "/settings",
     label: "Settings",
     icon: <MdOutlineSettings className="w-7 h-7" aria-hidden="true" />,
   },

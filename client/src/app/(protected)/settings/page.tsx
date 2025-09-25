@@ -1,5 +1,5 @@
 /**
- * @file client/src/app/(protected)/dashboard/page.tsx
+ * @file client/src/app/(protected)/settings/page.tsx
  * @description User dashboard page.
  *              Allows editing profile data, syncing with Google, and deleting the user account.
  *              Also handles form validation and error display.
@@ -19,7 +19,7 @@ import { useRouter } from "next/navigation";
 import Modal from "@/components/Modal";
 import { IoWarning } from "react-icons/io5";
 
-export default function DashboardPage() {
+export default function SettingsPage() {
   const router = useRouter();
   const { userState, userDispatch } = useAppContext();
   const { user, isLoading } = userState;
@@ -194,7 +194,7 @@ export default function DashboardPage() {
         <div>
           <div className="mt-6 md:mt-12">
             <div className="bg-main-text-bg rounded-lg p-4 md:p-6 border border-primary-light/20">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="grid grid-cols-2 gap-8">
                 <div>
                   <p className="text-sm text-foreground/80">First Name</p>
                   <p className="mt-1 font-medium text-foreground">
@@ -207,9 +207,12 @@ export default function DashboardPage() {
                     {user.lastName}
                   </p>
                 </div>
-                <div className="md:col-span-2">
+                <div className="col-span-2">
                   <p className="text-sm text-foreground/80">Email</p>
-                  <p className="mt-1 font-medium text-foreground">
+                  <p
+                    className="mt-1 font-medium text-foreground truncate"
+                    title={user.email} // shows full email on hover
+                  >
                     {user.email}
                   </p>
                 </div>
@@ -374,7 +377,7 @@ export default function DashboardPage() {
                   <p className="mt-1 text-sm text-accent">{formErrors.email}</p>
                 )}
                 {isGoogleAccount && (
-                  <p className="mt-1 text-sm text-accent">
+                  <p className="mt-1 text-sm text-accent leading-tight">
                     You are logged in with Google. To change your email, switch
                     to a different Google account by clicking the button below.
                   </p>
