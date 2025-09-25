@@ -60,16 +60,15 @@ export default function BreathingCalendar({ logs, onDeleteLog }: Props) {
     return dateGroups[date];
   };
 
-  // Toggle function for expanding/collapsing days
+  // Toggle function for expanding/collapsing days (accordion behaviour - only one open at a time)
   const toggleDayExpansion = (date: string) => {
     setExpandedDays((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(date)) {
-        newSet.delete(date);
+      // If clicking the currently expanded date, collapse it
+      if (prev.has(date)) {
+        return new Set(); // Close all (empty Set)
       } else {
-        newSet.add(date);
+        return new Set([date]); // Open only this date (Set with single item)
       }
-      return newSet;
     });
   };
 
