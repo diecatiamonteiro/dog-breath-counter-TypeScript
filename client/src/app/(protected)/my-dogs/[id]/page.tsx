@@ -588,6 +588,7 @@ export default function DogProfilePage() {
               ) : (
                 <BreathingLogCalendar
                   logs={breathingLogs}
+                  selectedDog={selectedDog}
                   onDeleteLog={handleDeleteBreathingLog}
                 />
               )}

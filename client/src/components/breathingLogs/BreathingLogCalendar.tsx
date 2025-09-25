@@ -26,15 +26,21 @@ import { useAppContext } from "@/context/Context";
 import { LOG_ACTIONS } from "@/reducers/breathingLogReducer";
 import { useState, useEffect } from "react";
 import Button from "@/components/Button";
+import { Dog } from "@/types/DogTypes";
 import { RiDeleteBin7Line } from "react-icons/ri";
 import { MdExpandMore, MdExpandLess } from "react-icons/md";
 
 type Props = {
   logs: BreathingLog[]; // Raw breathing logs
+  selectedDog?: Dog | null;
   onDeleteLog?: (logId: string) => void;
 };
 
-export default function BreathingCalendar({ logs, onDeleteLog }: Props) {
+export default function BreathingCalendar({
+  logs,
+  selectedDog,
+  onDeleteLog,
+}: Props) {
   // Get navigation state from context (shared with chart)
   const { logState, logDispatch } = useAppContext();
   const { viewMode, selectedYear, selectedMonth } = logState;
@@ -53,6 +59,7 @@ export default function BreathingCalendar({ logs, onDeleteLog }: Props) {
 
   // Helper functions
   const getLowestBpm = (dayLogs: ProcessedLogForCalendar[]) => {
+    if (!dayLogs || dayLogs.length === 0) return null;
     return Math.min(...dayLogs.map((log) => log.bpm));
   };
 
@@ -96,6 +103,7 @@ export default function BreathingCalendar({ logs, onDeleteLog }: Props) {
               const dayLogs = getDayLogs(date);
               const lowestBpm = getLowestBpm(dayLogs);
               const isExpanded = expandedDays.has(date);
+              const maxBpm = selectedDog?.maxBreathingRate || 30;
 
               return (
                 <div key={date} className="">
@@ -123,13 +131,26 @@ export default function BreathingCalendar({ logs, onDeleteLog }: Props) {
                         {dayLogs.length !== 1 ? "s " : ""}
                       </span>
                       <div
-                        className="flex items-center gap-1 ml-1 md:ml-2 px-2 py-1 bg-primary/10 hover:bg-primary/20 rounded-full relative group transition-colors duration-200"
-                        // Tooltip
+                        className="text-xs md:text-sm font-semibold ml-1 md:ml-2 px-2 py-1 bg-primary/10 hover:bg-primary/20 rounded-full relative group transition-colors duration-200"
                         title="Lowest BPM"
                       >
-                        <span className="text-xs md:text-sm font-semibold text-primary">
-                          {lowestBpm} BPM (min)
-                        </span>
+                        {lowestBpm !== null &&
+                        lowestBpm !== undefined &&
+                        isFinite(lowestBpm) ? (
+                          lowestBpm < maxBpm ? (
+                            <span style={{ color: "#10b981" }}>
+                              Min: {lowestBpm} BPM
+                            </span>
+                          ) : lowestBpm === maxBpm ? (
+                            <span style={{ color: "#f59e0b" }}>
+                              Min: {lowestBpm} BPM
+                            </span>
+                          ) : (
+                            <span style={{ color: "#ef4444" }}>
+                              Min: {lowestBpm} BPM
+                            </span>
+                          )
+                        ) : null}
                       </div>
                     </div>
                     <div className="flex items-center gap-1">
