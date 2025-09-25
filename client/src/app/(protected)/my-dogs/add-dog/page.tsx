@@ -17,7 +17,6 @@ import Button from "@/components/Button";
 import { PetPhotoUploader } from "@/components/PetPhotoUploader";
 import { CloudinaryPhoto } from "@/types/DogTypes";
 import InfoDialog from "@/components/InfoDialog";
-import { RiArrowLeftSLine } from "react-icons/ri";
 import { TbLungsFilled } from "react-icons/tb";
 import { FaHospital, FaPaw } from "react-icons/fa";
 
@@ -36,6 +35,7 @@ export default function AddDogPage() {
 
   const { dogState, dogDispatch } = useAppContext();
   const { isLoading } = dogState;
+
   // Form state
   const [formData, setFormData] = useState({
     dogName: "",
@@ -53,16 +53,16 @@ export default function AddDogPage() {
     },
   });
 
-  const formattedDogName = formData.dogName
-    .split(" ")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-
   // Form validation state
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [serverErrors, setServerErrors] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
+
+  const formattedDogName = formData.dogName
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 
   // Load existing dog data when in edit mode
   useEffect(() => {
@@ -73,7 +73,7 @@ export default function AddDogPage() {
 
           const birthYear = dogData.birthYear || 0;
 
-          setFormData({
+          const loadedForm = {
             dogName: dogData.name || "",
             breed: dogData.breed || "",
             birthYear: birthYear,
@@ -87,7 +87,9 @@ export default function AddDogPage() {
               vetEmail: dogData.veterinarian?.email || "",
               vetAddress: dogData.veterinarian?.address || "",
             },
-          });
+          };
+
+          setFormData(loadedForm);
           setDataLoaded(true);
         } catch {
           setServerErrors("Failed to load dog data. Please try again.");
@@ -306,11 +308,11 @@ export default function AddDogPage() {
 
     switch (focusSection) {
       case "info":
-        return `Edit ${formattedDogName || "Dog"} Info`;
+        return `Edit ${formattedDogName || "Dog"}'s Info`;
       case "breathing":
-        return `Edit ${formattedDogName || "Dog"} Breathing Rate`;
+        return `Edit ${formattedDogName || "Dog"}'s Breathing Rate`;
       case "vet":
-        return `Edit ${formattedDogName || "Dog"} Veterinarian`;
+        return `Edit ${formattedDogName || "Dog"}'s Veterinarian`;
       default:
         return "Edit Dog Profile";
     }
@@ -318,33 +320,10 @@ export default function AddDogPage() {
 
   return (
     <div className="max-w-5xl mb-36">
-      <div className="flex flex-wrap gap-2 justify-between align-center">
-        <div className="flex">
-          <h1 className="text-lg md:text-2xl font-bold text-foreground">
-            {getSectionTitle()}
-          </h1>
-        </div>
-        {isEditMode ? (
-          <Button
-            href={`/my-dogs/${editDogId}`}
-            variant="ghost"
-            size="sm"
-            icon={<RiArrowLeftSLine className="w-5 h-5" aria-hidden="true" />}
-            className="mb-4 lg:mb-16"
-          >
-            Back to {formattedDogName}&apos;s Profile
-          </Button>
-        ) : (
-          <Button
-            href="/my-dogs"
-            variant="ghost"
-            size="sm"
-            icon={<RiArrowLeftSLine className="w-5 h-5" aria-hidden="true" />}
-            className="mb-4 lg:mb-16"
-          >
-            Back to My Dogs
-          </Button>
-        )}
+      <div className="flex flex-wrap gap-2 justify-between items-center">
+        <h1 className="text-lg md:text-2xl font-bold text-foreground">
+          {getSectionTitle()}
+        </h1>
       </div>
 
       {serverErrors && (
@@ -355,18 +334,28 @@ export default function AddDogPage() {
 
       <form
         onSubmit={handleSubmit}
-        className="space-y-4 sm:space-y-6 md:space-y-8"
+        className="space-y-4 sm:space-y-6 md:space-y-8 mt-10"
       >
-        <Button
-          type="submit"
-          variant="primary"
-          size="lg"
-          loading={isSubmitting || isLoading}
-          loadingText={isEditMode ? "Updating..." : "Saving..."}
-          className="mt-4 w-full"
-        >
-          {isEditMode ? "Update Dog" : "Save Dog"}
-        </Button>
+        <div className="flex flex-row gap-4 mt-4">
+          <Button
+            type="submit"
+            variant="primary"
+            size="lg"
+            className="w-full"
+            loading={isSubmitting || isLoading}
+            loadingText={isEditMode ? "Updating..." : "Saving..."}
+          >
+            {isEditMode ? "Update Dog" : "Save Dog"}
+          </Button>
+          <Button
+            href={isEditMode ? `/my-dogs/${editDogId}` : "/my-dogs"}
+            variant="ghost"
+            size="lg"
+            className="w-full"
+          >
+            Cancel
+          </Button>
+        </div>
 
         {/* ***************** DOG INFO SECTION ***************** */}
         <div
@@ -382,7 +371,6 @@ export default function AddDogPage() {
                 Dog
               </h2>
             </div>
-
             <div
               ref={photoRef}
               className={`border rounded-lg p-4 mb-4 border-primary/30 focus:border-primary transition-all duration-300 ${
@@ -404,7 +392,6 @@ export default function AddDogPage() {
                 </p>
               )}
             </div>
-
             <div className="grid grid-cols-2 md:grid-cols-2 gap-4 mb-4">
               <div>
                 <label
@@ -499,8 +486,6 @@ export default function AddDogPage() {
                 </select>
               </div>
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
           </div>
         </div>
 
@@ -693,16 +678,26 @@ export default function AddDogPage() {
           </div>
         </div>
 
-        <Button
-          type="submit"
-          variant="primary"
-          size="lg"
-          loading={isSubmitting || isLoading}
-          loadingText={isEditMode ? "Updating..." : "Saving..."}
-          className="mt-4 w-full"
-        >
-          {isEditMode ? "Update Dog" : "Save Dog"}
-        </Button>
+        <div className="flex flex-row gap-4 mt-4">
+          <Button
+            type="submit"
+            variant="primary"
+            size="lg"
+            className="w-full"
+            loading={isSubmitting || isLoading}
+            loadingText={isEditMode ? "Updating..." : "Saving..."}
+          >
+            {isEditMode ? "Update Dog" : "Save Dog"}
+          </Button>
+          <Button
+            href={isEditMode ? `/my-dogs/${editDogId}` : "/my-dogs"}
+            variant="ghost"
+            size="lg"
+            className="w-full"
+          >
+            Cancel
+          </Button>
+        </div>
       </form>
     </div>
   );
