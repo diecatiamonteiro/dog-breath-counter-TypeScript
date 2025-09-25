@@ -10,6 +10,7 @@
 import { createBreathingLog } from "@/api/breathingLogApi";
 import { getSelectedDog } from "@/api/dogApi";
 import Button from "@/components/Button";
+import InfoDialog from "@/components/InfoDialog";
 import { useAppContext } from "@/context/Context";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -121,10 +122,27 @@ export default function MonitorBreathingPage() {
       <div className="mb-36">
         {/* Dog name & "Back to dog profile" button */}
         <div className="flex flex-wrap gap-2 justify-between align-center">
-          <div className="space-y-2">
+          <div className="flex flex-row items-center space-x-2">
             <h1 className="text-lg md:text-2xl font-bold text-foreground">
               {dogName || "Dog"}`s Breathing Tracker
             </h1>
+            <InfoDialog title="How to track the breathing?">
+              <p>
+                When your dog is asleep, pay attention to their chest as it
+                rises and falls. One full breath is counted when the chest goes
+                in and out once.
+              </p>
+              <p>
+                After that, pick the length of time you’d like to measure. Tap
+                the heart icon to begin, and press it again each time your dog
+                takes a breath during that period.
+              </p>
+              <p>
+                If you notice that the resting respiratory rate (RRR) is higher
+                than usual, try checking again after 10–60 minutes. If the RRR
+                remains high, consider contacting your vet for advice.
+              </p>
+            </InfoDialog>
           </div>
           <Button
             href={`/my-dogs/${dogId}`}
@@ -213,7 +231,7 @@ export default function MonitorBreathingPage() {
                     <div className="flex flex-col items-center space-y-4">
                       <button
                         onClick={handleBreathTap}
-                        className="relative w-28 h-28 md:w-32 md:h-32 lg:w-36 lg:h-36 rounded-full flex items-center justify-center transition-all duration-200 bg-accent hover:bg-accent/90 hover:scale-105 active:scale-95 shadow-lg cursor-pointer"
+                        className="relative w-28 h-28 md:w-32 md:h-32 lg:w-36 lg:h-36 rounded-full flex items-center justify-center transition-all duration-100 bg-accent hover:bg-accent/90 hover:scale-125 active:scale-95 shadow-lg cursor-pointer"
                         aria-label="Tap for each breath you fell or observe"
                       >
                         <FaHeart
