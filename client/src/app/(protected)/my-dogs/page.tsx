@@ -28,12 +28,19 @@ export default function MyDogsPage() {
     }
   }, [dogDispatch, authLoading, userState.isAuthenticated]);
 
-  if (authLoading && isLoading) {
+  if (authLoading || isLoading) {
     return (
       <div className="max-w-5xl p-4">
-        <div className="flex flex-wrap gap-2 text-left">
-          <h2 className="text-base text-primary mb-4">Loading your dogs</h2>
-          <LoadingSpinner />
+        <div className="text-left">
+          <div className="flex flex-wrap gap-2">
+            <h2 className="text-lg md:text-xl text-primary font-semibold mb-2">
+              Loading your dogs...
+            </h2>
+            <LoadingSpinner />
+          </div>
+          <p className="text-sm text-foreground/70 mb-4">
+            If this takes too long, try refreshing the page.
+          </p>
         </div>
       </div>
     );
