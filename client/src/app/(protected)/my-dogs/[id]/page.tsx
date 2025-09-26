@@ -228,7 +228,7 @@ export default function DogProfilePage() {
           >
             <div className="flex items-center">
               <TbLungsFilled
-                className="w-7 h-7 inline-block mr-2 md:mr-4 text-white"
+                className="w-7 h-7 inline-block mr-2 md:mr-4 text-background"
                 aria-hidden="true"
               />{" "}
               Track Breathing
@@ -278,6 +278,7 @@ export default function DogProfilePage() {
                       width={128}
                       height={32}
                       className="w-full h-full object-cover"
+                      priority
                     />
                   ) : (
                     <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5">
@@ -504,13 +505,13 @@ export default function DogProfilePage() {
             <div className="rounded-lg p-4 border border-navbar-icons flex-1">
               <div className="flex items-center justify-between">
                 <div className="flex flex-col gap-2">
-                  <p className="text-sm font-medium text-primary/80 leading-tight">
+                  <p className="text-sm font-medium text-primary leading-tight">
                     Max Breathing Rate
                   </p>
                   <p className="text-xl md:text-2xl font-bold text-primary leading-tight">
                     {selectedDog?.maxBreathingRate} BPM
                   </p>
-                  <p className="text-xs text-primary-dark leading-tight">
+                  <p className="text-xs text-primary leading-tight">
                     Set when adding dog
                   </p>
                 </div>
@@ -523,13 +524,13 @@ export default function DogProfilePage() {
             <div className="rounded-lg p-4 border border-navbar-icons flex-1">
               <div className="flex items-center justify-between">
                 <div className="flex flex-col gap-2">
-                  <p className="text-sm font-medium text-primary/80 leading-tight">
+                  <p className="text-sm font-medium text-primary leading-tight">
                     Average Breathing Rate
                   </p>
                   <p className="text-xl md:text-2xl font-bold text-primary leading-tight">
                     {averageBPM ? `${averageBPM} BPM` : "No data"}
                   </p>
-                  <p className="text-xs text-primary-dark leading-tight">
+                  <p className="text-xs text-primary leading-tight">
                     {averageBPM
                       ? "Average of all logs"
                       : "Start tracking breathing to see average"}
@@ -697,7 +698,7 @@ export default function DogProfilePage() {
             >
               <div className="flex items-center">
                 <TbLungsFilled
-                  className="w-7 h-7 inline-block mr-2 md:mr-4 text-white"
+                  className="w-7 h-7 inline-block mr-2 md:mr-4 text-background"
                   aria-hidden="true"
                 />{" "}
                 Track Breathing

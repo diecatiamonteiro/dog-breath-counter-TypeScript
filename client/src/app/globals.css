@@ -9,7 +9,7 @@
   --navbar-icons: rgb(180, 154, 211);
 
   --primary-light: rgb(216, 199, 233);
-  --primary: rgb(150, 114, 190);
+  --primary: rgb(132, 88, 182);
   --primary-dark: rgb(45, 33, 61);
 
   --accent: rgb(238, 117, 135);
@@ -37,13 +37,13 @@
   :root {
     --background: rgb(29, 14, 46);
     --foreground: rgb(237, 237, 237);
-    --main-text-bg: rgb(37, 18, 59);
+    --main-text-bg: rgb(42, 20, 67);
 
     --navbar-bg: rgb(45, 26, 68);
     --navbar-icons: rgb(92, 54, 128);
 
     --primary-light: rgb(35, 25, 48);
-    --primary: rgb(144, 102, 196);
+    --primary: rgb(165, 114, 228);
     --primary-dark: rgb(92, 54, 128);
 
     --accent: rgb(245, 93, 116);

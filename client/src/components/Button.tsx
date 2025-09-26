@@ -61,9 +61,9 @@ const Button = ({
   // Variant styles
   const variantStyles = {
     primary:
-      "bg-primary text-white hover:bg-primary/80 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed",
+      "bg-primary text-background hover:bg-primary/80 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed",
     secondary:
-      "bg-navbar-icons/90 text-white border border-primary/50 hover:bg-navbar-icons focus:ring-primary  disabled:opacity-50 disabled:cursor-not-allowed",
+      "bg-navbar-icons/90 text-foreground border border-primary/50 hover:bg-navbar-icons focus:ring-primary  disabled:opacity-50 disabled:cursor-not-allowed",
     ghost:
       "border border-primary text-primary hover:bg-primary/10 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed",
     danger:

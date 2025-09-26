@@ -43,7 +43,7 @@ export default function NavigationDesktop() {
               width={128}
               height={32}
               alt="Paw Pulse Dark Logo"
-              className="h-auto w-auto max-h-12 block dark:hidden transition-transform duration-300 hover:scale-105"
+              className="w-auto h-auto max-h-12 block dark:hidden transition-transform duration-300 hover:scale-105"
               priority
             />
 
@@ -53,7 +53,7 @@ export default function NavigationDesktop() {
               width={128}
               height={32}
               alt="Paw Pulse Light Logo"
-              className="h-auto w-auto hidden dark:block transition-transform duration-300 hover:scale-105"
+              className="w-auto h-auto hidden dark:block transition-transform duration-300 hover:scale-105"
               priority
             />
           </Link>
