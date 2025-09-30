@@ -270,9 +270,9 @@ export default function BreathingCalendar({
                 >
                   {monthData ? (
                     <div className="flex flex-row items-center justify-between">
-                      <h3 className="font-semibold text-foreground">
+                      <h2 className="font-semibold text-foreground">
                         {monthName}
-                      </h3>
+                      </h2>
                       <div className="flex flex-wrap gap-1 items-center">
                         <p className="text-sm text-foreground/70">
                           {monthData.count} Log
@@ -287,9 +287,9 @@ export default function BreathingCalendar({
                     </div>
                   ) : (
                     <div className="flex flex-row items-center justify-between">
-                      <h3 className="font-semibold text-foreground">
+                      <h2 className="font-semibold text-foreground">
                         {monthName}
-                      </h3>
+                      </h2>
                       <p className="text-sm text-foreground/50">No logs</p>
                     </div>
                   )}

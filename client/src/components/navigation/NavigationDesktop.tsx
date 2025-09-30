@@ -122,7 +122,7 @@ export default function NavigationDesktop() {
                     flex items-center px-4 py-3 rounded-lg transition-all duration-200 font-medium w-full
                     ${
                       isActive
-                        ? "bg-primary text-white shadow-md"
+                        ? "bg-primary text-background shadow-md"
                         : "text-foreground bg-transparent group-hover:bg-primary/20 group-hover:text-foreground"
                     }
                   `}

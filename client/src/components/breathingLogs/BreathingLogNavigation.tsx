@@ -164,11 +164,11 @@ export default function BreathingNavigation({ logs }: Props) {
           />
         </Button>
 
-        <h3 className="font-semibold text-foreground text-lg">
+        <h2 className="font-semibold text-foreground text-lg">
           {viewMode === "month"
             ? formatMonthYear(selectedYear, selectedMonth)
             : `${selectedYear}`}
-        </h3>
+        </h2>
 
         <Button
           onClick={onNextPeriod}

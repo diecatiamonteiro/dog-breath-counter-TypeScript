@@ -60,10 +60,10 @@ export default function EmailReportFormModal({
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
         <div className="bg-main-text-bg rounded-lg shadow-lg max-w-md w-full p-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+            <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
               <MdEmail className="text-primary" aria-hidden="true" />
               Send Email Report
-            </h3>
+            </h2>
             <Button
               onClick={onCancel}
               variant="ghost"

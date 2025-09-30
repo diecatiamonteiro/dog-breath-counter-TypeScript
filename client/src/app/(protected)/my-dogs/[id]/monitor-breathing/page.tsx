@@ -170,25 +170,24 @@ export default function MonitorBreathingPage() {
               <div className="text-center">
                 {!isMonitorOpen && (
                   <div>
-                    <h2 className="lg:text-lg font-semibold text-foreground">
+                    <h2 className="lg:text-lg font-semibold text-foreground mb-1">
                       Choose Duration
                     </h2>
                     <div className="grid grid-cols-3 gap-3">
                       {[15, 30, 60].map((duration) => (
-                        <button
+                        <Button
                           key={duration}
                           onClick={() => handleSetDuration(duration)}
                           disabled={isMonitoring}
                           aria-label={`Set duration to ${duration} seconds`}
-                          className={`p-4 rounded-xl border-2 transition-all duration-200 ${
-                            selectedDuration === duration
-                              ? "border-primary bg-primary text-white shadow-lg"
-                              : "border-primary/20 hover:border-primary/40 hover:bg-primary/5"
-                          }`}
+                          variant={
+                            selectedDuration === duration ? "primary" : "ghost"
+                          }
+                          className="py-2 md:py-4"
                         >
-                          <div className="text-2xl font-bold">{duration}</div>
-                          <div className="text-sm opacity-80">seconds</div>
-                        </button>
+                          <div className="text-xl md:text-2xl font-bold">{duration}</div>
+                          <div className="text-sm">seconds</div>
+                        </Button>
                       ))}
                     </div>
                     <Button

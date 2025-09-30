@@ -129,7 +129,7 @@ export default function MyDogsPage() {
 
                       {/* Dog Info */}
                       <div className="flex-1 text-left">
-                        <h3 className="text-lg font-semibold text-foreground mb-1">
+                        <h2 className="text-lg font-semibold text-foreground mb-1">
                           {dog.name
                             .split(" ")
                             .map(
@@ -137,7 +137,7 @@ export default function MyDogsPage() {
                                 word.charAt(0).toUpperCase() + word.slice(1)
                             )
                             .join(" ") || "Unnamed Dog"}
-                        </h3>
+                        </h2>
 
                         <div className="text-sm md:text-base text-foreground/70">
                           {dog.age && <p>Age: {dog.age}</p>}
