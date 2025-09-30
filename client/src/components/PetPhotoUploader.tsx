@@ -87,7 +87,7 @@ export const PetPhotoUploader: React.FC<PetPhotoUploaderProps> = ({
 
       {/* Upload Button */}
       <CldUploadWidget
-        uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
+        uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || "pet-photos"}
         onSuccess={handleUpload}
         options={{
           maxFiles: 1,
