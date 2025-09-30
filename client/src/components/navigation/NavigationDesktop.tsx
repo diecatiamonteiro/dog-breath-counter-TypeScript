@@ -41,7 +41,7 @@ export default function NavigationDesktop() {
             <Image
               src="/logos/logo-dark.png"
               width={128}
-              height={32}
+              height={77}
               alt="Paw Pulse Dark Logo"
               className="w-auto h-auto max-h-12 block dark:hidden transition-transform duration-300 hover:scale-105"
               priority
@@ -51,7 +51,7 @@ export default function NavigationDesktop() {
             <Image
               src="/logos/logo-light.png"
               width={128}
-              height={32}
+              height={79}
               alt="Paw Pulse Light Logo"
               className="w-auto h-auto hidden dark:block transition-transform duration-300 hover:scale-105"
               priority

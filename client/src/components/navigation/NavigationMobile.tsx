@@ -41,7 +41,7 @@ export default function NavigationMobile() {
             <Image
               src="/logos/logo-dark.png"
               width={128}
-              height={32}
+              height={77}
               alt="Paw Pulse Dark Logo"
               className="h-auto w-auto max-h-12 block dark:hidden"
               priority
@@ -51,7 +51,7 @@ export default function NavigationMobile() {
             <Image
               src="/logos/logo-light.png"
               width={128}
-              height={32}
+              height={79}
               alt="Paw Pulse Light Logo"
               className="h-auto w-auto max-h-12 hidden dark:block"
               priority
