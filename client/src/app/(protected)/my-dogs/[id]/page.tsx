@@ -177,6 +177,19 @@ export default function DogProfilePage() {
 
   const averageBPM = calculateAverageBPM();
 
+  // Check if logs exist for selected date range
+  const hasLogsInDateRange = (() => {
+    if (!startDate && !endDate) return breathingLogs.length > 0; // No filter = check all logs
+
+    return breathingLogs.some((log) => {
+      const logDate = new Date(log.createdAt).toDateString();
+      const start = startDate ? new Date(startDate).toDateString() : null;
+      const end = endDate ? new Date(endDate).toDateString() : null;
+
+      return (!start || logDate >= start) && (!end || logDate <= end);
+    });
+  })();
+
   // Check if veterinarian data exists (any field has a value)
   const hasVeterinarianData = () => {
     const vetData = selectedDog?.veterinarian;
@@ -671,7 +684,7 @@ export default function DogProfilePage() {
                   onClick={handleDownloadPdf}
                   variant="secondary"
                   size="sm"
-                  disabled={isLoadingPdf}
+                  disabled={isLoadingPdf || !hasLogsInDateRange}
                   className="flex items-center gap-2 w-full sm:w-fit"
                   icon={
                     <GrDocumentDownload
@@ -696,13 +709,22 @@ export default function DogProfilePage() {
                   onClick={() => setShowEmailForm(true)}
                   variant="secondary"
                   size="sm"
-                  disabled={isLoadingEmail}
+                  disabled={isLoadingEmail || !hasLogsInDateRange}
                   ariaLabel={`Email ${dogName}'s report`}
                   className="flex items-center gap-2 w-full sm:w-fit"
                   icon={<TfiEmail className="w-5 h-5" aria-hidden="true" />}
                 >
                   Email Report
                 </Button>
+
+                {!hasLogsInDateRange && (
+                  <div className="w-full">
+                    <p className="text-sm text-foreground font-bold py-2 leading-tight">
+                      No breathing logs found for the specified date range.
+                      Clear dates to start over.
+                    </p>
+                  </div>
+                )}
 
                 {isEmailSent && (
                   <div className="flex items-center gap-2">
