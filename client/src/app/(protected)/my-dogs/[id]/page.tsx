@@ -28,7 +28,7 @@ import {
   sendBreathingLogEmail,
 } from "@/api/breathingLogApi";
 import LoadingSpinner from "@/app/loading";
-import EmailReportFormModal from "@/components/shareData/EmailReportFormModal";
+
 import { RiArrowLeftSLine, RiAddLine, RiEditLine } from "react-icons/ri";
 import { FaDog, FaHospital, FaLungs, FaPaw } from "react-icons/fa";
 import { TbLungsFilled } from "react-icons/tb";
@@ -38,6 +38,7 @@ import { LuTriangleAlert, LuShare2 } from "react-icons/lu";
 import { TfiEmail } from "react-icons/tfi";
 import { BsClipboardData } from "react-icons/bs";
 import InfoDialog from "@/components/InfoDialog";
+import Modal from "@/components/Modal";
 
 export default function DogProfilePage() {
   const params = useParams();
@@ -53,6 +54,8 @@ export default function DogProfilePage() {
   const [isLoadingEmail, setIsLoadingEmail] = useState(false);
   const [isEmailSent, setIsEmailSent] = useState(false);
   const [recipientEmail, setRecipientEmail] = useState<string>("");
+  const [sentToEmail, setSentToEmail] = useState<string>(""); // Separate state for success message
+  const [emailError, setEmailError] = useState<string>("");
 
   // Load breathing logs on mount and when dogId changes
   useEffect(() => {
@@ -101,11 +104,12 @@ export default function DogProfilePage() {
   };
 
   // Show email sent message for 5 seconds
-  const handleShowEmailSentMessage = () => {
+  const handleShowEmailSentMessage = (email: string) => {
+    setSentToEmail(email);
     setIsEmailSent(true);
     setTimeout(() => {
       setIsEmailSent(false);
-      setRecipientEmail("");
+      setSentToEmail("");
     }, 5000);
   };
 
@@ -122,13 +126,37 @@ export default function DogProfilePage() {
         endDate || undefined
       );
       setShowEmailForm(false);
-      setRecipientEmail(recipientEmail);
-      handleShowEmailSentMessage();
+      handleShowEmailSentMessage(recipientEmail);
     } catch (error) {
       console.error("Failed to send email:", error);
       throw error; // Re-throw to let the form handle the error
     } finally {
       setIsLoadingEmail(false);
+    }
+  };
+
+  const handleEmailFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setEmailError("");
+
+    const email = recipientEmail.trim();
+
+    if (!email) {
+      setEmailError("Please enter a recipient email");
+      return;
+    }
+
+    if (!email.includes("@")) {
+      setEmailError("Please enter a valid email address");
+      return;
+    }
+
+    try {
+      await handleSendEmail(email);
+      // Clear the form input immediately after successful send
+      setRecipientEmail("");
+    } catch {
+      setEmailError("Failed to send email. Please try again.");
     }
   };
 
@@ -679,7 +707,7 @@ export default function DogProfilePage() {
                 {isEmailSent && (
                   <div className="flex items-center gap-2">
                     <p className="text-sm text-primary">
-                      Email sent to {recipientEmail}
+                      Email sent to {sentToEmail}
                     </p>
                   </div>
                 )}
@@ -708,12 +736,74 @@ export default function DogProfilePage() {
         )}
       </div>
 
-      <EmailReportFormModal
-        onSendEmail={handleSendEmail}
-        onCancel={() => setShowEmailForm(false)}
-        isVisible={showEmailForm}
-        isLoading={isLoadingEmail}
-      />
+      {showEmailForm && (
+        <Modal
+          title="Send Email Report"
+          onClose={() => {
+            setShowEmailForm(false);
+            setEmailError("");
+            setRecipientEmail("");
+          }}
+        >
+          <div className="p-6">
+            <form onSubmit={handleEmailFormSubmit} className="space-y-4">
+              <div>
+                <label
+                  htmlFor="recipientEmail"
+                  className="block text-sm font-medium text-foreground mb-2"
+                >
+                  To:
+                </label>
+                <input
+                  id="recipientEmail"
+                  type="email"
+                  value={recipientEmail}
+                  onChange={(e) => setRecipientEmail(e.target.value)}
+                  placeholder="vet@clinic.com"
+                  className="w-full px-3 py-2 border border-primary/20 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                  disabled={isLoadingEmail}
+                />
+              </div>
+
+              {emailError && (
+                <p className="text-red-500 text-sm">{emailError}</p>
+              )}
+
+              <div className="flex gap-3 pt-2">
+                <Button
+                  type="submit"
+                  variant="primary"
+                  disabled={isLoadingEmail}
+                  className="flex-1"
+                >
+                  {isLoadingEmail ? (
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      Sending...
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <TfiEmail className="w-4 h-4" aria-hidden="true" />
+                      Send Report
+                    </div>
+                  )}
+                </Button>
+                <Button
+                  onClick={() => {
+                    setShowEmailForm(false);
+                    setEmailError("");
+                    setRecipientEmail("");
+                  }}
+                  variant="ghost"
+                  disabled={isLoadingEmail}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </form>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 }
