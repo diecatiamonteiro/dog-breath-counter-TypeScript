@@ -17,7 +17,6 @@ import {
 import authRouter from "./routes/authRoutes";
 import userRouter from "./routes/userRoutes";
 import dogRouter from "./routes/dogRoutes";
-import { downloadBreathingLogPdf } from "./controllers/breathingLogController";
 
 // Initialize Express
 export const app = express();
@@ -72,9 +71,6 @@ app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/dogs", dogRouter);
 // Note: breathing log routes are now nested under dog routes
-
-// Public download route (no authentication required)
-app.get("/api/breathing-logs/download/:token", downloadBreathingLogPdf);
 
 // Error handling middleware
 app.use(RouteNotFoundError);
