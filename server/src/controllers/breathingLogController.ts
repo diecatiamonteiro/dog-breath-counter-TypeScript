@@ -438,32 +438,45 @@ export const sendBreathingLogEmail: Controller<
     // Generate email HTML
     const emailHTML = generateEmailHTML(reportData, recipientEmail);
 
-    // Send email with PDF attachment
-    await sendEmail({
-      to: recipientEmail,
-      subject: `Breathing Report for ${
-        dog.name
-      } - ${startDate.toLocaleDateString()} to ${endDate.toLocaleDateString()}`,
-      html: emailHTML,
-      attachments: [
-        {
-          filename: `breathing-report-${dog.name}-${
-            new Date().toISOString().split("T")[0]
-          }.pdf`,
-          content: pdfBuffer,
-          contentType: "application/pdf",
-        },
-      ],
-    });
-
+    // Return success immediately to avoid timeouts
     res.json({
-      message: "Email report sent successfully",
+      message: "Email report is being processed and will be sent shortly",
       data: {
         recipientEmail,
         dogName: dog.name,
         dateRange: `${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`,
         totalLogs: validLogs.length,
       },
+    });
+
+    // Process email asynchronously after response is sent
+    setImmediate(async () => {
+      try {
+        await sendEmail({
+          to: recipientEmail,
+          subject: `Breathing Report for ${
+            dog.name
+          } - ${startDate.toLocaleDateString()} to ${endDate.toLocaleDateString()}`,
+          html: emailHTML,
+          attachments: [
+            {
+              filename: `breathing-report-${dog.name}-${
+                new Date().toISOString().split("T")[0]
+              }.pdf`,
+              content: pdfBuffer,
+              contentType: "application/pdf",
+            },
+          ],
+        });
+        console.log(`Email sent successfully to ${recipientEmail} for dog ${dog.name}`);
+      } catch (emailError) {
+        console.error("Async email sending failed:", {
+          error: emailError instanceof Error ? emailError.message : "Unknown error",
+          recipientEmail,
+          dogId: req.params.id,
+          userId: req.user?._id,
+        });
+      }
     });
   } catch (error) {
     console.error("Email sending error details:", {
