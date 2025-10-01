@@ -13,6 +13,7 @@ import mongoose from "mongoose";
 import BreathingLog from "../models/BreathingLog";
 import Dog from "../models/Dog";
 import User from "../models/User";
+import crypto from "crypto";
 import { Controller } from "../types/controller";
 import { AuthenticatedRequest } from "../types/express";
 import {
@@ -24,6 +25,9 @@ import createError from "http-errors";
 import { withTransaction } from "../utils/transaction";
 import { generatePDF, ReportData } from "../services/pdfService";
 import { sendEmail, generateEmailHTML } from "../services/emailService";
+
+// Simple in-memory storage for download tokens (expires in 1 hour)
+const downloadTokens = new Map<string, { data: ReportData; expiresAt: number }>();
 
 /**
  * @desc   Create a breathing log for a specific dog
@@ -448,28 +452,29 @@ export const sendBreathingLogEmail: Controller<
       },
     };
 
-    // Generate PDF
-    const pdfBuffer = await generatePDF(reportData);
+    // Generate secure download token
+    const token = crypto.randomBytes(32).toString('hex');
+    const expiresAt = Date.now() + (60 * 60 * 1000); // 1 hour
+    
+    // Store report data with token
+    downloadTokens.set(token, { data: reportData, expiresAt });
 
-    // Generate email HTML
-    const emailHTML = generateEmailHTML(reportData, recipientEmail);
+    // Create download URL
+    const baseUrl = process.env.VERCEL_URL 
+      ? `https://${process.env.VERCEL_URL}` 
+      : `${req.protocol}://${req.get('host')}`;
+    const downloadUrl = `${baseUrl}/api/breathing-logs/download/${token}`;
 
-    // Send email with PDF attachment
+    // Generate email HTML with download link
+    const emailHTML = generateEmailHTML(reportData, recipientEmail, downloadUrl);
+
+    // Send lightweight email with download link
     await sendEmail({
       to: recipientEmail,
       subject: `Breathing Report for ${
         dog.name
       } - ${startDate.toLocaleDateString()} to ${endDate.toLocaleDateString()}`,
       html: emailHTML,
-      attachments: [
-        {
-          filename: `breathing-report-${dog.name}-${
-            new Date().toISOString().split("T")[0]
-          }.pdf`,
-          content: pdfBuffer,
-          contentType: "application/pdf",
-        },
-      ],
     });
 
     res.json({
@@ -497,5 +502,40 @@ export const sendBreathingLogEmail: Controller<
       return next(createError(500, error.message));
     }
     return next(createError(500, "An unexpected error occurred"));
+  }
+};
+
+/**
+ * @desc   Download PDF using secure token
+ * @route  GET /api/breathing-logs/download/:token
+ * @access Public (token-based)
+ */
+export const downloadBreathingLogPdf: Controller = async (req, res, next) => {
+  try {
+    const { token } = req.params;
+
+    // Check if token exists and is valid
+    const tokenData = downloadTokens.get(token);
+    if (!tokenData || tokenData.expiresAt < Date.now()) {
+      if (tokenData) downloadTokens.delete(token);
+      throw createError(404, "Invalid or expired download link");
+    }
+
+    // Generate PDF from stored data
+    const pdfBuffer = await generatePDF(tokenData.data);
+
+    // Set response headers
+    const filename = `breathing-report-${tokenData.data.dog.name}-${new Date().toISOString().split("T")[0]}.pdf`;
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+
+    // Send PDF
+    res.send(pdfBuffer);
+
+  } catch (error) {
+    if (error instanceof createError.HttpError) {
+      return next(error);
+    }
+    return next(createError(500, "Download failed"));
   }
 };
