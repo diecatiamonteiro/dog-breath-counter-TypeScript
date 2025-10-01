@@ -224,7 +224,15 @@ export const generateBreathingLogPdf: Controller<
     const startDate = req.body.startDate
       ? new Date(req.body.startDate)
       : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000); // Default: last 30 days
-    const endDate = req.body.endDate ? new Date(req.body.endDate) : new Date();
+    
+    let endDate: Date;
+    if (req.body.endDate) {
+      endDate = new Date(req.body.endDate);
+      // Set to end of day to include all logs from the selected date
+      endDate.setHours(23, 59, 59, 999);
+    } else {
+      endDate = new Date();
+    }
 
     // Get breathing logs for the date range
     const logs = await BreathingLog.find({
@@ -358,7 +366,15 @@ export const sendBreathingLogEmail: Controller<
     const startDate = req.body.startDate
       ? new Date(req.body.startDate)
       : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000); // Default: last 30 days
-    const endDate = req.body.endDate ? new Date(req.body.endDate) : new Date();
+    
+    let endDate: Date;
+    if (req.body.endDate) {
+      endDate = new Date(req.body.endDate);
+      // Set to end of day to include all logs from the selected date
+      endDate.setHours(23, 59, 59, 999);
+    } else {
+      endDate = new Date();
+    }
 
     // Get breathing logs for the date range
     const logs = await BreathingLog.find({
