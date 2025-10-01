@@ -56,3 +56,20 @@ body {
   color: var(--foreground);
   font-family: var(--font-nunito), sans-serif;
 }
+
+/* Normalize date input styling to ensure consistent colors */
+input[type="date"] {
+  color: var(--foreground);
+}
+
+input[type="date"]::-webkit-datetime-edit-text,
+input[type="date"]::-webkit-datetime-edit-month-field,
+input[type="date"]::-webkit-datetime-edit-day-field,
+input[type="date"]::-webkit-datetime-edit-year-field {
+  color: var(--foreground);
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%)
+    hue-rotate(246deg) brightness(104%) contrast(97%);
+}
