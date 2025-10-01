@@ -61,7 +61,7 @@ export default function DateRangePicker({
               type="date"
               value={startDate}
               onChange={(e) => handleStartDateChange(e.target.value)}
-              max={endDate || undefined}
+              max={endDate || new Date().toISOString().split("T")[0]}
               className="px-3 py-1 text-sm border border-primary/20 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
             />
           </div>
