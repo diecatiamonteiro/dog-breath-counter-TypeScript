@@ -679,7 +679,7 @@ export default function DogProfilePage() {
                 {isEmailSent && (
                   <div className="flex items-center gap-2">
                     <p className="text-sm text-primary">
-                      Email is being sent to {recipientEmail} 📧
+                      Email sent to {recipientEmail}
                     </p>
                   </div>
                 )}

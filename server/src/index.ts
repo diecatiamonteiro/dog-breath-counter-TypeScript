@@ -66,19 +66,6 @@ app.get("/", (req: Request, res: Response) => {
   res.json({ message: "Hello from the backend!" });
 });
 
-// Health check endpoint
-app.get("/api/health", (req: Request, res: Response) => {
-  res.json({ 
-    status: "healthy", 
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
-    emailService: {
-      configured: !!(process.env.GOOGLE_EMAIL && process.env.GOOGLE_APP_PASSWORD),
-      logoUrl: !!process.env.EMAIL_LOGO_URL
-    }
-  });
-});
-
 // Mount API routes
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);

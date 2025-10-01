@@ -22,37 +22,23 @@ export interface EmailOptions {
 
 export const sendEmail = async (options: EmailOptions): Promise<void> => {
   try {
-    // Create transporter using App Password with timeout settings
+    // Create transporter using App Password
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
         user: process.env.GOOGLE_EMAIL,
         pass: process.env.GOOGLE_APP_PASSWORD,
       },
-      // Add timeout configurations
-      connectionTimeout: 30000, // 30 seconds
-      greetingTimeout: 30000, // 30 seconds
-      socketTimeout: 30000, // 30 seconds
     });
 
-    // Create a promise that rejects after timeout
-    const timeoutPromise = new Promise<never>((_, reject) => {
-      setTimeout(() => {
-        reject(new Error('Email sending timeout - operation took longer than 25 seconds'));
-      }, 25000); // 25 seconds timeout
+    // Send email
+    await transporter.sendMail({
+      from: process.env.GOOGLE_EMAIL,
+      to: options.to,
+      subject: options.subject,
+      html: options.html,
+      attachments: options.attachments,
     });
-
-    // Race between email sending and timeout
-    await Promise.race([
-      transporter.sendMail({
-        from: process.env.GOOGLE_EMAIL,
-        to: options.to,
-        subject: options.subject,
-        html: options.html,
-        attachments: options.attachments,
-      }),
-      timeoutPromise
-    ]);
   } catch (error) {
     console.error("Email service error:", {
       message: error instanceof Error ? error.message : "Unknown error",
