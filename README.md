@@ -1,15 +1,15 @@
-# Dog Breath Counter 
+# Dog Breath Counter
 
-A full-stack web application to track dog breathing rates, built with **TypeScript**, **Next.js**, and **Express**. **CI/CD** is implemented using **GitHub Actions**, with automated tests using **Vitest**, to ensure seamless deployment and code quality.
+A full-stack web application to track dog breathing rates, built with **TypeScript**, **Next.js**, and **Express**. **CI/CD** is implemented using **GitHub Actions**, with automated tests using **Vitest**.
 
 When a dog has or is at risk of developing a heart condition, monitoring their resting respiratory rate can be crucial. This app helps dog owners track their dog's breathing over time, detect early signs of heart disease, and share data with their veterinarian, ultimately helping to prevent the condition from worsening.
 
-I’ve been using [Boehringer Ingelheim’s My Pet´s Heart2Heart app](https://apps.apple.com/de/app/my-pet-s-heart2heart/id1564965551) for the past year to help care for my dog, April, who has a heart condition. Inspired by that experience, I wanted to create an **improved tool** that offers the same core functionality while adding features that make daily tracking and sharing data with a veterinarian even easier.
+I’ve been using **[My Pet´s Heart2Heart app](https://apps.apple.com/de/app/my-pet-s-heart2heart/id1564965551)** from **Boehringer Ingelheim** for the past year to help care for my dog, April, who has a heart condition. Inspired by that experience, I create PawPulse as a tool that offers the same core functionality with a few twists that make daily tracking and sharing data with a veterinarian even easier.
 
 ## Table of Contents
 
 - [App Overview](#app-overview)
-- [Tech Stack](#tech-stack)
+- [Tech Stack](#tech-stack-monorepo)
 - [Features](#features)
 - [User Stories](#user-stories)
 - [Project Structure](#project-structure)
@@ -18,79 +18,81 @@ I’ve been using [Boehringer Ingelheim’s My Pet´s Heart2Heart app](https://a
 - [Available Scripts](#available-scripts)
 - [Development Notes](#development-notes)
 - [Testing Strategy](#testing-strategy)
-- [CI/CD Pipeline](#ci-cd-pipeline)
-- [To Do](#todo)
+- [CI/CD Pipeline](#ci-/-cd-pipeline)
+- [To Dos](#to-dos)
 - [Author](#author)
 
 ## App Overview
 
-| Home Page                                           | Breathing Monitor                                             |
-| --------------------------------------------------- | ------------------------------------------------------------- |
-| ![To add later](client/public/screenshots/home.png) | ![To add later](client/public/screenshots/breath-monitor.png) |
+#### LIVE DEMO [HERE](https://pawpulse-breathcounter.vercel.app/)
 
-## Tech Stack
+
+| Dark mode                                                | Light mode                                                |
+| -------------------------------------------------------- | --------------------------------------------------------- |
+| ![To add later](client/public/screenshots/dark-mode.png) | ![To add later](client/public/screenshots/light-mode.png) |
+
+| My Dogs Page                                                | Track Breathing Page                                           |
+| ----------------------------------------------------------- | -------------------------------------------------------------- |
+| ![To add later](client/public/screenshots/my-dogs-page.png) | ![To add later](client/public/screenshots/track-breathing.png) |
+
+| Breathing Logs (Chart View)                                           | Breathing Logs (Calendar View)                                           |
+| --------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| ![To add later](client/public/screenshots/dog-profile-chart-view.png) | ![To add later](client/public/screenshots/dog-profile-calendar-view.png) |
+
+## Tech Stack (Monorepo)
 
 ### Frontend
 
 - **Framework**: Next.js 15.3
-- **UI Library**: React 19
+- **Library**: React 19
 - **Language**: TypeScript
-- **Styling**: TailwindCSS
+- **Styling**: Tailwind CSS
+- **Data/HTTP**: Axios
+- **State**: Context API + reducers
 - **Authentication**: Google OAuth
-- **HTTP Client**: Axios
-- **State Management**: Context API & reducers
+- **Charts**: Recharts
+- **Icons**: React Icons
+- **Notifications**: React Toastify
+- **Image Upload**: Cloudinary + Next Cloudinary
 
 ### Backend
 
 - **Runtime**: Node.js
 - **Framework**: Express
 - **Language**: TypeScript
-- **Database**: MongoDB & Mongoose ODM
-- **Authentication**:
-  - JWT (jsonwebtoken)
-  - Bcrypt (password hashing)
-  - Cookie-parser
-- **Image Upload**: Cloudinary
+- **Database**: MongoDB + Mongoose ODM
+- **Authentication**: JWT (jsonwebtoken) + Google Auth Library + Bcrypt (password hashing) + Cookie-parser
 - **Security**: CORS
 - **Environment**: dotenv
+- **Image Upload**: Cloudinary
+- **PDF Generation**: html-pdf-node
+- **Email**: Nodemailer
 
 ### Testing
 
-- **Test Runner**: Vitest
-- **Testing Libraries**:
-  - React Testing Library
-  - @testing-library/jest-dom
-  - Supertest (for API testing)
+- **Runner**: Vitest
 - **Mocking**: vi (Vitest's built-in mock)
 - **Database Testing**: mongodb-memory-server
 
 ### Development Tools
 
-- **Package Manager**: npm with Workspaces
-- **Type Checking**: TypeScript
-- **Linting**:
-  - ESLint
-  - @typescript-eslint
-- **Development Server**:
-  - nodemon (backend)
-  - Next.js dev server (frontend)
-- **Process Manager**: concurrently (for running multiple scripts)
+- **Package & Monorepo**: npm Workspaces
+- **Dev Servers**: nodemon (backend) + Next.js dev server (frontend)
+- **Script Orchestration**: concurrently
+- **Local Checks**: TypeScript + ESLint
 
 ### DevOps
 
-- **CI/CD**: GitHub Actions (CD to be implemented)
+- **CI/CD**: GitHub Actions
 - **Version Control**: Git
-- **Code Quality**:
-  - TypeScript strict mode
-  - ESLint configuration
-  - Automated testing
+- **Code Quality (CI Gates)**: TypeScript strict mode, ESLint configuration & Automated testing
 
 ## Features
 
-- Manual breath counter with real-time BPM calculation and optional sound feedback
+- Manual breath counter with real-time breaths per minute (BPM) calculation
 - Dog profile management with photos, vital info, and veterinarian contacts
-- Breathing history tracking with interactive graphs and date filtering
-- Data sharing via PDF download or email to veterinarians
+- Breathing history tracking with graph and calendar views
+- Data sharing via PDF download (email report feature only works in development due to the 10-second time limit in Vercel's free tier when in production; for this reason, it has been commented out, but all functionality remains in code)
 - Secure authentication with Google OAuth and JWT session management
 - Responsive UI with dark mode and PWA support for mobile use
 
@@ -106,7 +108,7 @@ I’ve been using [Boehringer Ingelheim’s My Pet´s Heart2Heart app](https://a
 #### My Dogs Page --> Add Dog Page
 
 - As a user, I want to view my dog(s) on the **My Dogs** page.
-- As a user, I want to click the "+" icon to add a new dog and be redirected to the **Add Dog** page.
+- As a user, I want to click the "+ Add Dog" button to add a new dog and be redirected to the **Add Dog** page.
 - As a user, I want to fill in the following dog data and save it:
   - Photo
   - Name
@@ -114,44 +116,45 @@ I’ve been using [Boehringer Ingelheim’s My Pet´s Heart2Heart app](https://a
   - Age
   - Gender
   - Veterinarian's details (name, clinic name, phone number, email, address)
-  - Maximum breathing rate (default is 30 BPM, Breaths per minute)
+  - Maximum breathing rate (default is 30 BPM)
 - After saving, I am redirected back to the **My Dogs** page.
 
 #### My Dogs Page --> Dog Profile Page
 
 - As a user, I want to click on a dog card on **My Dogs** page and be redirected to its **Dog Profile** page.
 - As a user, I want to see the following information in the **Dog Profile** page:
-  - **Dog Info**: name, photo
+  - **Dog Info**:
+    - name
+    - age
+    - breed
+    - photo
   - **Resting respiratory rate**:
     - Maximum breath rate, eg 30 BPM (set when adding dog under **Add Dog** page)
     - Average breath rate, eg 28 BPM (average of all the breaths logged by the user)
   - **Veterinarian**:
     - If added, show the vet info
-    - If not, show a "+" button to add vet info (redirects to **Add Dog** page)
+    - If not, show a "Add" button to add vet info (redirects to **Edit Dog** page)
   - **Share data**:
-    - Select a date range (model with options Last 7, 15, 30, All logs)
-    - Share via email (opens email form with dog name, graph, logs as the body of the email)
-    - Download PDF (includes same content)
+    - Select a date range
+    - Download PDF
+    - Share via email (only available in development due to time limit on Vercel's free tier)
   - **Breathing Logs**:
     - Graph of breathing rate history
-    - List of logs (date, time, BPM, delete button per log)
+    - List of logs (date, BPM, comments, delete button per log)
 
 #### Dog Profile Page --> Breathing Monitor Page
 
-- As a user, I want to click the 'Add Breathing Rate' button at the bottom of the **Dog Profile** page to go to the **Breathing Monitor** page.
-- As a user, I want to select a duration for measurement on the **Breathing Monitor** page: modal with options 15 Seconds, 30 Seconds, 60 Seconds.
+- As a user, I want to click the 'Track Breathing' button at the top/bottom of the **Dog Profile** page to go to the **Breathing Monitor** page.
+- As a user, I want to select a duration for measurement on the **Breathing Monitor** page: 15 Seconds, 30 Seconds, 60 Seconds.
 - As a user, I want to manually tap a heart icon to log a breath in the **Breathing Monitor** page:
   - Seconds decrease as user taps
   - Breath count increases with each tap
-- As a user, I can enable heartbeat sound via a sound icon on the top right corner of the **Breathing Monitor** page.
 - As a user, and once the measurement is done, I can view a modal showing:
   - Breath Count
-  - Seconds
-  - BPM
   - Comment field
   - Confirm: saves log and closes modal
   - Cancel: discards log and closes modal
-- As a user, I can stop the log by clicking on the left arrow icon on the top left corner of the **Breathing Monitor** page and return to the **Dog Profile** page.
+- As a user, I can stop the breathing tracking by clicking on the button Stop Tracking in the **Breathing Monitor** page and return to the duration selection.
 
 ## Project Structure
 
@@ -166,10 +169,14 @@ pet-breath-counter-typescript/
 │ │ │ ├── layout.tsx # Root layout  
 │ │ │ └── page.tsx # Home page  
 │ │ └── components/ # React components  
+│ ├── .env.example # Client environment variables example  
+│ ├── .gitignore # Git ignore rules  
+│ ├── next.config.msj / # Next.js configuration  
 │ ├── public/ # Static assets  
 │ ├── postcss.config.js # PostCSS configuration  
 │ ├── tailwind.config.js # Tailwind configuration  
 │ └── tsconfig.json # TypeScript configuration  
+│ └── vercel.json # Vercel configuration (rewrites API requests to Render backend)  
 ├── **server**/ # Express backend  
 │ ├── src/  
 │ │ ├── config/ # Configuration  
@@ -182,11 +189,11 @@ pet-breath-counter-typescript/
 │ │ │ ├── tests/ # Model tests  
 │ │ ├── routes/ # API routes  
 │ │ │ ├── tests/ # Route tests  
-│ │ ├── seeds/ # Seed data  
-│ │ │ ├── tests/ # Seed tests  
+│ │ ├── services/ # External services  
 │ │ ├── types/ # TypeScript types  
+│ │ ├── utils/ # Helper functions  
 │ │ └── index.ts # Entry point  
-│ ├── .env-example # Environment variables example  
+│ ├── .env.example # Server environment variables example  
 │ ├── package-lock.json # Dependency lock file  
 │ ├── package.json # Server package configuration  
 │ ├── tsconfig.json # TypeScript configuration  
@@ -206,8 +213,10 @@ pet-breath-counter-typescript/
 | POST   | `/login`                 | Log in and return JWT token                               | ❌ No           |
 | POST   | `/login/google`          | Log in or register with Google OAuth                      | ❌ No           |
 | GET    | `/logout`                | Log out user (server must clear the cookie)               | ✅ Yes          |
-| POST   | `/forgot-password`       | Send reset link to user's email (token is generated here) | ❌ No           |
-| POST   | `/reset-password/:token` | Reset password using token (token proves user identity)   | ❌ No           |
+| \*POST | `/forgot-password`       | Send reset link to user's email (token is generated here) | ❌ No           |
+| \*POST | `/reset-password/:token` | Reset password using token (token proves user identity)   | ❌ No           |
+
+\* Not implemented
 
 #### User management endpoints (`/api/user`)
 
@@ -215,7 +224,9 @@ pet-breath-counter-typescript/
 | ------- | -------- | ------------------------------------------- | --------------- |
 | GET     | `/me`    | Get current user profile                    | ✅ Yes          |
 | DELETE  | `/me`    | Delete user account and all related data    | ✅ Yes          |
-| ? PATCH | `/me`    | Update user details (name, email, password) | ✅ Yes          |
+| \*PATCH | `/me`    | Update user details (name, email, password) | ✅ Yes          |
+
+\* Only name and email update implemented
 
 #### Dog management endpoints (`api/dogs`)
 
@@ -229,39 +240,32 @@ pet-breath-counter-typescript/
 
 #### Breathing log management endpoints (`api/dogs/:dogId/breathing-logs`)
 
-| Method | Endpoint  | Description                                                             | Logged in User? |
-| ------ | --------- | ----------------------------------------------------------------------- | --------------- |
-| POST   | `/`       | Add a new breathing log to a dog                                        | ✅ Yes          |
-| GET    | `/`       | Get all breathing logs for a specific dog (supports date range filters) | ✅ Yes          |
-| GET    | `/:logId` | Get a specific breathing log by its ID                                  | ✅ Yes          |
-| DELETE | `/:logId` | Delete a specific breathing log by its ID                               | ✅ Yes          |
+| Method | Endpoint        | Description                                                             | Logged in User? |
+| ------ | --------------- | ----------------------------------------------------------------------- | --------------- |
+| POST   | `/`             | Add a new breathing log to a dog                                        | ✅ Yes          |
+| GET    | `/`             | Get all breathing logs for a specific dog (supports date range filters) | ✅ Yes          |
+| GET    | `/:logId`       | Get a specific breathing log by its ID                                  | ✅ Yes          |
+| DELETE | `/:logId`       | Delete a specific breathing log by its ID                               | ✅ Yes          |
+| POST   | `/generate-pdf` | Generate a pdf with all breathing logs within a date range              | ✅ Yes          |
+| POST   | `/send-email`   | Email pdf with all breathing logs                                       | ✅ Yes          |
 
 ## Getting Started
 
 1. Clone the repository
-2. From the root directory, install dependencies:
+
+   ```bash
+   git clone git@github.com:diecatiamonteiro/dog-breath-counter-TypeScript.git
+   ```
+
+2. From the root directory, install dependencies
 
    ```bash
    npm install
    ```
 
-3. Create `.env` files:
+3. Create `.env` files for client and for server
 
-   For client:
-
-   ```env
-   NEXT_PUBLIC_API_URL=http://localhost:5000
-   ```
-
-   For server:
-
-   ```env
-   PORT=5000
-   MONGODB_URI=your_mongodb_uri
-   JWT_SECRET=your_jwt_secret
-   ```
-
-4. From the root directory, run the development servers (one single command for both frontend and backend):
+4. From the root directory, run the development servers (one single command for both client and server)
 
    ```bash
    npm run dev
@@ -274,15 +278,11 @@ pet-breath-counter-typescript/
 
 ## Available Scripts
 
-- Run both frontend and backend: `npm run dev`
-
-- Run frontend only: `npm run client`
-
-- Run backend only: `npm run server`
-
-- Run tests from **server/**: `npm run test`
-
-- Run lint from **client/**: `npm run lint`
+- Run both client and server from root/: `npm run dev`
+- Run client only: `npm run client`
+- Run server only: `npm run server`
+- Run tests from server/: `npm run test`
+- Run lint from client/: `npm run lint`
 
 ## Development Notes
 
@@ -296,27 +296,17 @@ pet-breath-counter-typescript/
 
 ## Testing Strategy
 
-- **Frontend**: Unit tests for components and logic using Vitest + React Testing Library
-- **Backend**: Unit and integration tests with Vitest + Supertest (to be decided)
-- **E2E**: To be decided (possibly Cypress)
+- **Backend**: Unit tests with Vitest
+- **Frontend**: To be implemented
+- **E2E**: To be implemented (possibly Cypress)
 - **CI**: All tests run on pull requests via GitHub Actions
 
 ## CI/CD Pipeline
 
-### Implemented:
-
 - **Server side unit tests**: Run on every push and PR
 - **Build process**: Both client and server are built in CI (Node 18, 20, and 22)
 
-### Planned steps:
-
-- **Code linting** – ESLint integration planned for both client and server
-- **Type checking** – TypeScript check (`tsc --noEmit`) will be added to CI
-- **Client side unit tests** – Tests to be added for the React frontend
-- **Integration tests** – E2E with Cypress
-- **Deployment** – Netlify or Vercel & Render
-
-### TODO
+## TO DOs
 
 - [x] Implement error handling
 - [x] Set up MongoDB connection
@@ -349,9 +339,10 @@ pet-breath-counter-typescript/
 - [x] Improve responsiveness of all page
 - [x] Improve accessibility of all repo
 - [x] Improve documentation across repo
-- [ ] Fix errors & warnings from console
-- [ ] Add InfoDialog
-- [ ] Test with Lighthouse for performance and accessibility for mobile and desktop
+- [x] Fix errors & warnings from console
+- [x] Add InfoDialog
+- [x] Test with Lighthouse for performance and accessibility for mobile and desktop
+- [x] Fix bugs in generate & send report features
 - [ ] Integrate Parlant
 - [ ] Integration tests (Cypress)
 
@@ -359,6 +350,6 @@ pet-breath-counter-typescript/
 
 Built with ❤️ by [Cátia Monteiro](https://github.com/diecatiamonteiro).
 
-& 
+&
 
-Inspired by [Boehringer Ingelheim’s My Pet´s Heart2Heart app](https://apps.apple.com/de/app/my-pet-s-heart2heart/id1564965551), which I’ve been using daily for the past year.
+Inspired by Boehringer Ingelheim’s [My Pet´s Heart2Heart app](https://apps.apple.com/de/app/my-pet-s-heart2heart/id1564965551), which I’ve been using daily for the past year.
