@@ -18,7 +18,7 @@ I’ve been using **[My Pet´s Heart2Heart app](https://apps.apple.com/de/app/my
 - [Available Scripts](#available-scripts)
 - [Development Notes](#development-notes)
 - [Testing Strategy](#testing-strategy)
-- [CI/CD Pipeline](#ci-/-cd-pipeline)
+- [CI/CD Pipeline](#cicd-pipeline)
 - [To Dos](#to-dos)
 - [Author](#author)
 
