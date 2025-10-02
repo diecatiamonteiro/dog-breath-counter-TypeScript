@@ -647,7 +647,7 @@ export default function DogProfilePage() {
                 aria-hidden="true"
               />
               <h2 className="text-base md:text-xl font-semibold text-foreground">
-                Share Report
+                Breathing Report
               </h2>
             </div>
           </div>
@@ -705,7 +705,10 @@ export default function DogProfilePage() {
                   )}
                 </Button>
 
-                <Button
+                {/* The Email Report feature does not work in production because of 
+                Vercel's 10-second timeout limit, throwing a 502 Bad Gateway error.
+                For now, it will remain commented out. */}
+                {/* <Button
                   onClick={() => setShowEmailForm(true)}
                   variant="secondary"
                   size="sm"
@@ -715,7 +718,7 @@ export default function DogProfilePage() {
                   icon={<TfiEmail className="w-5 h-5" aria-hidden="true" />}
                 >
                   Email Report
-                </Button>
+                </Button> */}
 
                 {!hasLogsInDateRange && (
                   <div className="w-full">
